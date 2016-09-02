@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.ReceiptMapper">
+	<resultMap type="com.sinoservices.xascf.credit.model.ReceiptModel" id="receiptModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="receiptPid" column="RECEIPT_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="receiptType" column="RECEIPT_TYPE"/>
+		<result property="receiptKinds" column="RECEIPT_KINDS"/>
+		<result property="rpFlag" column="RP_FLAG"/>
+		<result property="cpFlag" column="CP_FLAG"/>
+		<result property="receiptNumber" column="RECEIPT_NUMBER"/>
+		<result property="receiptNo" column="RECEIPT_NO"/>
+		<result property="receiptOwerPid" column="RECEIPT_OWER_PID"/>
+		<result property="issueDate" column="ISSUE_DATE"/>
+		<result property="signforDate" column="SIGNFOR_DATE"/>
+		<result property="receiptToDate" column="RECEIPT_TO_DATE"/>
+		<result property="receiptToDateStr" column="RECEIPT_TO_DATE"/>
+		<result property="taxPayerIdentifier" column="TAX_PAYER_IDENTIFIER"/>
+		<result property="payerName" column="PAYER_NAME"/>
+		<result property="payerPid" column="PAYER_PID"/>
+		<result property="payerBank" column="PAYER_BANK"/>
+		<result property="payerAccountNumber" column="PAYER_ACCOUNT_NUMBER"/>
+		<result property="payeeName" column="PAYEE_NAME"/>
+		<result property="taxPayeeIdentifier" column="TAX_PAYEE_IDENTIFIER"/>
+		<result property="payeeAddress" column="PAYEE_ADDRESS"/>
+		<result property="payeePhone" column="PAYEE_PHONE"/>
+		<result property="payeeBank" column="PAYEE_BANK"/>
+		<result property="payeeAccountNumber" column="PAYEE_ACCOUNT_NUMBER"/>
+		<result property="settlementName" column="SETTLEMENT_NAME"/>
+		<result property="settlementCode" column="SETTLEMENT_CODE"/>
+		<result property="payeeEsusCode" column="PAYEE_ESUS_CODE"/>
+		<result property="payeeEsusUsername" column="PAYEE_ESUS_USERNAME"/>
+		<result property="drawerEsusCode" column="DRAWER_ESUS_CODE"/>
+		<result property="drawerEsusUsername" column="DRAWER_ESUS_USERNAME"/>
+		<result property="sumAmount" column="SUM_AMOUNT"/>
+		<result property="sumAmountCn" column="SUM_AMOUNT_CN"/>
+		<result property="sumNotaxAmount" column="SUM_NOTAX_AMOUNT"/>
+		<result property="sumTaxAmount" column="SUM_TAX_AMOUNT"/>
+		<result property="actualAmount" column="ACTUAL_AMOUNT"/>
+		<result property="actualAmountCn" column="ACTUAL_AMOUNT_CN"/>
+		<result property="actualTaxAmount" column="ACTUAL_TAX_AMOUNT"/>
+		<result property="receiptFileName" column="RECEIPT_FILE_NAME"/>
+		<result property="receiptFileRename" column="RECEIPT_FILE_RENAME"/>
+		<result property="receiptFileUrl" column="RECEIPT_FILE_URL"/>
+		<result property="isEffective" column="ISEFFECTIVE"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					RECEIPT_PID,
+					FANCING_ORDER_NO,
+					RECEIPT_TYPE,
+					RECEIPT_KINDS,
+					RP_FLAG,
+					CP_FLAG,
+					RECEIPT_NUMBER,
+					RECEIPT_NO,
+					RECEIPT_OWER_PID,
+					ISSUE_DATE,
+					SIGNFOR_DATE,
+					RECEIPT_TO_DATE,
+					TAX_PAYER_IDENTIFIER,
+					PAYER_PID,
+					PAYER_NAME,
+					PAYER_BANK,
+					PAYER_ACCOUNT_NUMBER,
+					PAYEE_NAME,
+					TAX_PAYEE_IDENTIFIER,
+					PAYEE_ADDRESS,
+					PAYEE_PHONE,
+					PAYEE_BANK,
+					PAYEE_ACCOUNT_NUMBER,
+					SETTLEMENT_NAME,
+					SETTLEMENT_CODE,
+					PAYEE_ESUS_CODE,
+					PAYEE_ESUS_USERNAME,
+					DRAWER_ESUS_CODE,
+					DRAWER_ESUS_USERNAME,
+					SUM_AMOUNT,
+					SUM_AMOUNT_CN,
+					SUM_NOTAX_AMOUNT,
+					SUM_TAX_AMOUNT,
+					ACTUAL_AMOUNT,
+					ACTUAL_AMOUNT_CN,
+					ACTUAL_TAX_AMOUNT,
+					RECEIPT_FILE_NAME,
+					RECEIPT_FILE_RENAME,
+					RECEIPT_FILE_URL,
+					ISEFFECTIVE,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="receiptPid!=null and receiptPid!=''"> AND RECEIPT_PID LIKE ('%'||'receiptPid'||'%' )</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO LIKE ('%'||'fancingOrderNo'||'%' )</if>
+		<if test="receiptType!=null and receiptType!=''"> AND RECEIPT_TYPE LIKE ('%'||'receiptType'||'%' )</if>
+		<if test="receiptKinds!=null and receiptKinds!=''"> AND RECEIPT_KINDS LIKE ('%'||'receiptKinds'||'%' )</if>
+		<if test="rpFlag!=null and rpFlag!=''"> AND RP_FLAG LIKE ('%'||'rpFlag'||'%' )</if>
+		<if test="cpFlag!=null and cpFlag!=''"> AND CP_FLAG LIKE ('%'||'cpFlag'||'%' )</if>
+		<if test="receiptNumber!=null and receiptNumber!=''"> AND RECEIPT_NUMBER LIKE ('%'||'receiptNumber'||'%' )</if>
+		<if test="receiptNo!=null and receiptNo!=''"> AND RECEIPT_NO LIKE ('%'||'receiptNo'||'%' )</if>
+		<if test="receiptOwerPid!=null and receiptOwerPid!=''"> AND RECEIPT_OWER_PID LIKE ('%'||'receiptOwerPid'||'%' )</if>
+		<if test="issueDate!=null and issueDate!=''"> AND ISSUE_DATE LIKE ('%'||'issueDate'||'%' )</if>
+		<if test="signforDate!=null and signforDate!=''"> AND SIGNFOR_DATE LIKE ('%'||'signforDate'||'%' )</if>
+		<if test="receiptToDate!=null and receiptToDate!=''"> AND RECEIPT_TO_DATE LIKE ('%'||'receiptToDate'||'%' )</if>
+		<if test="taxPayerIdentifier!=null and taxPayerIdentifier!=''"> AND TAX_PAYER_IDENTIFIER LIKE ('%'||'taxPayerIdentifier'||'%' )</if>
+		<if test="payerName!=null and payerName!=''"> AND PAYER_NAME LIKE ('%'||'payerName'||'%' )</if>
+		<if test="payerBank!=null and payerBank!=''"> AND PAYER_BANK LIKE ('%'||'payerBank'||'%' )</if>
+		<if test="payerAccountNumber!=null and payerAccountNumber!=''"> AND PAYER_ACCOUNT_NUMBER LIKE ('%'||'payerAccountNumber'||'%' )</if>
+		<if test="payeeName!=null and payeeName!=''"> AND PAYEE_NAME LIKE ('%'||'payeeName'||'%' )</if>
+		<if test="taxPayeeIdentifier!=null and taxPayeeIdentifier!=''"> AND TAX_PAYEE_IDENTIFIER LIKE ('%'||'taxPayeeIdentifier'||'%' )</if>
+		<if test="payeeAddress!=null and payeeAddress!=''"> AND PAYEE_ADDRESS LIKE ('%'||'payeeAddress'||'%' )</if>
+		<if test="payeePhone!=null and payeePhone!=''"> AND PAYEE_PHONE LIKE ('%'||'payeePhone'||'%' )</if>
+		<if test="payeeBank!=null and payeeBank!=''"> AND PAYEE_BANK LIKE ('%'||'payeeBank'||'%' )</if>
+		<if test="payeeAccountNumber!=null and payeeAccountNumber!=''"> AND PAYEE_ACCOUNT_NUMBER LIKE ('%'||'payeeAccountNumber'||'%' )</if>
+		<if test="settlementName!=null and settlementName!=''"> AND SETTLEMENT_NAME LIKE ('%'||'settlementName'||'%' )</if>
+		<if test="settlementCode!=null and settlementCode!=''"> AND SETTLEMENT_CODE LIKE ('%'||'settlementCode'||'%' )</if>
+		<if test="payeeEsusCode!=null and payeeEsusCode!=''"> AND PAYEE_ESUS_CODE LIKE ('%'||'payeeEsusCode'||'%' )</if>
+		<if test="payeeEsusUsername!=null and payeeEsusUsername!=''"> AND PAYEE_ESUS_USERNAME LIKE ('%'||'payeeEsusUsername'||'%' )</if>
+		<if test="drawerEsusCode!=null and drawerEsusCode!=''"> AND DRAWER_ESUS_CODE LIKE ('%'||'drawerEsusCode'||'%' )</if>
+		<if test="drawerEsusUsername!=null and drawerEsusUsername!=''"> AND DRAWER_ESUS_USERNAME LIKE ('%'||'drawerEsusUsername'||'%' )</if>
+		<if test="sumAmount!=null and sumAmount!=''"> AND SUM_AMOUNT LIKE ('%'||'sumAmount'||'%' )</if>
+		<if test="sumAmountCn!=null and sumAmountCn!=''"> AND SUM_AMOUNT_CN LIKE ('%'||'sumAmountCn'||'%' )</if>
+		<if test="sumNotaxAmount!=null and sumNotaxAmount!=''"> AND SUM_NOTAX_AMOUNT LIKE ('%'||'sumNotaxAmount'||'%' )</if>
+		<if test="sumTaxAmount!=null and sumTaxAmount!=''"> AND SUM_TAX_AMOUNT LIKE ('%'||'sumTaxAmount'||'%' )</if>
+		<if test="actualAmount!=null and actualAmount!=''"> AND ACTUAL_AMOUNT LIKE ('%'||'actualAmount'||'%' )</if>
+		<if test="actualAmountCn!=null and actualAmountCn!=''"> AND ACTUAL_AMOUNT_CN LIKE ('%'||'actualAmountCn'||'%' )</if>
+		<if test="actualTaxAmount!=null and actualTaxAmount!=''"> AND ACTUAL_TAX_AMOUNT LIKE ('%'||'actualTaxAmount'||'%' )</if>
+		<if test="receiptFileName!=null and receiptFileName!=''"> AND RECEIPT_FILE_NAME LIKE ('%'||'receiptFileName'||'%' )</if>
+		<if test="receiptFileUrl!=null and receiptFileUrl!=''"> AND RECEIPT_FILE_URL LIKE ('%'||'receiptFileUrl'||'%' )</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.credit.model.ReceiptModel">
+		<include refid="count"/>
+		FROM  DM_RECEIPT
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="receiptModelResultMap" parameterType="com.sinoservices.xascf.credit.model.ReceiptModel">
+		<include refid="select"/>
+		FROM  DM_RECEIPT
+		<include refid="findByExample"/>
+	</select>
+	<!-- 根据融资单号获取融资发票列表 -->
+	<select id="getPageByOrderNo" resultMap="receiptModelResultMap" parameterType="com.sinoservices.xascf.credit.model.ReceiptModel">
+		<include refid="select"/>
+		FROM  DM_RECEIPT
+			WHERE FANCING_ORDER_NO=#{fancingOrderNo}
+			<if test="isEffective !=null and isEffective !=''"> AND ISEFFECTIVE =#{isEffective}</if>
+	</select>
+	<!-- 获取所有运单单号list -->
+	<select id="getReceiptNoList" resultType="String" >
+		SELECT RECEIPT_NUMBER
+			FROM  DM_RECEIPT
+	</select>
+	
+	<!-- 根据creditNo删除 -->
+	<delete id="deleteByCreditNo" parameterType="String">
+		DELETE FROM  DM_RECEIPT
+		WHERE
+			1=1
+			AND FANCING_ORDER_NO=#{_parameter}
+	</delete>
+	<!-- 根据pid删除 -->
+	<delete id="deleteByPid" parameterType="String">
+		DELETE FROM  DM_RECEIPT
+		WHERE RECEIPT_PID=#{_parameter}
+	</delete>
+	<insert id="insert" parameterType="com.sinoservices.xascf.credit.model.ReceiptModel">
+		INSERT INTO DM_RECEIPT (
+				RECEIPT_PID,
+				FANCING_ORDER_NO,
+				RECEIPT_TYPE,
+				RECEIPT_KINDS,
+				RP_FLAG,
+				CP_FLAG,
+				RECEIPT_NUMBER,
+				RECEIPT_NO,
+				RECEIPT_OWER_PID,
+				ISSUE_DATE,
+				SIGNFOR_DATE,
+				RECEIPT_TO_DATE,
+				TAX_PAYER_IDENTIFIER,
+				PAYER_PID,
+				PAYER_NAME,
+				PAYER_BANK,
+				PAYER_ACCOUNT_NUMBER,
+				PAYEE_NAME,
+				TAX_PAYEE_IDENTIFIER,
+				PAYEE_ADDRESS,
+				PAYEE_PHONE,
+				PAYEE_BANK,
+				PAYEE_ACCOUNT_NUMBER,
+				SETTLEMENT_NAME,
+				SETTLEMENT_CODE,
+				PAYEE_ESUS_CODE,
+				PAYEE_ESUS_USERNAME,
+				DRAWER_ESUS_CODE,
+				DRAWER_ESUS_USERNAME,
+				SUM_AMOUNT,
+				SUM_AMOUNT_CN,
+				SUM_NOTAX_AMOUNT,
+				SUM_TAX_AMOUNT,
+				ACTUAL_AMOUNT,
+				ACTUAL_AMOUNT_CN,
+				ACTUAL_TAX_AMOUNT,
+				RECEIPT_FILE_NAME,
+				RECEIPT_FILE_RENAME,
+				RECEIPT_FILE_URL,
+				ISEFFECTIVE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{receiptPid},
+			   #{fancingOrderNo},
+			   #{receiptType},
+			   #{receiptKinds},
+			   #{rpFlag},
+			   #{cpFlag},
+			   #{receiptNumber},
+			   #{receiptNo},
+			   #{receiptOwerPid},
+			   #{issueDate},
+			   #{signforDate},
+			   #{receiptToDate},
+			   #{taxPayerIdentifier},
+			   #{payerPid},
+			   #{payerName},
+			   #{payerBank},
+			   #{payerAccountNumber},
+			   #{payeeName},
+			   #{taxPayeeIdentifier},
+			   #{payeeAddress},
+			   #{payeePhone},
+			   #{payeeBank},
+			   #{payeeAccountNumber},
+			   #{settlementName},
+			   #{settlementCode},
+			   #{payeeEsusCode},
+			   #{payeeEsusUsername},
+			   #{drawerEsusCode},
+			   #{drawerEsusUsername},
+			   #{sumAmount},
+			   #{sumAmountCn},
+			   #{sumNotaxAmount},
+			   #{sumTaxAmount},
+			   #{actualAmount},
+			   #{actualAmountCn},
+			   #{actualTaxAmount},
+			   #{receiptFileName},
+			   #{receiptFileRename},
+			   #{receiptFileUrl},
+			   #{isEffective},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   1
+		)
+	</insert>
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO DM_RECEIPT (
+				RECEIPT_PID,
+				FANCING_ORDER_NO,
+				RECEIPT_TYPE,
+				RECEIPT_KINDS,
+				RP_FLAG,
+				CP_FLAG,
+				RECEIPT_NUMBER,
+				RECEIPT_NO,
+				RECEIPT_OWER_PID,
+				ISSUE_DATE,
+				SIGNFOR_DATE,
+				RECEIPT_TO_DATE,
+				TAX_PAYER_IDENTIFIER,
+				PAYER_PID,
+				PAYER_NAME,
+				PAYER_BANK,
+				PAYER_ACCOUNT_NUMBER,
+				PAYEE_NAME,
+				TAX_PAYEE_IDENTIFIER,
+				PAYEE_ADDRESS,
+				PAYEE_PHONE,
+				PAYEE_BANK,
+				PAYEE_ACCOUNT_NUMBER,
+				SETTLEMENT_NAME,
+				SETTLEMENT_CODE,
+				PAYEE_ESUS_CODE,
+				PAYEE_ESUS_USERNAME,
+				DRAWER_ESUS_CODE,
+				DRAWER_ESUS_USERNAME,
+				SUM_AMOUNT,
+				SUM_AMOUNT_CN,
+				SUM_NOTAX_AMOUNT,
+				SUM_TAX_AMOUNT,
+				ACTUAL_AMOUNT,
+				ACTUAL_AMOUNT_CN,
+				ACTUAL_TAX_AMOUNT,
+				RECEIPT_FILE_NAME,
+				RECEIPT_FILE_RENAME,
+				RECEIPT_FILE_URL,
+				ISEFFECTIVE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (  #{item.receiptPid},
+			   #{item.fancingOrderNo},
+			   #{item.receiptType},
+			   #{item.receiptKinds},
+			   #{item.rpFlag},
+			   #{item.cpFlag},
+			   #{item.receiptNumber},
+			   #{item.receiptNo},
+			   #{item.receiptOwerPid},
+			   #{item.issueDate},
+			   #{item.signforDate},
+			   #{item.receiptToDate},
+			   #{item.taxPayerIdentifier},
+			   #{item.payerPid},
+			   #{item.payerName},
+			   #{item.payerBank},
+			   #{item.payerAccountNumber},
+			   #{item.payeeName},
+			   #{item.taxPayeeIdentifier},
+			   #{item.payeeAddress},
+			   #{item.payeePhone},
+			   #{item.payeeBank},
+			   #{item.payeeAccountNumber},
+			   #{item.settlementName},
+			   #{item.settlementCode},
+			   #{item.payeeEsusCode},
+			   #{item.payeeEsusUsername},
+			   #{item.drawerEsusCode},
+			   #{item.drawerEsusUsername},
+			   #{item.sumAmount},
+			   #{item.sumAmountCn},
+			   #{item.sumNotaxAmount},
+			   #{item.sumTaxAmount},
+			   #{item.actualAmount},
+			   #{item.actualAmountCn},
+			   #{item.actualTaxAmount},
+			   #{item.receiptFileName},
+			   #{item.receiptFileRename},
+			   #{item.receiptFileUrl},
+			   1,
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   1)  
+	    </foreach>  
+  </insert>  
+	<delete id="deleteByOrderNo" parameterType="String">
+		DELETE FROM DM_RECEIPT WHERE FANCING_ORDER_NO=#{_parameter} AND ISEFFECTIVE='1'
+	</delete>
+	<update id="update"  parameterType="com.sinoservices.xascf.credit.model.ReceiptModel">
+		UPDATE DM_RECEIPT SET
+			<if test="receiptType!=null and receiptType!=''"> 	RECEIPT_TYPE = #{receiptType},</if>
+			<if test="receiptKinds!=null and receiptKinds!=''"> 	RECEIPT_KINDS = #{receiptKinds},</if>
+			<if test="rpFlag!=null and rpFlag!=''"> 	RP_FLAG = #{rpFlag},</if>
+			<if test="cpFlag!=null and cpFlag!=''"> 	CP_FLAG = #{cpFlag},</if>
+			<if test="receiptNumber!=null and receiptNumber!=''"> 	RECEIPT_NUMBER = #{receiptNumber},</if>
+			<if test="receiptNo!=null and receiptNo!=''"> 	RECEIPT_NO = #{receiptNo},</if>
+			<if test="receiptOwerPid!=null and receiptOwerPid!=''"> 	RECEIPT_OWER_PID = #{receiptOwerPid},</if>
+			<if test="issueDate!=null and issueDate!=''"> 	ISSUE_DATE = #{issueDate},</if>
+			<if test="signforDate!=null and signforDate!=''"> 	SIGNFOR_DATE = #{signforDate},</if>
+			<if test="receiptToDate!=null and receiptToDate!=''"> 	RECEIPT_TO_DATE = #{receiptToDate},</if>
+			<if test="taxPayerIdentifier!=null and taxPayerIdentifier!=''"> 	TAX_PAYER_IDENTIFIER = #{taxPayerIdentifier},</if>
+			<if test="payerName!=null and payerName!=''"> 	PAYER_NAME = #{payerName},</if>
+			<if test="payerPid!=null and payerPid!=''"> 	PAYER_PID = #{payerPid},</if>
+			<if test="payerBank!=null and payerBank!=''"> 	PAYER_BANK = #{payerBank},</if>
+			<if test="payerAccountNumber!=null and payerAccountNumber!=''"> 	PAYER_ACCOUNT_NUMBER = #{payerAccountNumber},</if>
+			<if test="payeeName!=null and payeeName!=''"> 	PAYEE_NAME = #{payeeName},</if>
+			<if test="taxPayeeIdentifier!=null and taxPayeeIdentifier!=''"> 	TAX_PAYEE_IDENTIFIER = #{taxPayeeIdentifier},</if>
+			<if test="payeeAddress!=null and payeeAddress!=''"> 	PAYEE_ADDRESS = #{payeeAddress},</if>
+			<if test="payeePhone!=null and payeePhone!=''"> 	PAYEE_PHONE = #{payeePhone},</if>
+			<if test="payeeBank!=null and payeeBank!=''"> 	PAYEE_BANK = #{payeeBank},</if>
+			<if test="payeeAccountNumber!=null and payeeAccountNumber!=''"> 	PAYEE_ACCOUNT_NUMBER = #{payeeAccountNumber},</if>
+			<if test="settlementName!=null and settlementName!=''"> 	SETTLEMENT_NAME = #{settlementName},</if>
+			<if test="settlementCode!=null and settlementCode!=''"> 	SETTLEMENT_CODE = #{settlementCode},</if>
+			<if test="payeeEsusCode!=null and payeeEsusCode!=''"> 	PAYEE_ESUS_CODE = #{payeeEsusCode},</if>
+			<if test="payeeEsusUsername!=null and payeeEsusUsername!=''"> 	PAYEE_ESUS_USERNAME = #{payeeEsusUsername},</if>
+			<if test="drawerEsusCode!=null and drawerEsusCode!=''"> 	DRAWER_ESUS_CODE = #{drawerEsusCode},</if>
+			<if test="drawerEsusUsername!=null and drawerEsusUsername!=''"> 	DRAWER_ESUS_USERNAME = #{drawerEsusUsername},</if>
+			<if test="sumAmount!=null and sumAmount!=''"> 	SUM_AMOUNT = #{sumAmount},</if>
+			<if test="sumAmountCn!=null and sumAmountCn!=''"> 	SUM_AMOUNT_CN = #{sumAmountCn},</if>
+			<if test="sumNotaxAmount!=null and sumNotaxAmount!=''"> 	SUM_NOTAX_AMOUNT = #{sumNotaxAmount},</if>
+			<if test="sumTaxAmount!=null and sumTaxAmount!=''"> 	SUM_TAX_AMOUNT = #{sumTaxAmount},</if>
+			<if test="actualAmount!=null and actualAmount!=''"> 	ACTUAL_AMOUNT = #{actualAmount},</if>
+			<if test="actualAmountCn!=null and actualAmountCn!=''"> 	ACTUAL_AMOUNT_CN = #{actualAmountCn},</if>
+			<if test="actualTaxAmount!=null and actualTaxAmount!=''"> 	ACTUAL_TAX_AMOUNT = #{actualTaxAmount},</if>
+			<if test="receiptFileName!=null and receiptFileName!=''"> 	RECEIPT_FILE_NAME = #{receiptFileName},</if>
+			<if test="receiptFileRename!=null and receiptFileRename!=''"> 	RECEIPT_FILE_RENAME = #{receiptFileRename},</if>
+			<if test="receiptFileUrl!=null and receiptFileUrl!=''"> 	RECEIPT_FILE_URL = #{receiptFileUrl},</if>
+			<if test="remark!=null and remark!=''"> 	REMARK = #{remark},</if>
+			<if test="modifier!=null and modifier!=''"> 	MODIFIER = #{modifier},</if>
+			<if test="recStatus!=null and recStatus!=''"> 	REC_STATUS = #{recStatus}</if>
+			MODIFY_TIME =SYSDATE(),
+			 	REC_VER=REC_VER+1
+			 	WHERE RECEIPT_PID= #{receiptPid}
+	</update>
+	
+	<!-- 批量执行更新有效期 -->
+	<update id="updateEfftimeByList" parameterType="java.util.List">
+			UPDATE DM_RECEIPT 
+			<trim prefix="set" suffixOverrides=","> 
+	          <!-- 更新的字段集合 --> 
+	          <trim prefix="RECEIPT_TO_DATE =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.receiptToDate!=null">  
+	                      when (RECEIPT_PID=#{i.receiptPid}) then #{i.receiptToDate}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	           <trim prefix="Modifier =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                     <if test="i.modifier!=null">  
+	                      when (RECEIPT_PID=#{i.receiptPid}) then #{i.modifier}  
+	                     </if>  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Modify_Time =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (RECEIPT_PID=#{i.receiptPid}) then SYSDATE()  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Rec_Ver =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (RECEIPT_PID=#{i.receiptPid}) then Rec_Ver+1  
+	              </foreach>  
+	           </trim>
+         </trim>   
+         where   
+         <foreach collection="list" separator="or" item="i" index="index" > 
+         <if test="i.receiptPid!=null">  
+          (RECEIPT_PID=#{i.receiptPid})
+           </if>   
+      	</foreach>  
+	</update>
+	<update id="updateToNoEffectiveByOrderNo" parameterType="String">
+		UPDATE DM_RECEIPT SET
+				ISEFFECTIVE=0,
+				REC_VER=REC_VER+1,
+				MODIFY_TIME=SYSDATE()
+			WHERE FANCING_ORDER_NO=#{_parameter}
+	</update>
+</mapper>

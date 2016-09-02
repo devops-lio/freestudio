@@ -1,0 +1,60 @@
+@charset "utf-8";
+.buttonRomve {
+	background: url("../images/zTreeStandard.gif");
+	margin-right: 2px;
+	background-position: -111px -65px;
+	vertical-align: top;
+	width:16px;
+	height:16px;
+	display:inline-block;
+}
+.fromPre .control-group.full .control-label {
+    width: 75px;
+}
+.fromPre  .control-group.full .controls {
+    margin-left: 80px;
+    *padding-left: 0;
+}
+
+.editFormPre .control-group.full .control-label {
+    width: 90px;
+}
+.editFormPre  .control-group.full .controls {
+    margin-left: 95px;
+    *padding-left: 0;
+}
+select,
+textarea,
+input[type="text"],
+input[type="button"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+  font-size: 12px;
+}
+.btn 
+{
+  font-size: 12px;
+}
+.widget-header 
+{
+  font-size: 14px;
+}
+a {
+cursor: pointer;
+}
+a:hover, a:focus {
+color: #005580;
+text-decoration: none;
+}

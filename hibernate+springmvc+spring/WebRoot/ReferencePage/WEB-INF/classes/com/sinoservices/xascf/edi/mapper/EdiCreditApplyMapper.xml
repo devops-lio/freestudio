@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.edi.mapper.EdiCreditApplyMapper">
+	<resultMap type="com.sinoservices.xascf.edi.model.EdiCreditApplyModel" id="EdiCreditApplyModel">
+		<result property="customerId" column="CUSTOMER_ID"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="loginName" column="LOGIN_NAME"/>
+		<result property="loginNameR" column="LOGIN_NAME_R"/>	
+		<result property="loginPwd" column="LOGIN_PWD"/> 
+		<result property="userNameCn" column="USER_NAME_CN"/> 	
+		<result property="tel" column="TEL"/>
+		<result property="emill" column="EMILL"/> 
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATETIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFYTIME"/>
+		<result property="ediFlag" column="EDIFLAG"/> 
+		<result property="apperrInfo" column="APPERRINFO"/>  
+		
+	</resultMap>  
+	
+	<sql id="select"> 
+		  SELECT 
+		  	CREDIT_APPLY_ID,			
+	        CREDIT_NO, 
+	        MEMBER_NO,
+	        CREDIT_QUOTA,		
+			EFFECTIVE_START_TIME,
+			EFFECTIVE_END_TIME,
+			FINANCING_TYPE,		
+			FINANCING_METHOD,
+			FINANCING_NATURE,	
+			CREATOR,			
+			CREATETIME,		
+			MODIFIER,				
+			MODIFYTIME,			
+			EDIFLAG,			
+			APPERRINFO
+	</sql>
+	
+	<!-- 查询  -->
+	<select id="getEdiCreditApplyByCondition" resultMap="EdiCreditApplyModel" parameterType="com.sinoservices.xascf.edi.model.EdiCreditApplyModel">
+		<include refid="select"/>  
+		FROM  EDI_CREDIT_APPLY
+		<include refid="findByExample"/> 
+	</select>
+	
+	<sql id="findByExample">
+		WHERE  1=1
+		<if test="creditApplyId !=null and  creditApplyId !=''">AND CREDIT_APPLY_ID LIKE ('%${creditApplyId}%')</if>
+		<if test="ediFlag !=null and ediFlag != ''">AND EDIFLAG LIKE ('%${ediFlag}%')</if>
+	</sql>
+
+	<update id="update" parameterType="com.sinoservices.xascf.edi.model.EdiCreditApplyModel">
+		UPDATE EDI_CREDIT_APPLY  
+		<set>   
+			<if test="ediFlag != null and ediFlag != ''">EDIFLAG = #{ediFlag},</if>
+			<if test="apperrInfo != null and apperrInfo != ''">APPERRINFO = #{apperrInfo},</if>
+ 
+			<if test="creator != null and creator != ''">CREATOR = #{creator},</if>
+			<if test="createTime != null and createTime != ''">CREATETIME = #{createTime},</if>
+			<if test="modifier != null and modifier != ''">MODIFIER = #{modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''">MODIFYTIME = #{modifyTime},</if>
+		</set>
+			WHERE 
+			CREDIT_APPLY_ID = #{creditApplyId} 
+	</update>
+	
+	<update id="batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+        	UPDATE EDI_CREDIT_APPLY
+            <set>
+				<if test="item.ediFlag != null and item.ediFlag != ''">EDIFLAG = #{item.ediFlag},</if>
+				<if test="item.apperrInfo != null and item.apperrInfo != ''">APPERRINFO = #{item.apperrInfo},</if>
+				MODIFIER = 'SYSTEM',
+				MODIFYTIME = SYSDATE()         	
+            </set>
+            where CREDIT_NO = #{item.creditNo}
+         </foreach>
+	</update>
+	
+	
+</mapper>

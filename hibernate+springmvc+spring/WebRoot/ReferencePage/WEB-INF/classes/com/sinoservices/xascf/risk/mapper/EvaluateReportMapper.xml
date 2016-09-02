@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinoservices.xascf.risk.mapper.EvaluateReportMapper">
+	<resultMap type="com.sinoservices.xascf.risk.model.EvaluateReportModel" id="evaluateReportResultMap">
+		<result property="id" column="ID"/>
+		<result property="reportPid" column="REPORT_PID"/>
+		<result property="reportObjectPid" column="REPORT_OBJECT_PID"/>
+		<result property="reportObjectName" column="REPORT_OBJECT_NAME"/>
+		<result property="reportObjectNo" column="REPORT_OBJECT_NO"/>
+		<result property="reportTitle" column="REPORT_TITLE"/>
+		<result property="operatorPid" column="OPERATOR_PID"/>
+		<result property="operator" column="OPERATOR"/>
+		<result property="reportTime" column="REPORT_TIME"/>
+		<result property="reportContent" column="REPORT_CONTENT"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileUrl" column="FILE_URL"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+				ID,
+				REPORT_PID,
+				REPORT_OBJECT_PID,
+				REPORT_OBJECT_NAME,
+				REPORT_OBJECT_NO,
+				REPORT_TITLE,
+				OPERATOR_PID,
+				OPERATOR,
+				REPORT_TIME,
+				REPORT_CONTENT,
+				FILE_NAME,
+				FILE_URL,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="reportPid !=null and reportPid !=''"> AND REPORT_PID LIKE ('%${reportPid}%')</if>
+		<if test="reportObjectPid !=null and reportObjectPid !=''"> AND REPORT_OBJECT_PID LIKE ('%${reportObjectPid}%')</if>
+		<if test="reportObjectName !=null and reportObjectName !=''"> AND REPORT_OBJECT_NAME LIKE ('%${reportObjectName}%' )</if>
+		<if test="reportObjectNo !=null and reportObjectNo !=''"> AND REPORT_OBJECT_NO LIKE ('%${reportObjectNo}%' )</if>
+		<if test="reportTitle !=null and reportTitle !=''"> AND REPORT_TITLE LIKE ('%${reportTitle}%' )</if>
+		<if test="operatorPid !=null and operatorPid !=''"> AND OPERATOR_PID LIKE ('%${operatorPid}%')</if>
+		<if test="operator !=null and operator !=''"> AND OPERATOR LIKE ('%${operator}%')</if>
+		<if test="reportTime !=null and reportTime !=''"> AND REPORT_TIME LIKE ('%${reportTime}%')</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%')</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%${createTime}%')</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%')</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%${modifyTime}%')</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%${recVer}%')</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%')</if>
+		ORDER BY CREATE_TIME DESC
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.risk.view.EvaluateReportConditionView">
+		<include refid="count"/>
+		FROM  RM_EVALUATE_REPORT
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="evaluateReportResultMap" parameterType="com.sinoservices.xascf.risk.view.EvaluateReportConditionView">
+		SELECT 
+				ID,
+				REPORT_PID,
+				REPORT_OBJECT_PID,
+				REPORT_OBJECT_NAME,
+				REPORT_OBJECT_NO,
+				REPORT_TITLE,
+				OPERATOR_PID,
+				OPERATOR,
+				REPORT_TIME,
+				FILE_NAME,
+				FILE_URL,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		FROM  RM_EVALUATE_REPORT
+		<include refid="findByExample"/>
+	</select>
+
+	<!-- 新增 -->
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.sinoservices.xascf.risk.model.EvaluateReportModel">
+		INSERT INTO RM_EVALUATE_REPORT(
+					REPORT_PID,
+					REPORT_OBJECT_PID,
+					REPORT_OBJECT_NAME,
+					REPORT_OBJECT_NO,
+					REPORT_TITLE,
+					OPERATOR_PID,
+					OPERATOR,
+					REPORT_TIME,
+					REPORT_CONTENT,
+					FILE_NAME,
+					FILE_URL,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		) VALUES(
+			#{reportPid},
+			#{reportObjectPid},
+			#{reportObjectName},
+			#{reportObjectNo},
+			#{reportTitle},
+			#{operatorPid},
+			#{operator},
+			#{reportTime},
+			#{reportContent},
+			#{fileName},
+			#{fileUrl},
+			#{recVer},
+			#{createTime},
+			#{creator},
+			#{modifyTime},
+			#{modifier},
+			#{recStatus}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE RM_EVALUATE_REPORT SET
+			<if test="reportObjectPid !=null and reportObjectPid !=''"> REPORT_OBJECT_PID = #{reportObjectPid},</if>
+			<if test="reportObjectName !=null and reportObjectName !=''">	REPORT_OBJECT_NAME = #{reportObjectName},</if>
+			<if test="reportObjectNo !=null and reportObjectNo !=''">	REPORT_OBJECT_NO = #{reportObjectNo},</if>
+			<if test="reportTitle !=null and reportTitle !=''">	REPORT_TITLE = #{reportTitle},</if>
+			<if test="operatorPid !=null and operatorPid !=''">	OPERATOR_PID = #{operatorPid},</if>
+			<if test="operator !=null and operator !=''">	OPERATOR = #{operator},</if>
+			<if test="reportTime !=null and reportTime !=''">	REPORT_TIME = #{reportTime},</if>
+			<if test="reportContent !=null and reportContent !=''">	REPORT_CONTENT = #{reportContent},</if>
+			<if test="fileName !=null and fileName !=''">	FILE_NAME = #{fileName},</if>
+			<if test="fileUrl !=null and fileUrl !=''">	FILE_URL = #{fileUrl},</if>
+				Rec_Ver = Rec_Ver+1,
+		  		MODIFY_TIME=SYSDATE(),
+		  		MODIFIER=#{modifier} 		
+		WHERE REPORT_PID=#{reportPid}
+				
+	</update>
+	
+	<!-- 根据逻辑id查找model -->
+	<select id="findEvaluateReportByPid" resultMap="evaluateReportResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  RM_EVALUATE_REPORT
+		WHERE
+			1=1
+			AND REPORT_PID=#{_parameter}
+	</select>
+	
+	<select id="getTitlesInCreditByPidList" resultType="String" parameterType="java.util.List">
+   		SELECT GROUP_CONCAT(DISTINCT REPORT_TITLE) FROM DM_CREDIT_APPLY WHERE 
+        	REC_STATUS='1'
+			AND STATUS!='000'        	
+			AND REPORT_PID in 			    
+	       	<foreach collection="list" item="reportPid"  open="(" separator="," close=")">  
+		        #{reportPid}  
+			</foreach>  
+    </select>
+	
+	
+	<delete id="deleteByReportPid" parameterType="java.util.List">
+        DELETE FROM RM_EVALUATE_REPORT WHERE REPORT_PID in 			    
+	       	<foreach collection="list" item="reportPid"  open="(" separator="," close=")">  
+		        #{reportPid}  
+			</foreach>  
+    </delete>
+	
+	
+	
+
+</mapper>

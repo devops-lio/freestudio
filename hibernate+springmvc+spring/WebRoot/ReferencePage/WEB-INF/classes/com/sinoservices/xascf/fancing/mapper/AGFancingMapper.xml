@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.AGFancingMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.view.AGFancingItem" id="aGFancingItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="agfancingPid" column="AGFANCING_PID"/>
+		<result property="agfancingCustomerPid" column="AGFANCING_CUSTOMER_PID"/> 
+		<result property="agfancingOrderNo" column="AGFANCING_ORDER_NO"/>
+		<result property="agfancingCustomerName" column="AGFANCING_CUSTOMER_NAME"/>
+		<result property="billAmount" column="BILL_AMOUNT"/>
+		<result property="agfancingAmount" column="AGFANCING_AMOUNT"/>
+		<result property="agfancingAccount" column="AGFANCING_ACCOUNT"/>
+		<result property="interest" column="INTEREST"/>
+		<result property="agfancingRate" column="AGFANCING_RATE"/>
+		<result property="state" column="STATE"/> 
+		<result property="agfancingType" column="AGFANCING_TYPE"/>
+		<result property="agfancingRepaycount" column="AGFANCING_REPAYCOUNT"/>
+		<result property="isrepay" column="ISREPAY"/>
+		<result property="shipCount" column="SHIP_COUNT"/>
+		<result property="invoiceCount" column="INVOICE_COUNT"/>
+		<result property="mustRepaydate" column="MUST_REPAYDATE"/>
+		<result property="agfancingDate" column="AGFANCING_DATE"/>
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="pastDate" column="PAST_DATE"/> 
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>  
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/> 
+	</resultMap>
+	
+	<sql id="select"> 
+			SELECT 
+				 ID,
+				 AGFANCING_PID,
+				 AGFANCING_CUSTOMER_PID,
+				 AGFANCING_ORDER_NO,
+				 AGFANCING_CUSTOMER_NAME,
+				 BILL_AMOUNT,
+				 AGFANCING_AMOUNT,
+				 AGFANCING_ACCOUNT,
+				 INTEREST,
+				 AGFANCING_RATE,
+				 STATE,
+				 AGFANCING_TYPE,
+				 AGFANCING_REPAYCOUNT,
+				 ISREPAY,
+				 SHIP_COUNT,
+				 INVOICE_COUNT,
+				 MUST_REPAYDATE,
+				 AGFANCING_DATE,
+				 APPLY_DATE,
+				 PAST_DATE, 
+				 CREATOR,
+				 CREATE_TIME,
+				 MODIFIER,
+				 MODIFY_TIME,
+				 REC_VER,
+				 REC_STATUS  
+	</sql> 
+	
+	<sql id="count">
+		SELECT COUNT(1) 
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1 
+		AND REC_STATUS != '0'
+		<if test="agfancingOrderNo!=null and agfancingOrderNo!=''"> AND AGFANCING_ORDER_NO LIKE ('%${agfancingOrderNo}%' )</if>
+		<if test="(startTime!=null and startTime!='') and (endTime==null or endTime == '') "> AND CREATE_TIME &gt;= #{startTime}</if>
+		<if test="(startTime==null or startTime=='') and (endTime!=null and endTime != '') "> AND CREATE_TIME &lt;  DATE_ADD( #{endTime},INTERVAL 1 DAY)</if>
+		<if test="(startTime!=null and startTime!='') and (endTime!=null and endTime != '') "> AND CREATE_TIME between #{startTime} and DATE_ADD( #{endTime},INTERVAL 1 DAY)</if> 
+		ORDER BY CREATE_TIME DESC
+	</sql>
+	
+	<!-- 新增 tony-->
+	<insert id="insert"  parameterType="com.sinoservices.xascf.fancing.model.AGFancingModel">
+		INSERT INTO DM_AGFANCING(  
+		AGFANCING_PID,
+		AGFANCING_CUSTOMER_PID ,
+		AGFANCING_ORDER_NO,
+		AGFANCING_CUSTOMER_NAME,
+		BILL_AMOUNT,
+		AGFANCING_AMOUNT,
+		AGFANCING_ACCOUNT,
+		INTEREST,
+		AGFANCING_RATE,
+		STATE ,
+		AGFANCING_TYPE,
+		AGFANCING_REPAYCOUNT,
+		ISREPAY,
+		SHIP_COUNT,
+		INVOICE_COUNT,
+		MUST_REPAYDATE,
+		AGFANCING_DATE,
+		APPLY_DATE,
+		PAST_DATE ,
+		CREATOR,
+		CREATE_TIME,
+		MODIFIER,
+		MODIFY_TIME , 
+		REC_VER,
+		REC_STATUS 
+		)
+		VALUES
+		( 
+		#{agfancingPid},
+		#{agfancingCustomerPid}, 
+		#{agfancingOrderNo},
+		#{agfancingCustomerName},
+		#{billAmount},
+		#{agfancingAmount} ,
+		#{agfancingAccount} ,
+		#{interest},
+		#{agfancingRate}, 
+		#{state},
+		#{agfancingType},
+		#{agfancingRepaycount}, 
+		#{isrepay},
+		#{shipCount} ,
+		#{invoiceCount} ,
+		#{mustRepaydate} ,
+		#{agfancingDate} ,
+		#{applyDate} ,
+		#{pastDate} ,
+		#{creator} ,
+		SYSDATE() ,
+		#{modifier} ,
+		#{modifyTime} ,
+		#{recVer} ,
+		#{recStatus} 
+		);
+	</insert>
+	
+	<!-- 修改再融资 tony-->
+	<update id="update"  parameterType="com.sinoservices.xascf.fancing.model.AGFancingModel">
+		UPDATE DM_AGFANCING  SET
+			<if test="agfancingPid != null and agfancingPid != ''">AGFANCING_PID = #{agfancingPid},</if> 
+			<if test="agfancingCustomerPid != null and agfancingCustomerPid != ''">AGFANCING_CUSTOMER_PID = #{agfancingCustomerPid},</if> 
+			<if test="agfancingOrderNo != null and agfancingOrderNo != ''">AGFANCING_ORDER_NO = #{agfancingOrderNo},</if> 
+			<if test="agfancingCustomerName != null and agfancingCustomerName != ''">AGFANCING_CUSTOMER_NAME = #{agfancingCustomerName},</if> 
+			<if test="billAmount != null and billAmount != ''">BILL_AMOUNT = #{billAmount},</if> 
+			<if test="agfancingAmount != null and agfancingAmount != ''">AGFANCING_AMOUNT = #{agfancingAmount},</if> 
+			<if test="agfancingAccount != null and agfancingAccount != ''">AGFANCING_ACCOUNT = #{agfancingAccount},</if> 
+			<if test="interest != null and interest != ''">INTEREST = #{interest},</if> 
+			<if test="agfancingRate != null and agfancingRate != ''">AGFANCING_RATE = #{agfancingRate},</if> 
+			<if test="state != null and state != ''">STATE = #{state},</if> 
+			<if test="agfancingType != null and agfancingType != ''">AGFANCING_TYPE = #{agfancingType},</if> 
+			<if test="agfancingRepaycount != null and agfancingRepaycount != ''">AGFANCING_REPAYCOUNT = #{agfancingRepaycount},</if> 
+			<if test="isrepay != null and isrepay != ''">ISREPAY = #{isrepay},</if> 
+			<if test="shipCount != null and shipCount != ''">SHIP_COUNT = #{shipCount},</if> 
+			<if test="invoiceCount != null and invoiceCount != ''">INVOICE_COUNT = #{invoiceCount},</if> 
+			<if test="mustRepaydate != null and mustRepaydate != ''">MUST_REPAYDATE = #{mustRepaydate},</if> 
+			<if test="agfancingDate != null and agfancingDate != ''">AGFANCING_DATE = #{agfancingDate},</if> 
+			<if test="applyDate != null and applyDate != ''">APPLY_DATE = #{applyDate},</if> 
+			<if test="pastDate != null and pastDate != ''">PAST_DATE = #{pastDate},</if>  
+			<if test="modifier != null and modifier != ''">MODIFIER = #{modifier},</if> 
+			MODIFY_TIME = SYSDATE() 
+			WHERE 1=1 
+			AND AGFANCING_ORDER_NO=#{agfancingOrderNo}
+	</update>
+	
+	<!-- 再融资管理计数tony-->
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.AGFancingCondition">
+		<include refid="count"/>
+		FROM  DM_AGFANCING	  
+		<include refid="findByExample"/>   
+	</select>
+	
+	<!-- 在融资管理列表查询 tony-->
+	<select id="findByCondition" resultMap="aGFancingItemResultMap" parameterType="com.sinoservices.xascf.fancing.view.AGFancingCondition">
+		<include refid="select"/>
+		FROM  DM_AGFANCING	   
+		<include refid="findByExample"/>  
+	</select>
+	
+	<!-- 再融资单号查询 tony --> 
+	<select id="findByOrderNo" resultMap="aGFancingItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM DM_AGFANCING
+		WHERE 1=1
+		AND AGFANCING_ORDER_NO = #{agfancingOrderNo}
+	</select>
+	
+	
+	
+	<!-- 再融资管理（审核中）计数-->
+	<select id="getCountByChecking" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.AGFancingCondition">
+		<include refid="count"/>
+		FROM  DM_AGFANCING	  
+		<include refid="findByExample"/>   
+		AND STATE=2
+	</select>
+	
+	<!-- 再融资管理（审核中）列表查询 -->
+	<select id="findByChecking" resultMap="aGFancingItemResultMap" parameterType="com.sinoservices.xascf.fancing.view.AGFancingCondition">
+		<include refid="select"/>
+		FROM  DM_AGFANCING	   
+		<include refid="findByExample"/>  
+		AND STATE=2
+	</select>
+	
+	<!-- 再融资管理（审核已通过）计数 -->
+	<select id="getCountByChecked" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.AGFancingCondition">
+		<include refid="count"/>
+		FROM  DM_AGFANCING	  
+		<include refid="findByExample"/>   
+		AND STATE=3
+	</select>
+	
+	<!-- 再融资管理（审核已通过）列表查询 -->
+	<select id="findByChecked" resultMap="aGFancingItemResultMap" parameterType="com.sinoservices.xascf.fancing.view.AGFancingCondition">
+		<include refid="select"/>
+		FROM  DM_AGFANCING	   
+		<include refid="findByExample"/>  
+		AND STATE=3
+	</select>
+	
+	<!-- 再融资管理（以收款） 计数 -->
+	<select id="getCountByIncomeed" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.AGFancingCondition">
+		<include refid="count"/>
+		FROM  DM_AGFANCING	  
+		<include refid="findByExample"/>   
+		AND STATE=4
+	</select>
+	
+	<!-- 再融资管理（以收款）列表查询 -->
+	<select id="findByIncomeed" resultMap="aGFancingItemResultMap" parameterType="com.sinoservices.xascf.fancing.view.AGFancingCondition">
+		<include refid="select"/>
+		FROM  DM_AGFANCING	   
+		<include refid="findByExample"/>  
+		AND STATE=4
+	</select>
+	
+	<!-- 再融资管理（到期还款） 计数 -->
+	<select id="getCountByRepayment" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.AGFancingCondition">
+		<include refid="count"/>
+		FROM  DM_AGFANCING	  
+		<include refid="findByExample"/>   
+		AND STATE=5
+	</select> 
+	
+	<!-- 再融资管理（到期还款）列表查询 -->
+	<select id="findByRepayment" resultMap="aGFancingItemResultMap" parameterType="com.sinoservices.xascf.fancing.view.AGFancingCondition">
+		<include refid="select"/>
+		FROM  DM_AGFANCING	   
+		<include refid="findByExample"/>  
+		AND STATE=5
+	</select>
+	
+	
+	<!-- 修改再融资状态 parameterType="String" -->
+	<update id="updateState"  parameterType="com.sinoservices.xascf.fancing.view.AGFancingCondition">
+		UPDATE DM_AGFANCING  
+		<set>   
+			<if test="agfancingAccount != null and agfancingAccount != ''">AGFANCING_ACCOUNT = #{agfancingAccount},</if> 
+			<if test="agfancingRate != null and agfancingRate != ''">AGFANCING_RATE = #{agfancingRate},</if> 
+			STATE=#{state}, 
+		</set>  
+			WHERE 1=1 
+			AND AGFANCING_ORDER_NO=#{agfancingOrderNo}
+	</update>
+	
+	
+	
+	
+	<!-- 再融资单删除 -->
+	<update id="deleteById" parameterType="String">
+		UPDATE DM_AGFANCING 
+		SET 
+			REC_STATUS=0 
+			WHERE 1=1 
+			AND AGFANCING_PID=#{agfancingPid}
+	</update>
+	 
+</mapper>

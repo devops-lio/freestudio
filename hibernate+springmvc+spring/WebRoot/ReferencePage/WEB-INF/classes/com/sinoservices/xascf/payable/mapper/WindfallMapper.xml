@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.payable.mapper.WindfallMapper">
+	<resultMap type="com.sinoservices.xascf.payable.view.WindfallQueryItemView" id="WindfallItemViewResultMap">
+		<result property="id" column="ID"/>
+		<result property="windfallPid" column="WINDFALL_PID"/>
+		<result property="sscoPid" column="SSCO_PID"/>
+		<result property="orderNo" column="ORDER_NO"/>
+		<result property="exceptDate" column="EXCEPT_DATE"/>
+		<result property="inDate" column="IN_DATE"/>
+		<result property="amount" column="AMOUNT"/>
+		<result property="customer" column="CUSTOMER"/>
+		<result property="customerName" column="CUSTOMER_NAME"/>
+		<result property="manageRate" column="MANAGE_RATE"/>
+		<result property="businessType" column="BUSINESS_TYPE"/>
+		<result property="remark" column="REMARK"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+		  SELECT 
+			ID,
+			WINDFALL_PID,
+			SSCO_PID,
+			ORDER_NO,
+			EXCEPT_DATE,
+			IN_DATE,
+			AMOUNT,
+			CUSTOMER,
+			CUSTOMER_NAME,
+			MANAGE_RATE,
+			BUSINESS_TYPE,
+			REMARK,
+			CREATOR,
+			CREATE_TIME,
+			MODIFIER,
+			MODIFY_TIME,
+			REC_VER,
+			REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+	WHERE 1=1
+	<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+	<if test="windfallPid!=null and windfallPid!=''"> AND WINDFALL_PID LIKE ('%'||'windfallPid'||'%' )</if>
+	<if test="sscoPid!=null and sscoPid!=''"> AND SSCO_PID LIKE ('%'||'sscoPid'||'%' )</if>
+	<if test="orderNo!=null and orderNo!=''"> AND ORDER_NO LIKE ('%'||'orderNo'||'%' )</if>
+	<if test="exceptDate!=null and exceptDate!=''"> AND EXCEPT_DATE LIKE ('%'||'exceptDate'||'%' )</if>
+	<if test="inDate!=null and inDate!=''"> AND IN_DATE LIKE ('%'||'inDate'||'%' )</if>
+	<if test="amount!=null and amount!=''"> AND AMOUNT LIKE ('%'||'amount'||'%' )</if>
+	<if test="customer!=null and customer!=''"> AND CUSTOMER LIKE ('%'||'customer'||'%' )</if>
+	<if test="customerName!=null and customerName!=''"> AND CUSTOMER_NAME LIKE ('%'||'customerName'||'%' )</if>
+	<if test="manageRate!=null and manageRate!=''"> AND MANAGE_RATE LIKE ('%'||'manageRate'||'%' )</if>
+	<if test="businessType!=null and businessType!=''"> AND BUSINESS_TYPE LIKE ('%'||'businessType'||'%' )</if>
+	<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+	<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+	<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+	<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+	<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+	<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+	<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	
+	<!-- 意外所得管理查询 -->
+	
+	<sql id="findByWindFall">
+	WHERE 1=1 AND REC_STATUS = 1
+	 <if test="orderNo!=null and orderNo!=''"> AND ORDER_NO  LIKE ('%${orderNo}%')</if>
+	 <if test="customerName!=null and customerName!=''"> AND CUSTOMER_NAME LIKE ('%${customerName}%')</if>
+	 <if test="businessType!=null and businessType!=''">AND BUSINESS_TYPE LIKE ('%${businessType}%')</if>
+	</sql>
+	
+	<!-- count -->
+	<select id="getCountByByWindFall" resultType="int" parameterType="com.sinoservices.xascf.payable.view.WindfallQueryConditionView">
+		<include refid="count"/>
+		FROM  PM_WINDFALL
+		<include refid="findByWindFall"/>
+	</select>
+	
+	<!-- page -->
+	<select id="getPageByWindFall" resultMap="WindfallItemViewResultMap" parameterType="com.sinoservices.xascf.payable.view.WindfallQueryConditionView">
+		<include refid="select"/>
+		FROM  PM_WINDFALL
+		<include refid="findByWindFall"/>
+	</select>
+	
+	<!-- 意外所得信息写入 -->
+	<insert id="insertWindFall">
+		INSERT INTO PM_WINDFALL(
+			ID,
+			WINDFALL_PID,
+			SSCO_PID,
+			ORDER_NO,
+			EXCEPT_DATE,
+			IN_DATE,
+			AMOUNT,
+			CUSTOMER,
+			CUSTOMER_NAME,
+			MANAGE_RATE,
+			BUSINESS_TYPE,
+			REMARK,
+			CREATOR,
+			CREATE_TIME 
+		)VALUES(
+			#{id},
+			#{windfallPid},
+			#{sscoPid},
+			#{orderNo},
+			#{exceptDate},
+			#{inDate},
+			#{amount},
+			#{customer},
+			#{customerName},
+			#{manageRate},
+			#{businessType},
+			#{remark},
+			#{creator},
+			#{createTime}
+		);
+	</insert> 
+	
+	<!-- 意外所得信息更新 -->
+	<update id="updateByWindFall" parameterType="com.sinoservices.xascf.payable.model.WindfallModel">
+	UPDATE PM_WINDFALL
+	<set>
+		<if test="orderNo != null and orderNo != ''">ORDER_NO=${orderNo},</if>
+		<if test="exceptDate != null and exceptDate !=''">EXCEPT_DATE=${exceptDate},</if>
+		<if test="inDate != null and inDate !=''">IN_DATE=${inDate},</if>
+		<if test="amount != null and amount !=''">AMOUNT=${amount},</if>
+		<if test="customer != null and customer !=''">CUSTOMER=${customer},</if>
+		<if test="customerName != null and customerName !=''">CUSTOMER_NAME=${customerName},</if>
+		<if test="manageRate != null and manageRate !=''">MANAGE_RATE=${manageRate},</if>
+		<if test="businessType != null and businessType !=''">BUSINESS_TYPE=${businessType},</if>
+		<if test="remark != null and remark !=''">REMARK=${remark},</if>
+		<if test="modifier != null and modifier !=''">MODIFIER=${modifier},</if>
+		<if test="modifyTime != null and modifyTime !=''">MODIFY_TIME=${modifyTime}</if> 
+	</set>
+	   WHERE 1=1 AND
+	   ORDER_NO=${orderNo} AND
+	   BUSINESS_TYPE=${businessType}
+	</update>
+	
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.payable.view.WindfallQueryConditionView">
+		<include refid="count"/>
+		FROM  PM_WINDFALL
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="WindfallItemViewResultMap" parameterType="com.sinoservices.xascf.payable.view.WindfallQueryConditionView">
+		<include refid="select"/>
+		FROM  PM_WINDFALL
+		<include refid="findByExample"/>
+	</select>
+</mapper>

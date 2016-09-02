@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.UserMapper">     
+    <resultMap type="com.sinoservices.xascf.system.model.UserModel" id="userModelViewMap">
+        <result property="id" column="ID"/>
+        <result property="userPid" column="USER_PID"/>
+        <result property="userNo" column="USER_NO"/>
+        <result property="loginName" column="LOGIN_NAME"/>
+        <result property="loginPwd" column="LOGIN_PWD"/>
+        <result property="userNameCn" column="USER_NAME_CN"/>
+        <result property="email" column="EMAIL"/>
+        <result property="tel" column="TEL"/>
+        <result property="extPhone" column="EXT_PHONE"/>
+ 		<result property="mobile" column="MOBILE"/>
+ 		<result property="fax" column="FAX"/>
+ 		<result property="isenable" column="ISENABLE"/>
+ 		<result property="remark" column="REMARK"/>
+ 		<result property="loginedCount" column="LOGINED_COUNT"/>
+ 		<result property="lastLoginTime" column="LAST_LOGINTIME"/>
+ 		<result property="creator" column="CREATOR"/>
+ 		<result property="createTime" column="CREATE_TIME"/>
+ 		<result property="modifier" column="MODIFIER"/>
+ 		<result property="modifyTime" column="MODIFY_TIME"/>
+ 		<result property="recver" column="REC_VER"/>
+ 		<result property="recStatus" column="REC_STATUS"/>  
+    </resultMap>
+    
+        <resultMap type="com.sinoservices.xascf.system.view.UserItem" id="userItemMap">
+        <result property="id" column="ID"/>
+        <result property="userPid" column="USER_PID"/>
+        <result property="userNo" column="USER_NO"/>
+        <result property="loginName" column="LOGIN_NAME"/>
+        <result property="loginPwd" column="LOGIN_PWD"/>
+        <result property="userNameCn" column="USER_NAME_CN"/>
+        <result property="email" column="EMAIL"/>
+        <result property="tel" column="TEL"/>
+        <result property="extPhone" column="EXT_PHONE"/>
+ 		<result property="mobile" column="MOBILE"/>
+ 		<result property="fax" column="FAX"/>
+ 		<result property="isenable" column="ISENABLE"/>
+ 		<result property="remark" column="REMARK"/>
+ 		<result property="loginedCount" column="LOGINED_COUNT"/>
+ 		<result property="lastLoginTime" column="LAST_LOGINTIME"/>
+        <result property="systemNames" column="SYSTEM_NAMES"/>
+        <result property="roleId" column="ROLE_ID"/>
+        <result property="roleName" column="ROLE_NAME"/>
+ 		<result property="creator" column="CREATOR"/>
+ 		<result property="createTime" column="CREATE_TIME"/>
+ 		<result property="modifier" column="MODIFIER"/>
+ 		<result property="modifyTime" column="MODIFY_TIME"/>
+ 		<result property="recver" column="REC_VER"/>
+ 		<result property="recStatus" column="REC_STATUS"/>  
+    </resultMap> 
+    
+    <!-- 用户登入查询 -->
+    <sql id="selectUser">
+		SELECT U.ID,
+			U.USER_PID,
+			U.USER_NO,
+			LOGIN_NAME,
+			LOGIN_PWD,
+			USER_NAME_CN,
+			EMAIL,
+			TEL,
+			EXT_PHONE,
+			MOBILE,
+			FAX,
+			ISENABLE,
+			REMARK,
+			LOGINED_COUNT,
+			LAST_LOGINTIME,
+			U.CREATOR,
+			U.CREATE_TIME,
+			U.MODIFIER,
+			U.MODIFY_TIME,
+			U.REC_VER,
+			U.REC_STATUS
+		FROM `SS_USER` U
+		LEFT	JOIN SS_USER_SYSTEM US ON U.USER_PID=US.USER_PID
+		LEFT	JOIN SS_SYSTEM S ON S.SYSTEM_PID=US.SYSTEM_PID
+		
+    </sql>  
+    
+    <sql id="selectWithSystem">
+          
+          SELECT U.ID,
+            U.USER_PID,
+            U.USER_NO,
+			LOGIN_NAME,
+			LOGIN_PWD,
+			USER_NAME_CN,
+			EMAIL,
+			TEL,
+			EXT_PHONE,
+			MOBILE,
+			FAX,
+			ISENABLE,
+			REMARK,
+			LOGINED_COUNT,
+			LAST_LOGINTIME, 
+			U.CREATOR,
+            U.CREATE_TIME,
+            U.MODIFIER,
+            U.MODIFY_TIME,
+            group_concat(S.SYSTEM_NAME separator '、') AS SYSTEM_NAMES
+				FROM SS_USER U 
+			LEFT	JOIN SS_USER_SYSTEM US ON U.USER_PID=US.USER_PID
+			LEFT	JOIN SS_SYSTEM S ON S.SYSTEM_PID=US.SYSTEM_PID
+    </sql>
+	
+	<insert id="insert"  parameterType="com.sinoservices.xascf.system.model.UserModel">
+		INSERT INTO SS_USER( 
+			ID,
+			USER_PID,
+			USER_NO,
+			LOGIN_NAME,
+			LOGIN_PWD,
+			USER_NAME_CN,
+			EMAIL,
+			MOBILE,
+			ISENABLE,
+			CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+		)VALUES(
+			#{id},
+			#{userPid},
+			#{userNo},
+			#{loginName},
+			#{loginPwd},
+			#{userNameCn},
+			#{email},
+			#{mobile},
+			#{isenable},
+			#{creator}, #{createTime, jdbcType=TIMESTAMP}, #{modifier}, #{modifyTime, jdbcType=TIMESTAMP});
+	</insert>
+	
+	<sql id="count"> 
+        SELECT COUNT(1) FROM SS_USER U 
+			LEFT	JOIN SS_USER_SYSTEM US ON U.USER_PID=US.USER_PID
+			LEFT	JOIN SS_SYSTEM S ON S.SYSTEM_PID=US.SYSTEM_PID
+	</sql>
+    
+    <!-- 用户登陆查询条件 -->
+    <sql id="findByUserWhere">
+    	WHERE 1=1 
+    	<if test="loginName!=null and loginName!=''">AND LOGIN_NAME = #{loginName}</if>  
+    	<if test="loginPwd!=null and loginPwd!=''">AND LOGIN_PWD = #{loginPwd}</if>  
+    	<if test="isenable!=null and isenable!=''">AND ISENABLE = #{isenable}</if>
+    	AND  S.SYSTEM_PID = 'SS20140918140518-7308BBDF2AA8E98'
+    </sql> 
+    
+    <sql id="findByUserList">
+    	WHERE 1=1
+    	<if test="userNameCn!=null and userNameCn!=''">AND USER_NAME_CN LIKE ('%${userNameCn}%')</if>
+    	<if test="loginName!=null and loginName!=''">AND LOGIN_NAME LIKE ('%${loginName}%')</if>
+    	<if test="systemPid!=null and systemPid!=''"> AND S.SYSTEM_PID = #{systemPid}</if>
+    	AND U.ID !=1
+    </sql>
+    
+    
+    <select id="getUserCount" resultType="int" parameterType="com.sinoservices.xascf.system.view.UserCondition">
+    	SELECT COUNT(1) FROM ( 
+    	<include refid="selectWithSystem"/>
+    	<include refid="findByUserList"/>
+    	 GROUP BY U.USER_PID
+        ORDER BY U.CREATE_TIME DESC ) T
+    	
+    </select> 
+    
+    <select id="getUserPageList" resultMap="userItemMap" parameterType="com.sinoservices.xascf.system.view.UserCondition">
+    	<include refid="selectWithSystem"/>
+    	<include refid="findByUserList"/>
+    	 GROUP BY U.USER_PID
+        ORDER BY U.CREATE_TIME DESC
+    	
+    </select>
+    <select id="getUserRoleNamesCount"  resultType="int"  parameterType="com.sinoservices.xascf.system.view.UserCondition">
+    SELECT COUNT(1) FROM ( 
+    SELECT U.ID,
+			            U.USER_PID,
+			            U.USER_NO,
+						LOGIN_NAME,
+						LOGIN_PWD,
+						USER_NAME_CN,
+						EMAIL,
+						TEL,
+						EXT_PHONE,
+						MOBILE,
+						FAX,
+						ISENABLE,
+						REMARK,
+						LOGINED_COUNT,
+						LAST_LOGINTIME, 
+						U.CREATOR,
+			            U.CREATE_TIME,
+			            U.MODIFIER,
+			            U.MODIFY_TIME,
+			            group_concat(SR.ROLE_NAME separator '、') AS ROLE_NAME
+							FROM SS_USER U 
+							JOIN SS_USER_SYSTEM US ON U.USER_PID=US.USER_PID
+							JOIN SS_SYSTEM S ON S.SYSTEM_PID=US.SYSTEM_PID
+							LEFT JOIN SS_USER_ROLE  UR ON U.USER_PID=UR.USER_PID
+			  				LEFT  JOIN SS_ROLE SR ON SR.ROLE_PID=UR.ROLE_PID 
+			      WHERE 1=1 AND U.ID !=1
+				<if test="userNameCn!=null and userNameCn!=''">AND USER_NAME_CN LIKE ('%${userNameCn}%')</if>
+		    	<if test="loginName!=null and loginName!=''">AND LOGIN_NAME LIKE ('%${loginName}%')</if>
+		    	<if test="systemPid!=null and systemPid!=''"> AND S.SYSTEM_PID = #{systemPid}</if>
+		    	 GROUP BY U.USER_PID
+		        ORDER BY U.CREATE_TIME DESC ) T
+    </select>
+    <select id="getUserRoleNames" resultMap="userItemMap" parameterType="com.sinoservices.xascf.system.view.UserCondition">
+			    SELECT U.ID,
+			            U.USER_PID,
+			            U.USER_NO,
+						LOGIN_NAME,
+						LOGIN_PWD,
+						USER_NAME_CN,
+						EMAIL,
+						TEL,
+						EXT_PHONE,
+						MOBILE,
+						FAX,
+						ISENABLE,
+						REMARK,
+						LOGINED_COUNT,
+						LAST_LOGINTIME, 
+						U.CREATOR,
+			            U.CREATE_TIME,
+			            U.MODIFIER,
+			            U.MODIFY_TIME,
+			            group_concat(SR.ROLE_NAME separator '、') AS ROLE_NAME
+							FROM SS_USER U 
+							JOIN SS_USER_SYSTEM US ON U.USER_PID=US.USER_PID
+							JOIN SS_SYSTEM S ON S.SYSTEM_PID=US.SYSTEM_PID
+							LEFT JOIN SS_USER_ROLE  UR ON U.USER_PID=UR.USER_PID
+			  				LEFT  JOIN SS_ROLE SR ON SR.ROLE_PID=UR.ROLE_PID 
+			      WHERE 1=1 AND U.ID !=1
+				<if test="userNameCn!=null and userNameCn!=''">AND USER_NAME_CN LIKE ('%${userNameCn}%')</if>
+		    	<if test="loginName!=null and loginName!=''">AND LOGIN_NAME LIKE ('%${loginName}%')</if>
+		    	<if test="systemPid!=null and systemPid!=''"> AND S.SYSTEM_PID = #{systemPid}</if>
+		    	 GROUP BY U.USER_PID
+		        ORDER BY U.CREATE_TIME DESC
+    </select>
+    <select id="getCheckout" resultMap="userModelViewMap" parameterType="com.sinoservices.xascf.system.model.UserModel">
+    	<include refid="selectUser"/>
+    	<include refid="findByUserWhere"/> 
+    </select>
+    <!-- 校验唯一性查找 -->
+	<select id="findListForCheck" resultMap="userItemMap" parameterType="com.sinoservices.xascf.system.model.UserModel">
+		SELECT U.ID,
+			U.USER_PID,
+			U.USER_NO,
+			LOGIN_NAME,
+			LOGIN_PWD,
+			USER_NAME_CN,
+			EMAIL,
+			TEL,
+			EXT_PHONE,
+			MOBILE,
+			FAX,
+			ISENABLE,
+			REMARK,
+			LOGINED_COUNT,
+			LAST_LOGINTIME,
+			U.CREATOR,
+			U.CREATE_TIME,
+			U.MODIFIER,
+			U.MODIFY_TIME,
+			U.REC_VER,
+			U.REC_STATUS
+		FROM SS_USER U
+			WHERE 1=1 
+		AND ( 1=2 
+			<if test="loginName !=null and loginName != ''">OR LOGIN_NAME =#{loginName}</if>
+			<if test="mobile != null and mobile !=''"> OR MOBILE = #{mobile}</if>
+			<if test="email !=null and email != ''">OR EMAIL =#{email}</if>
+		)
+	</select>
+    <update id="update" parameterType="com.sinoservices.xascf.system.model.UserModel">
+    	UPDATE SS_USER
+    	<set>
+    		<if test="userNo != null and userNo != ''">USER_NO = #{userNo},</if>
+			<if test="loginName != null and loginName !=''">LOGIN_NAME = #{loginName},</if>
+			<if test="loginPwd != null and loginPwd !=''">LOGIN_PWD = #{loginPwd},</if>
+			<if test="userNameCn != null and userNameCn !=''">USER_NAME_CN = #{userNameCn},</if>
+			<if test="email != null and email !=''">EMAIL = #{email},</if>
+			<if test="tel != null and tel !=''">TEL = #{tel},</if>
+			<if test="mobile != null and mobile !=''">MOBILE = #{mobile},</if>
+			<if test="isenable != null and isenable !=''">ISENABLE = #{isenable},</if>
+			<if test="loginedCount != null and loginedCount !=''">LOGINED_COUNT = #{loginedCount},</if>
+			<if test="lastLoginTime != null and lastLoginTime !=''">LAST_LOGINTIME = #{lastLoginTime},</if>
+		  	MODIFY_TIME=SYSDATE(),
+		  	MODIFIER=#{modifier} 		
+    	</set>
+    	WHERE 1 = 1
+    	AND USER_PID = #{userPid}
+    </update>
+    
+    <delete id="delete" parameterType="java.util.List">
+        DELETE FROM `SS_USER` WHERE
+        <choose>
+             <when test="null!=list and list.size!=0">
+                USER_PID IN
+                <foreach collection="list" item="userPid" index="index" open="(" separator="," close=")">
+                    #{userPid}
+                </foreach>
+            </when>
+            <otherwise>
+               1 != 1
+            </otherwise>
+        </choose>
+    </delete>
+</mapper>

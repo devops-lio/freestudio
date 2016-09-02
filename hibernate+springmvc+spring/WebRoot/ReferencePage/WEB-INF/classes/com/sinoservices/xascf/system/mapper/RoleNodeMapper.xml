@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.RoleNodeMapper">
+ 
+     <!-- 批量执行插入 -->
+	<insert id="addByList"  parameterType="java.util.List">  
+	    	 INSERT INTO SS_ROLE_NODE ( ROLE_NODE_PID,ROLE_PID, NODE_PID,
+            CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+			) values  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( #{item.roleNodePid},#{item.rolePid}, #{item.nodePid},
+	         #{item.creator},SYSDATE(), #{item.modifier},SYSDATE())  
+	    </foreach>  
+    </insert>
+  
+   <delete id="deleteByRolePid" parameterType="String">
+        DELETE FROM SS_ROLE_NODE WHERE   ROLE_PID=#{rolePid} 
+    </delete>
+    
+    <select id="getNodePidListByRolePid" resultType="String" parameterType="String">
+		SELECT NODE_PID
+		FROM  SS_ROLE_NODE
+		WHERE ROLE_PID = #{rolePid}
+	</select>
+    
+</mapper>

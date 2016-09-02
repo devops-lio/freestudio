@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.FancingMaterialMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.view.FancingMaterialItem" id="fancingMaterialItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="materialPid" column="MATERIAL_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="materialType" column="MATERIAL_TYPE"/>
+		<result property="materialRoot" column="MATERIAL_ROOT"/>
+		<result property="materialName" column="MATERIAL_NAME"/>
+		<result property="materialFileName" column="MATERIAL_FILE_NAME"/>
+		<result property="materialUrl" column="MATERIAL_URL"/>
+		<result property="materialNo" column="MATERIAL_NO"/>
+		<result property="materialOwerPid" column="MATERIAL_OWER_PID"/>
+		<result property="materialFromDate" column="MATERIAL_FROM_DATE"/>
+		<result property="materialToDate" column="MATERIAL_TO_DATE"/>
+		<result property="materialOtherName" column="MATERIAL_OTHER_NAME"/>
+		<result property="materialPrice" column="MATERIAL_PRICE"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="resultScore" column="RESULT_SCORE"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					MATERIAL_PID,
+					FANCING_ORDER_NO,
+					MATERIAL_TYPE,
+					MATERIAL_ROOT,
+					MATERIAL_NAME,
+					MATERIAL_FILE_NAME,
+					MATERIAL_URL,
+					MATERIAL_NO,
+					MATERIAL_OWER_PID,
+					MATERIAL_FROM_DATE,
+					MATERIAL_TO_DATE,
+					MATERIAL_OTHER_NAME,
+					MATERIAL_PRICE,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="materialPid!=null and materialPid!=''"> AND MATERIAL_PID LIKE ('%'||'materialPid'||'%' )</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO LIKE ('%'||'fancingOrderNo'||'%' )</if>
+		<if test="materialType!=null and materialType!=''"> AND MATERIAL_TYPE LIKE ('%'||'materialType'||'%' )</if>
+		<if test="materialName!=null and materialName!=''"> AND MATERIAL_NAME LIKE ('%'||'materialName'||'%' )</if>
+		<if test="materialUrl!=null and materialUrl!=''"> AND MATERIAL_URL LIKE ('%'||'materialUrl'||'%' )</if>
+		<if test="materialNo!=null and materialNo!=''"> AND MATERIAL_NO LIKE ('%'||'materialNo'||'%' )</if>
+		<if test="materialOwerPid!=null and materialOwerPid!=''"> AND MATERIAL_OWER_PID LIKE ('%'||'materialOwerPid'||'%' )</if>
+		<if test="materialFromDate!=null and materialFromDate!=''"> AND MATERIAL_FROM_DATE LIKE ('%'||'materialFromDate'||'%' )</if>
+		<if test="materialToDate!=null and materialToDate!=''"> AND MATERIAL_TO_DATE LIKE ('%'||'materialToDate'||'%' )</if>
+		<if test="materialOtherName!=null and materialOtherName!=''"> AND MATERIAL_OTHER_NAME LIKE ('%'||'materialOtherName'||'%' )</if>
+		<if test="materialPrice!=null and materialPrice!=''"> AND MATERIAL_PRICE LIKE ('%'||'materialPrice'||'%' )</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.FancingMaterialCondition">
+		<include refid="count"/>
+		FROM  _FANCING_MATERIAL
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="fancingMaterialItemResultMap" parameterType="com.sinoservices.xascf.fancing.view.FancingMaterialCondition">
+		<include refid="select"/>
+		FROM  DM_FANCING_MATERIAL
+		<include refid="findByExample"/>
+	</select>
+	
+	<!-- 根据融资单号获取材料列表 -->
+	<select id="getPageByOrderNo" resultMap="fancingMaterialItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_FANCING_MATERIAL
+		WHERE FANCING_ORDER_NO=#{_parameter}
+	</select>
+	<!-- 根据融资单号获取材料评分结果列表 -->
+	<select id="getResultPageByOrderNo" resultMap="fancingMaterialItemResultMap" parameterType="String">
+		SELECT 
+					RRI.SCORE AS RESULT_SCORE,
+					MATERIAL_PID,
+					FANCING_ORDER_NO,
+					MATERIAL_TYPE,
+					MATERIAL_ROOT,
+					MATERIAL_NAME,
+					MATERIAL_FILE_NAME,
+					MATERIAL_URL,
+					MATERIAL_NO,
+					MATERIAL_OWER_PID,
+					MATERIAL_FROM_DATE,
+					MATERIAL_TO_DATE,
+					MATERIAL_OTHER_NAME,
+					MATERIAL_PRICE
+		FROM  DM_FANCING_MATERIAL DFM
+		LEFT JOIN RM_RESULT_ITEM RRI ON DFM.MATERIAL_PID=RRI.FACTOR_PID
+		WHERE DFM.FANCING_ORDER_NO=#{_parameter}
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.fancing.model.FancingMaterialModel">
+		INSERT INTO DM_FANCING_MATERIAL (
+				MATERIAL_PID,
+				FANCING_ORDER_NO,
+				MATERIAL_TYPE,
+				MATERIAL_ROOT,
+				MATERIAL_NAME,
+				MATERIAL_FILE_NAME,
+				MATERIAL_URL,
+				MATERIAL_NO,
+				MATERIAL_OWER_PID,
+				MATERIAL_FROM_DATE,
+				MATERIAL_TO_DATE,
+				MATERIAL_OTHER_NAME,
+				MATERIAL_PRICE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{materialPid},
+			   #{fancingOrderNo},
+			   #{materialType},
+			   #{materialRoot},
+			   #{materialName},
+			   #{materialFileName},
+			   #{materialUrl},
+			   #{materialNo},
+			   #{materialOwerPid},
+			   #{materialFromDate},
+			   #{materialToDate},
+			   #{materialOtherName},
+			   #{materialPrice},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   #{recStatus}
+		)
+	</insert>
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO DM_FANCING_MATERIAL (
+				MATERIAL_PID,
+				FANCING_ORDER_NO,
+				MATERIAL_TYPE,
+				MATERIAL_ROOT,
+				MATERIAL_NAME,
+				MATERIAL_FILE_NAME,
+				MATERIAL_URL,
+				MATERIAL_NO,
+				MATERIAL_OWER_PID,
+				MATERIAL_FROM_DATE,
+				MATERIAL_TO_DATE,
+				MATERIAL_OTHER_NAME,
+				MATERIAL_PRICE,
+				REMARK,
+				REC_VER,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( #{item.materialPid},
+			   #{item.fancingOrderNo},
+			   #{item.materialType},
+			   #{item.materialRoot},
+			   #{item.materialName},
+			   #{item.materialFileName},
+			   #{item.materialUrl},
+			   #{item.materialNo},
+			   #{item.materialOwerPid},
+			   #{item.materialFromDate},
+			   #{item.materialToDate},
+			   #{item.materialOtherName},
+			   #{item.materialPrice},
+			   #{item.remark},
+			   1,
+			   #{item.creator},
+			   #{item.recStatus} )  
+	    </foreach>  
+  </insert>  
+	<update id="updateByPid" parameterType="com.sinoservices.xascf.fancing.model.FancingMaterialModel">
+		UPDATE DM_FANCING_MATERIAL SET
+		<if test="materialType!=null and materialType!=''">		MATERIAL_TYPE = #{materialType},</if>
+		<if test="materialRoot!=null and materialRoot!=''">		MATERIAL_ROOT = #{materialRoot},</if>
+		<if test="materialName!=null and materialName!=''">		MATERIAL_NAME = #{materialName},</if>
+		<if test="materialFileName!=null and materialFileName!=''">		MATERIAL_FILE_NAME = #{materialFileName},</if>
+		<if test="materialUrl!=null and materialUrl!=''">		MATERIAL_URL = #{materialUrl},</if>
+		<if test="materialNo!=null and materialNo!=''">		MATERIAL_NO = #{materialNo},</if>
+		<if test="materialOwerPid!=null and materialOwerPid!=''">		MATERIAL_OWER_PID = #{materialOwerPid},</if>
+		<if test="materialFromDate!=null and materialFromDate!=''">		MATERIAL_FROM_DATE = #{materialFromDate},</if>
+		<if test="materialToDate!=null and materialToDate!=''">		MATERIAL_TO_DATE = #{materialToDate},</if>
+		<if test="materialOtherName!=null and materialOtherName!=''">		MATERIAL_OTHER_NAME = #{materialOtherName},</if>
+		<if test="materialPrice!=null and materialPrice!=''">		MATERIAL_PRICE = #{materialPrice},</if>
+		<if test="remark!=null and remark!=''">		REMARK = #{remark},</if>
+		<if test="modifier!=null and modifier!=''">		MODIFIER = #{modifier},</if>
+		<if test="recStatus!=null and recStatus!=''">		REC_STATUS = #{recStatus},</if>
+				REC_VER = REC_VER+1,
+				MODIFY_TIME =  SYSDATE()
+		WHERE 	MATERIAL_PID=	#{materialPid}
+	</update>
+	<delete id="deleteByPid" parameterType="String">
+		DELETE FROM DM_FANCING_MATERIAL
+		WHERE 	MATERIAL_PID=	#{materialPid}
+	</delete>
+	
+	<delete id="deleteByFancingNo" parameterType="String">
+    	DELETE FROM DM_FANCING_MATERIAL
+    	WHERE 1=1
+    	  AND FANCING_ORDER_NO=#{orderNo}
+    </delete>
+</mapper>

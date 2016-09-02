@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.ProtocolInfoMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.model.ProtocolInfoModel" id="protocolInfoModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="protocolPid" column="PROTOCOL_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="protocolNo" column="PROTOCOL_NO"/>
+		<result property="protocolName" column="PROTOCOL_NAME"/>
+		<result property="protocolContent" column="PROTOCOL_CONTENT"/>
+		<result property="requestPid" column="REQUEST_PID"/>
+		<result property="buyerPid" column="BUYER_PID"/>
+		<result property="protocolFileName" column="PROTOCOL_FILE_NAME"/>
+		<result property="protocolFileUrl" column="PROTOCOL_FILE_URL"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PROTOCOL_PID,
+					FANCING_ORDER_NO,
+					PROTOCOL_NO,
+					PROTOCOL_NAME,
+					PROTOCOL_CONTENT,
+					REQUEST_PID,
+					BUYER_PID,
+					PROTOCOL_FILE_NAME,
+					PROTOCOL_FILE_URL,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	<select id="getByOrderNo" resultMap="protocolInfoModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_PROTOCOL_INFO
+		WHERE FANCING_ORDER_NO=#{_parameter}
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.fancing.model.ProtocolInfoModel">
+		INSERT INTO DM_PROTOCOL_INFO (
+				PROTOCOL_PID,
+				FANCING_ORDER_NO,
+				PROTOCOL_NO,
+				PROTOCOL_NAME,
+				PROTOCOL_CONTENT,
+				REQUEST_PID,
+				BUYER_PID,
+				PROTOCOL_FILE_NAME,
+				PROTOCOL_FILE_URL,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{protocolPid},
+			   #{fancingOrderNo},
+			   #{protocolNo},
+			   #{protocolName},
+			   #{protocolContent},
+			   #{requestPid},
+			   #{buyerPid},
+			   #{protocolFileName},
+			   #{protocolFileUrl},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			  1
+		)
+	</insert>
+	<update id="updateByPid" parameterType="com.sinoservices.xascf.fancing.model.ProtocolInfoModel">
+		UPDATE DM_PROTOCOL_INFO SET
+		<if test="fancingOrderNo !=null and fancingOrderNo!=''">FANCING_ORDER_NO=#{fancingOrderNo},</if>	
+		<if test="protocolNo !=null and protocolNo!=''">		PROTOCOL_NO=#{protocolNo},</if>
+		<if test="protocolName !=null and protocolName!=''">		PROTOCOL_NAME=#{protocolName},</if>
+		<if test="protocolContent !=null and protocolContent!=''">		PROTOCOL_CONTENT=#{protocolContent},</if>
+		<if test="requestPid !=null and requestPid!=''">		REQUEST_PID=#{requestPid},</if>
+		<if test="buyerPid !=null and buyerPid!=''">		BUYER_PID=#{buyerPid},</if>
+		<if test="protocolFileName !=null and protocolFileName!=''">		PROTOCOL_FILE_NAME=#{protocolFileName},</if>
+		<if test="protocolFileUrl !=null and protocolFileUrl!=''">		PROTOCOL_FILE_URL=#{protocolFileUrl},</if>
+				MODIFY_TIME=SYSDATE(),
+				REC_VER=REC_VER+1
+				WHERE PROTOCOL_PID= #{protocolPid}
+	</update>
+</mapper>

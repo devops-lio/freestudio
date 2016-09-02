@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.KpiCustomerMapper">     
+    <resultMap type="com.sinoservices.xascf.system.model.KpiCustomerModel" id="KpiCustomerModelViewMap">
+        <result property="id" column="ID"/>
+        <result property="kpicustomerPid" column="KPICUSTOMER_PID"/>
+        <result property="customersubPid" column="CUSTOMERSUB_PID"/>
+        <result property="userPid" column="USER_PID"/>
+        <result property="proworkStardate" column="PROWORK_STARDATE"/>
+        <result property="proworkEnddate" column="PROWORK_ENDDATE"/>
+        <result property="customerType" column="CUSTOMER_TYPE"/> 
+          
+ 		<result property="creator" column="CREATOR"/>
+ 		<result property="createTime" column="CREATE_TIME"/>
+ 		<result property="modifier" column="MODIFIER"/>
+ 		<result property="modifyTime" column="MODIFY_TIME"/>
+ 		<result property="recver" column="REC_VER"/>
+ 		<result property="recStatus" column="REC_STATUS"/>  
+    </resultMap>
+    
+    <resultMap type="com.sinoservices.xascf.system.view.KpiCustomerItem" id="KpiCustomerItemViewMap"> 
+        <result property="kpicustomerPid" column="KPICUSTOMER_PID"/>
+        <result property="customersubPid" column="CUSTOMERSUB_PID"/>
+        <result property="userPid" column="USER_PID"/>
+        <result property="proworkStardate" column="PROWORK_STARDATE"/>
+        <result property="proworkEnddate" column="PROWORK_ENDDATE"/>
+        <result property="customerType" column="CUSTOMER_TYPE"/> 
+          
+ 		<result property="creator" column="CREATOR"/>
+ 		<result property="createTime" column="CREATE_TIME"/>
+ 		<result property="modifier" column="MODIFIER"/>
+ 		<result property="modifyTime" column="MODIFY_TIME"/>
+ 		<result property="recver" column="REC_VER"/>
+ 		<result property="recStatus" column="REC_STATUS"/>  
+    </resultMap> 
+    
+	    <!-- 查询 -->
+	    <sql id="select">
+			 SELECT
+			 	KPICUSTOMER_PID,
+			 	CUSTOMERSUB_PID,
+			 	USER_PID,
+			 	PROWORK_STARDATE,
+			 	PROWORK_ENDDATE,
+			 	CUSTOMER_TYPE,
+			 	CREATOR,
+			 	CREATE_TIME,
+			 	MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS  
+	    </sql>  
+    
+	    <!-- KPI员工考核查询列表 -->
+	    <sql id="Page">   
+	    	SELECT
+	    </sql>
+    
+	    <!-- KPI员工考核查询计数 -->
+	    <sql id="Count">
+			SELECT 
+				COUNT(1)  
+	    </sql>
+    
+	    <!-- KPI员工考核查询条件  -->
+	    <sql id="findByKpiListWhere">
+	    	<if test="userNo != null and userNo != '' "> AND U.USER_NO = #{userNo} </if> 
+	    	<if test="kpidetalType != null and kpidetalType != ''"> AND K.KPIDETAL_TYPE = #{kpidetalType} </if>
+	    	<if test="(startTime!=null and startTime!='') and (endTime==null or endTime == '') "> AND K.KPIDETAL_DATE &gt;= #{startTime}</if>
+			<if test="(startTime ==null or startTime=='') and (endTime != null and endTime != '') "> AND K.KPIDETAL_DATE &lt;  DATE_ADD( #{endTime},INTERVAL 1 DAY)</if>
+			<if test="(startTime!=null and startTime!='') and (endTime != null and endTime != '') "> AND K.KPIDETAL_DATE BETWEEN #{startTime} and DATE_ADD( #{endTime},INTERVAL 1 DAY)</if>
+			<if test="(startTime == null and startTime == '') and (endTime == null and endTime == '') "> 
+				AND DATE_FORMAT(K.KPIDETAL_DATE,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
+			</if> 
+	    </sql> 
+	    
+	    <!-- 
+	    <select id="selectPage" resultMap="kpiIndexItemViewMap" parameterType="com.sinoservices.xascf.system.view.KpiIndexCondition">
+	    	<include refid="Page"/> 
+	    	<include refid="findByKpiListWhere"/>
+	    </select>
+	    
+	   	<select id="selectPageCount" resultType="int" parameterType="com.sinoservices.xascf.system.view.KpiIndexCondition">
+	    	<include refid="Count"/> 
+	    	<include refid="findByKpiListWhere"/>
+	    </select>
+		 -->
+		<!-- 新增"业务专员"KPI考核员工PID写入 -->
+		<insert id="insert"  parameterType="com.sinoservices.xascf.system.model.KpiCustomerModel"> 
+			INSERT INTO SS_KPICUSTOMER( 
+				KPICUSTOMER_PID,
+				CUSTOMERSUB_PID,
+				USER_PID,
+				PROWORK_STARDATE,
+				CUSTOMER_TYPE,
+				CREATOR,
+				CREATE_TIME 
+			)VALUES(
+				#{kpicustomerPid},
+				#{customersubPid},
+				#{userPid},
+				#{proworkStardate},
+				#{customerType},
+				#{creator},
+				#{createTime}  
+			) 
+		</insert>
+		
+		<!-- 根据会员PID和用户PID将客户释放 -->
+		<delete id="deleteByUserPidAndCustomerPid" parameterType="com.sinoservices.xascf.system.model.KpiCustomerModel">
+			DELETE FROM SS_KPICUSTOMER WHERE USER_PID=#{userPid} AND CUSTOMERSUB_PID=#{customersubPid}
+		</delete>
+		
+		
+		<select id="findByMemberPid" resultMap="KpiCustomerModelViewMap" parameterType="String">
+	    	<include refid="select"/> 
+	    	FROM SS_KPICUSTOMER
+	    	WHERE	
+	    		1=1
+	    		AND CUSTOMERSUB_PID=#{_parameter}
+	    </select>
+	    
+	    <!-- 根据会员ID获取会员用户列表 -->
+	    <select id="getCustomerUserByMemberPid" resultMap="KpiCustomerModelViewMap" parameterType="String">
+	    	<include refid="select"/> 
+	    	FROM SS_KPICUSTOMER
+	    	WHERE	
+	    		1=1
+	    		AND CUSTOMERSUB_PID=#{memberPid}
+	    </select>
+	 	
+	 	<!-- 根据会员ID批量删除KPI记录 -->
+    	<delete id="deleteByCustomerPid" parameterType="String">
+    		DELETE FROM SS_KPICUSTOMER WHERE CUSTOMERSUB_PID=#{memberPid}
+    	</delete>
+    	
+    	<!-- 批量新增会员KPI记录 -->
+    	<insert id="insertList" parameterType="java.util.List">
+    		INSERT INTO SS_KPICUSTOMER (
+					KPICUSTOMER_PID,
+					CUSTOMERSUB_PID,
+					USER_PID,
+					PROWORK_STARDATE,
+					CUSTOMER_TYPE,
+					CREATOR,
+					CREATE_TIME
+				)VALUES
+		    <foreach collection="list" item="item" index="index"  separator=",">  
+		        (
+					#{item.kpicustomerPid},
+					#{item.customersubPid},
+					#{item.userPid},
+					#{item.proworkStardate},
+					#{item.customerType},
+					#{item.creator},
+					#{item.createTime}
+			  	)
+		    </foreach>
+    	</insert>
+	  
+</mapper>

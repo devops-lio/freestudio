@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.FancingQualificationMapMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.model.FancingQualificationMapModel" id="fancingQualificationMapModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="fancingQualificationMapPid" column="FANCING_QUALIFICATION_MAP_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="qualificationPid" column="QUALIFICATION_PID"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					FANCING_QUALIFICATION_MAP_PID,
+					FANCING_ORDER_NO,
+					QUALIFICATION_PID,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="fancingQualificationMapPid!=null and fancingQualificationMapPid!=''"> AND FANCING_QUALIFICATION_MAP_PID LIKE ('%'||'fancingQualificationMapPid'||'%' )</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO LIKE ('%'||'fancingOrderNo'||'%' )</if>
+		<if test="qualificationPid!=null and qualificationPid!=''"> AND QUALIFICATION_PID LIKE ('%'||'qualificationPid'||'%' )</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.model.FancingQualificationMapModel">
+		<include refid="count"/>
+		FROM  DM_FANCING_QUALIFICATION_MAP
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="fancingQualificationMapModelResultMap" parameterType="com.sinoservices.xascf.fancing.model.FancingQualificationMapModel">
+		<include refid="select"/>
+		FROM  DM_FANCING_QUALIFICATION_MAP
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.fancing.model.FancingQualificationMapModel">
+		INSERT INTO DM_FANCING_QUALIFICATION_MAP (
+				ID,
+				FANCING_QUALIFICATION_MAP_PID,
+				FANCING_ORDER_NO,
+				QUALIFICATION_PID,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{fancingQualificationMapPid},
+			   #{fancingOrderNo},
+			   #{qualificationPid},
+			   #{remark},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus}
+		);
+	</insert>
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO DM_FANCING_QUALIFICATION_MAP (
+				FANCING_QUALIFICATION_MAP_PID,
+				FANCING_ORDER_NO,
+				QUALIFICATION_PID,
+				REMARK,
+				REC_VER,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( 
+			   #{item.fancingQualificationMapPid},
+			   #{item.fancingOrderNo},
+			   #{item.qualificationPid},
+			   #{item.remark},
+			   1,
+			   #{item.creator},
+			   #{item.recStatus})  
+	    </foreach>  
+  </insert>  
+  <delete id="deleteByOrderNo" parameterType="String">
+  	DELETE FROM DM_FANCING_QUALIFICATION_MAP
+  	WHERE FANCING_ORDER_NO=#{orderNo}
+  </delete>
+</mapper>

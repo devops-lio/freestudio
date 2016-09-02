@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.funds.mapper.FundAccountMapper">
+	<resultMap type="com.sinoservices.xascf.funds.view.FundAccountQueryItemView" id="fundAccountQueryItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="fundAccountPid" column="FUND_ACCOUNT_PID"/>
+		<result property="bankNo" column="BANK_NO"/>
+		<result property="accountName" column="ACCOUNT_NAME"/>
+		<result property="theBank" column="THE_BANK"/>
+		<result property="accountUsage" column="ACCOUNT_USAGE"/>
+		<result property="totalAmount" column="TOTAL_AMOUNT"/>
+		<result property="availableAmount" column="AVAILABLE_AMOUNT"/>
+		<result property="lockedAmount" column="LOCKED_AMOUNT"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="createTimeStr" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="accountOtherName"  column="ACCOUNT_OTHER_NAME"/>
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.funds.model.FundAccountModel" id="fundAccountModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="fundAccountPid" column="FUND_ACCOUNT_PID"/>
+		<result property="bankNo" column="BANK_NO"/>
+		<result property="accountName" column="ACCOUNT_NAME"/>
+		<result property="theBank" column="THE_BANK"/>
+		<result property="accountUsage" column="ACCOUNT_USAGE"/>
+		<result property="totalAmount" column="TOTAL_AMOUNT"/>
+		<result property="availableAmount" column="AVAILABLE_AMOUNT"/>
+		<result property="lockedAmount" column="LOCKED_AMOUNT"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="accountOtherName"  column="ACCOUNT_OTHER_NAME"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					FUND_ACCOUNT_PID,
+					BANK_NO,
+					ACCOUNT_NAME,
+					ACCOUNT_OTHER_NAME,
+					THE_BANK,
+					ACCOUNT_USAGE,
+					TOTAL_AMOUNT,
+					AVAILABLE_AMOUNT,
+					LOCKED_AMOUNT,
+					CURRENCY,
+					CREATOR,
+					CREATE_TIME,
+					MODIFIER,
+					MODIFY_TIME,
+					REC_VER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="fundAccountPid!=null and fundAccountPid!=''"> AND FUND_ACCOUNT_PID LIKE ('%${fundAccountPid}%')</if>
+		<if test="bankNo!=null and bankNo!=''"> AND BANK_NO LIKE ('%${bankNo}%')</if>
+		<if test="accountName!=null and accountName!=''"> AND ACCOUNT_NAME LIKE ('%${accountName}%' )</if>
+		<if test="accountOtherName!=null and accountOtherName!=''"> AND ACCOUNT_OTHER_NAME LIKE ('%${accountOtherName}%' )</if>
+		<if test="theBank!=null and theBank!=''"> AND THE_BANK LIKE ('%${theBank}%' )</if>
+		<if test="accountUsage!=null and accountUsage!=''"> AND ACCOUNT_USAGE LIKE ('%${accountUsage}%' )</if>
+		<if test="totalAmount!=null and totalAmount!=''"> AND TOTAL_AMOUNT LIKE ('%${totalAmount}%')</if>
+		<if test="availableAmount!=null and availableAmount!=''"> AND AVAILABLE_AMOUNT LIKE ('%${availableAmount}%')</if>
+		<if test="lockedAmount!=null and lockedAmount!=''"> AND LOCKED_AMOUNT LIKE ('%${lockedAmount}%')</if>
+		<if test="currency!=null and currency!=''"> AND CURRENCY LIKE ('%${currency}%')</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%')</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%${createTime}%')</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%')</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%${modifyTime}%')</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%${recVer}%')</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%')</if>
+		ORDER BY CREATE_TIME DESC
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.funds.view.FundAccountQueryConditionView">
+		<include refid="count"/>
+		FROM  FM_FUND_ACCOUNT
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="fundAccountQueryItemResultMap" parameterType="com.sinoservices.xascf.funds.view.FundAccountQueryConditionView">
+		<include refid="select"/>
+		FROM  FM_FUND_ACCOUNT
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getFundAccountByBankNo" resultMap="fundAccountModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  FM_FUND_ACCOUNT
+		WHERE BANK_NO=#{bankNo} AND REC_STATUS = '0'
+	</select>
+	
+	<select id="getAllTotalAmount" resultType="java.util.HashMap">
+		SELECT ACCOUNT_USAGE,SUM(TOTAL_AMOUNT) AS AMOUNT FROM FM_FUND_ACCOUNT WHERE REC_STATUS ='0' GROUP BY ACCOUNT_USAGE
+	</select>
+	
+	<select id="getFundAccountListByUsage" resultMap="fundAccountModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  FM_FUND_ACCOUNT
+		WHERE ACCOUNT_USAGE=#{accountUsage} AND REC_STATUS = '0'
+	</select>
+	
+	
+	<insert id="insert">
+		INSERT INTO FM_FUND_ACCOUNT (
+				ID,
+				FUND_ACCOUNT_PID,
+				BANK_NO,
+				ACCOUNT_NAME,
+				ACCOUNT_OTHER_NAME,
+				THE_BANK,
+				ACCOUNT_USAGE,
+				TOTAL_AMOUNT,
+				AVAILABLE_AMOUNT,
+				LOCKED_AMOUNT,
+				CURRENCY,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{fundAccountPid},
+			   #{bankNo},
+			   #{accountName},
+			   #{accountOtherName},
+			   #{theBank},
+			   #{accountUsage},
+			     '0',
+			     '0',
+			     '0',
+			   #{currency},
+			   #{creator},
+			   #{createTime},
+			   #{modifier},
+			   #{modifyTime},
+			   #{recVer},
+			   #{recStatus}
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE FM_FUND_ACCOUNT SET
+			<if test="bankNo !=null and bankNo !=''"> BANK_NO = #{bankNo},</if>
+			<if test="accountName !=null and accountName !=''">	ACCOUNT_NAME = #{accountName},</if>
+			<if test="accountOtherName!=null and accountOtherName!=''">  ACCOUNT_OTHER_NAME = #{accountOtherName},</if>
+			<if test="theBank !=null and theBank !=''">	THE_BANK = #{theBank},</if>
+			<if test="accountUsage !=null and accountUsage !=''">	ACCOUNT_USAGE = #{accountUsage},</if>
+			<if test="totalAmount !=null and totalAmount !=''">	TOTAL_AMOUNT = #{totalAmount},</if>
+			<if test="availableAmount !=null and availableAmount !=''">	AVAILABLE_AMOUNT = #{availableAmount},</if>
+			<if test="lockedAmount !=null and lockedAmount !=''">	LOCKED_AMOUNT = #{lockedAmount},</if>
+			<if test="currency !=null and currency !=''">	CURRENCY = #{currency},</if>
+			<if test="recStatus !=null and recStatus !=''">	REC_STATUS = #{recStatus},</if>
+				Rec_Ver = Rec_Ver+1,
+		  		MODIFY_TIME=SYSDATE(),
+		  		MODIFIER=#{modifier} 		
+		WHERE FUND_ACCOUNT_PID=#{fundAccountPid}
+				
+	</update>
+</mapper>

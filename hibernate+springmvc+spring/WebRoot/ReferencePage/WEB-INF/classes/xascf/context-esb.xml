@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+	
+	<!-- 资金、每天需要执行的定时器-->
+	
+	<bean name="dailyExpectedTimer" class="com.sinoservices.xascf.timer.DailyExpectedTimer"></bean>
+	<camelContext id="camel-temp" xmlns="http://camel.apache.org/schema/spring">
+		<route autoStartup="true">
+			<from uri="quartz://myGroup/myTimerName?cron=0 0 01 * * ?"/>
+			<process ref="dailyExpectedTimer"/>
+		</route>
+	</camelContext>
+	<!--成本统计定时器每个月月初生成-->
+	<bean name="incomeTJTimer" class="com.sinoservices.xascf.timer.IncomeTJTimer"></bean>
+	<camelContext id="camel_incomeTimer" xmlns="http://camel.apache.org/schema/spring">
+		<route autoStartup="true">
+			<from uri="quartz://myGroup/myTimerName?cron=0 0 0 01 * ?"/>
+			<process ref="incomeTJTimer"/>
+		</route>
+	</camelContext>
+	
+	
+	<!-- 融资交易单 账单生成定时器  每月17号01点  生成-->
+	<bean name="billTimer" class="com.sinoservices.xascf.timer.FancingBillTimer"></bean>
+	<camelContext id="camel_billTimer" xmlns="http://camel.apache.org/schema/spring">
+		<route autoStartup="true">
+			 <from uri="quartz://myGroup/myTimerName?cron=0 0 01 17 * ?"/> 
+			<!--<from uri="quartz://myGroup/myTimerName?cron=0 0 23 * * ?"/> -->
+			<process ref="billTimer"/>
+		</route>
+	</camelContext>
+	<!--
+	<bean name="everyDayTimer" class="com.sinoservices.xascf.timer.EveryDayTimer"></bean>
+	<camelContext id="camel_EveryDayTimer" xmlns="http://camel.apache.org/schema/spring">
+		<route autoStartup="true">
+			 <from uri="quartz://myGroup/myTimerName?cron=0 0 00 * * ?"/> 
+			<process ref="everyDayTimer"/>
+		</route>
+	</camelContext>-->
+	
+	<!-- edi数据处理定时器-->
+	<!--
+	<bean name="ediDataHandleTimer" class="com.sinoservices.xascf.timer.EdiDataHandleTimer"></bean>
+	<camelContext id="camel_ediDataHandleTimer" xmlns="http://camel.apache.org/schema/spring">
+		<route autoStartup="true">
+			<from uri="quartz://myGroup/myTimerName?cron=0/60 * * * * ?"/>
+			<process ref="ediDataHandleTimer"/>
+		</route>
+	</camelContext>
+	-->
+</beans>

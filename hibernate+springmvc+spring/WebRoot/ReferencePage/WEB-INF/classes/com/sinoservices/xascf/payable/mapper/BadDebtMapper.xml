@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.payable.mapper.BadDebtMapper">
+	<resultMap type="com.sinoservices.xascf.payable.view.BadDebtQueryItemView" id="BadDebtItemViewResultMap">
+		<result property="id" column="ID"/>
+		<result property="badDebtPid" column="BAD_DEBT_PID"/>
+		<result property="sscoPid" column="SSCO_PID"/>
+		<result property="oredrNo" column="OREDR_NO"/>
+		<result property="exceptDate" column="EXCEPT_DATE"/>
+		<result property="inDate" column="IN_DATE"/>
+		<result property="amount" column="AMOUNT"/>
+		<result property="customer" column="CUSTOMER"/>
+		<result property="customerName" column="CUSTOMER_NAME"/>
+		<result property="businessType" column="BUSINESS_TYPE"/>
+		<result property="remake" column="REMAKE"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	
+	<sql id="select">
+		<![CDATA[
+		  SELECT 
+			ID,
+			BAD_DEBT_PID,
+			SSCO_PID,
+			OREDR_NO,
+			EXCEPT_DATE,
+			IN_DATE,
+			AMOUNT,
+			CUSTOMER,
+			CUSTOMER_NAME,
+			BUSINESS_TYPE,
+			REMAKE,
+			CREATOR,
+			CREATE_TIME,
+			MODIFIER,
+			MODIFY_TIME,
+			REC_VER,
+			REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+	WHERE 1=1
+	<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+	<if test="badDebtPid!=null and badDebtPid!=''"> AND BAD_DEBT_PID LIKE ('%'||'badDebtPid'||'%' )</if>
+	<if test="sscoPid!=null and sscoPid!=''"> AND SSCO_PID LIKE ('%'||'sscoPid'||'%' )</if>
+	<if test="oredrNo!=null and oredrNo!=''"> AND OREDR_NO LIKE ('%'||'oredrNo'||'%' )</if>
+	<if test="exceptDate!=null and exceptDate!=''"> AND EXCEPT_DATE LIKE ('%'||'exceptDate'||'%' )</if>
+	<if test="inDate!=null and inDate!=''"> AND IN_DATE LIKE ('%'||'inDate'||'%' )</if>
+	<if test="amount!=null and amount!=''"> AND AMOUNT LIKE ('%'||'amount'||'%' )</if>
+	<if test="customer!=null and customer!=''"> AND CUSTOMER LIKE ('%'||'customer'||'%' )</if>
+	<if test="customerName!=null and customerName!=''"> AND CUSTOMER_NAME LIKE ('%'||'customerName'||'%' )</if>
+	<if test="businessType!=null and businessType!=''"> AND BUSINESS_TYPE LIKE ('%'||'businessType'||'%' )</if>
+	<if test="remake!=null and remake!=''"> AND REMAKE LIKE ('%'||'remake'||'%' )</if>
+	<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+	<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+	<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+	<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+	<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+	<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.payable.view.BadDebtQueryConditionView">
+		<include refid="count"/>
+		FROM  PM_BAD_DEBT
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="BadDebtItemViewResultMap" parameterType="com.sinoservices.xascf.payable.view.BadDebtQueryConditionView">
+		<include refid="select"/>
+		FROM  PM_BAD_DEBT
+		<include refid="findByExample"/>
+	</select>
+	
+	
+	<!-- 坏账管理查询 -->
+	<sql id="findByBadDebt">
+		 WHERE 1=1  AND REC_STATUS = 1
+	  <if test="oredrNo!=null and oredrNo!=''"> AND OREDR_NO  LIKE ('%${orderNo}%')</if>	
+	  <if test="customerName!=null and customerName!=''"> AND CUSTOMER_NAME LIKE ('%${customerName}%')</if>	  
+	  <if test="businessType!=null and businessType!=''">AND BUSINESS_TYPE LIKE ('%${businessType}%')</if> 
+	</sql>
+	
+	<!-- count -->
+	<select id="getCountByByBadDebt" resultType="int" parameterType="com.sinoservices.xascf.payable.view.BadDebtQueryConditionView">
+		<include refid="count"/>
+		FROM  PM_BAD_DEBT
+		<include refid="findByBadDebt"/>
+	</select>
+	
+	<!-- page -->
+	<select id="getPageByByBadDebt" resultMap="BadDebtItemViewResultMap" parameterType="com.sinoservices.xascf.payable.view.BadDebtQueryConditionView">
+		<include refid="select"/>
+		FROM  PM_BAD_DEBT
+		<include refid="findByBadDebt"/>
+	</select>
+	
+	<!-- 坏账信息接入 -->
+	<insert id="insertByBadDebt">
+		INSERT INTO PM_BAD_DEBT(
+		ID,
+		BAD_DEBT_PID,
+		SSCO_PID,
+		OREDR_NO,
+		EXCEPT_DATE,
+		IN_DATE,
+		AMOUNT,
+		CUSTOMER,
+		CUSTOMER_NAME,
+		BUSINESS_TYPE,
+		REMAKE,
+		CREATOR,
+		CREATE_TIME
+		)VALUES(
+		#{id},
+		#{badDebtPid},
+		#{sscoPid},
+		#{oredrNo},
+		#{exceptDate},
+		#{inDate},
+		#{amount},
+		#{customer},
+		#{customerName},
+		#{businessType},
+		#{remake},
+		#{creator},
+		#{createTime}
+		);
+	</insert>
+
+	<update id="updateByBadDebt" parameterType="com.sinoservices.xascf.payable.model.BadDabtModel">
+		UPDATE PM_BAD_DEBT 
+		<set>
+			<if test="oredrNo != null and oredrNo != ''">OREDR_NO=${oredrNo},</if>
+			<if test="exceptDate != null and exceptDate != ''">EXCEPT_DATE='${exceptDate}',</if>
+			<if test="inDate != null and inDate != ''">IN_DATE='${inDate}',</if>
+			<if test="amount != null and amount != ''">AMOUNT=${amount},</if>
+			<if test="customer != null and customer != ''">CUSTOMER=${customer},</if>
+			<if test="customerName != null and customerName != ''">CUSTOMER_NAME=${customerName},</if>
+			<if test="businessType != null and businessType != ''">BUSINESS_TYPE=${businessType},</if>
+			<if test="remake != null and remake != ''">REMAKE=${remake},</if>
+			<if test="modifier != null and modifier != ''">MODIFIER=${modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''">MODIFY_TIME='${modifyTime}'</if>
+		</set>
+		WHERE 1=1 AND 
+		OREDR_NO=${oredrNo} AND 
+		BUSINESS_TYPE=${businessType}
+	</update>
+	
+	
+</mapper>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.funds.mapper.WithdrawDepositMapper">
+	<resultMap type="com.sinoservices.xascf.funds.model.WithdrawDepositModel" id="withdrawDepositModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="withdrawDepositPid" column="WITHDRAW_DEPOSIT_PID"/>
+		<result property="withdrawDepositNo" column="WITHDRAW_DEPOSIT_NO"/>
+		<result property="withdrawBankNo" column="WITHDRAW_BANK_NO"/>
+		<result property="withdrawAmount" column="WITHDRAW_AMOUNT"/>
+		<result property="withdrawTime" column="WITHDRAW_TIME"/>
+		<result property="withdrawReason" column="WITHDRAW_REASON"/>
+		<result property="intoBankNo" column="INTO_BANK_NO"/>
+		<result property="withdrawStatus" column="WITHDRAW_STATUS"/>
+		<result property="repliedRemark" column="REPLIED_REMARK"/>
+		<result property="repliedTime" column="REPLIED_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					WITHDRAW_DEPOSIT_PID,
+					WITHDRAW_DEPOSIT_NO,
+					WITHDRAW_BANK_NO,
+					WITHDRAW_AMOUNT,
+					date_format(WITHDRAW_TIME, '%Y-%m-%d %H:%i:%s') as WITHDRAW_TIME,
+					WITHDRAW_REASON,
+					INTO_BANK_NO,
+					WITHDRAW_STATUS,
+					REPLIED_REMARK,
+					date_format(REPLIED_TIME, '%Y-%m-%d %H:%i:%s') as REPLIED_TIME,
+					CREATOR,
+					CREATE_TIME,
+					MODIFIER,
+					MODIFY_TIME,
+					REC_VER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%${id}%')</if>
+		<if test="withdrawDepositPid!=null and withdrawDepositPid!=''"> AND WITHDRAW_DEPOSIT_PID LIKE ('%${withdrawDepositPid}%')</if>
+		<if test="withdrawDepositNo!=null and withdrawDepositNo!=''"> AND WITHDRAW_DEPOSIT_NO LIKE ('%${withdrawDepositNo}%')</if>
+		<if test="withdrawBankNo!=null and withdrawBankNo!=''"> AND WITHDRAW_BANK_NO LIKE ('%${withdrawBankNo}%')</if>
+		<if test="withdrawAmount!=null and withdrawAmount!=''"> AND WITHDRAW_AMOUNT LIKE ('%${withdrawAmount}%')</if>
+		<if test="withdrawTime!=null and withdrawTime!=''"> AND WITHDRAW_TIME LIKE ('%${withdrawTime}%')</if>
+		<if test="withdrawReason!=null and withdrawReason!=''"> AND WITHDRAW_REASON LIKE ('%${withdrawReason}%')</if>
+		<if test="intoBankNo!=null and intoBankNo!=''"> AND INTO_BANK_NO LIKE ('%${intoBankNo}%')</if>
+		<if test="withdrawStatus!=null and withdrawStatus!=''"> AND WITHDRAW_STATUS LIKE ('%${withdrawStatus}%')</if>
+		<if test="repliedRemark!=null and repliedRemark!=''"> AND REPLIED_REMARK LIKE ('%${repliedRemark}%')</if>
+		<if test="repliedTime!=null and repliedTime!=''"> AND REPLIED_TIME LIKE ('%${repliedTime}%')</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%')</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%${createTime}%')</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%')</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%${modifyTime}%')</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%${recVer}%')</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%')</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.funds.view.WithdrawDepositQueryConditionView">
+		<include refid="count"/>
+		FROM  FM_WITHDRAW_DEPOSIT
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="withdrawDepositModelResultMap" parameterType="com.sinoservices.xascf.funds.view.WithdrawDepositQueryConditionView">
+		<include refid="select"/>
+		FROM  FM_WITHDRAW_DEPOSIT
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO FM_WITHDRAW_DEPOSIT (
+				ID,
+				WITHDRAW_DEPOSIT_PID,
+				WITHDRAW_DEPOSIT_NO,
+				WITHDRAW_BANK_NO,
+				WITHDRAW_AMOUNT,
+				WITHDRAW_TIME,
+				WITHDRAW_REASON,
+				INTO_BANK_NO,
+				WITHDRAW_STATUS,
+				REPLIED_REMARK,
+				REPLIED_TIME,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{withdrawDepositPid},
+			   #{withdrawDepositNo},
+			   #{withdrawBankNo},
+			   #{withdrawAmount},
+			   #{withdrawTime},
+			   #{withdrawReason},
+			   #{intoBankNo},
+			   #{withdrawStatus},
+			   #{repliedRemark},
+			   #{repliedTime},
+			   #{creator},
+			   #{createTime},
+			   #{modifier},
+			   #{modifyTime},
+			   1,
+			   0
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE FM_WITHDRAW_DEPOSIT SET
+			<if test="withdrawBankNo !=null and withdrawBankNo !=''">WITHDRAW_BANK_NO = #{withdrawBankNo},</if>
+			<if test="withdrawAmount !=null and withdrawAmount !=''">	WITHDRAW_AMOUNT = #{withdrawAmount},</if>
+			<if test="withdrawTime !=null and withdrawTime !=''">	WITHDRAW_TIME = #{withdrawTime},</if>
+			<if test="withdrawReason !=null and withdrawReason !=''">	WITHDRAW_REASON = #{withdrawReason},</if>
+			<if test="intoBankNo !=null and intoBankNo !=''">	INTO_BANK_NO = #{intoBankNo},</if>
+			<if test="withdrawStatus !=null and withdrawStatus !=''">	WITHDRAW_STATUS = #{withdrawStatus},</if>
+			<if test="repliedRemark !=null and repliedRemark !=''">	REPLIED_REMARK = #{repliedRemark},</if>
+			<if test="repliedTime !=null and repliedTime !=''">	REPLIED_TIME = #{repliedTime},</if>
+			<if test="recStatus !=null and recStatus !=''">	REC_STATUS = #{recStatus},</if>
+				Rec_Ver = Rec_Ver+1,
+		  		MODIFY_TIME=SYSDATE(),
+		  		MODIFIER=#{modifier} 		
+		WHERE WITHDRAW_DEPOSIT_PID=#{withdrawDepositPid}
+				
+	</update>
+	
+	<select id="getWithdrawDepositByPid" resultMap="withdrawDepositModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  FM_WITHDRAW_DEPOSIT
+		WHERE WITHDRAW_DEPOSIT_PID=#{withdrawDepositPid}
+	</select>
+	
+</mapper>

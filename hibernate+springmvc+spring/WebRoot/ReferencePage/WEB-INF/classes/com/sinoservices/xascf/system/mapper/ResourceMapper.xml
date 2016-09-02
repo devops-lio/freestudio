@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.ResourceMapper">
+
+    <resultMap type="com.sinoservices.xascf.system.model.ResourceModel" id="resourceResultMap">
+        <id property="id" column="ID"/>
+        <result property="resourcePid" column="RESOURCE_PID"/>
+        <result property="resourceName" column="RESOURCE_NAME"/>
+        <result property="resourceCode" column="RESOURCE_CODE"/>
+        <result property="parentPid" column="PARENT_PiD"/>
+        <result property="functionPid" column="FUNCTION_PID"/>
+        <result property="resourceType" column="RESOURCE_TYPE"/>
+        <result property="systemPid" column="SYSTEM_PID"/>
+       <result property="creator" column="CREATOR"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="modifier" column="MODIFIER"/>
+        <result property="modifyTime" column="MODIFY_TIME"/>
+        <collection property="children" column="RESOURCE_PID" ofType="com.sinoservices.xascf.system.model.ResourceModel" select="select-children"/>
+    </resultMap>
+    <select id="select-children" parameterType="String" resultMap="resourceResultMap">
+       SELECT
+				RESOURCE_NAME,
+				R.ID,
+				R.RESOURCE_PID,
+				RESOURCE_CODE,
+				RESOURCE_TYPE,
+				PARENT_PID,
+			F.FUNCTION_PID AS FUNCTION_PID
+			FROM
+				SS_RESOURCE R
+			JOIN `SS_FUNCTION` F ON R.RESOURCE_PID=F.RESOURCE_PID
+			JOIN SS_MENU M ON M.RESOURCE_PID=R.RESOURCE_PID
+         WHERE R.PARENT_PID = #{resourcePid} AND RESOURCE_TYPE=1
+         GROUP BY R.ID
+        ORDER BY M.ORDER_NO ASC
+    </select>
+    <sql id="selectAll">
+     	SELECT RESOURCE_NAME,ID,RESOURCE_PID,RESOURCE_CODE,RESOURCE_TYPE,PARENT_PID,SYSTEM_PID,CREATOR,CREATE_TIME,MODIFIER,MODIFY_TIME
+     	FROM SS_RESOURCE
+    </sql>
+    <!-- 
+    <sql id="findByExampleWhere">
+        WHERE 1=1
+        	<if test="systemId!=null and systemId!=''"> AND SYSTEM_ID = #{systemId}</if>
+           <if test="resourceName!=null and resourceName!=''"> AND RESOURCE_NAME LIKE CONCAT('%','${resourceName}','%' )</if>
+           <if test="resourceCode!=null and resourceCode!=''"> AND RESOURCE_CODE LIKE CONCAT('%','${resourceCode}','%' )</if>
+           <if test="resourceType!=null and resourceType!=''"> AND RESOURCE_TYPE = #{resourceType}</if>
+    </sql>
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.upm.model.ResourceModel">
+        SELECT COUNT(1) FROM RESOURCE
+        <include refid="findByExampleWhere"/>
+        AND PARENT_ID =0
+    </select>
+    <select id="getPage" resultMap="resourceResultMap" parameterType="com.sinoservices.upm.model.ResourceModel">
+        <include refid="selectAll"/>
+        <include refid="findByExampleWhere"/>
+         AND PARENT_ID =0
+        ORDER BY CREATE_TIME DESC
+    </select>
+    -->
+    <!-- 获取树形返回model --> 
+    <select id="getResource" resultMap="resourceResultMap">
+	   SELECT
+				RESOURCE_NAME,
+				R.ID,
+				R.RESOURCE_PID,
+				RESOURCE_CODE,
+				RESOURCE_TYPE,
+				PARENT_PID,
+				R.SYSTEM_PID,
+			F.FUNCTION_PID AS FUNCTION_PID
+			FROM
+				SS_RESOURCE R
+			JOIN `SS_FUNCTION` F ON R.RESOURCE_PID=F.RESOURCE_PID
+	     WHERE 1=1 AND PARENT_PID ='0' AND RESOURCE_TYPE=1
+	     	   AND   R.SYSTEM_PID = #{systemPid}
+    </select>
+
+    <select id="getByResourcePid" parameterType="java.lang.String" resultMap="resourceResultMap">
+        <include refid="selectAll" />
+         WHERE RESOURCE_PID = #{resourcePid}
+    </select>
+
+    <!-- 获取菜单父级下拉列表 -->
+    <select id="getParentList" parameterType="String" resultMap="resourceResultMap">
+		SELECT RESOURCE_NAME,ID,RESOURCE_PID,RESOURCE_CODE,RESOURCE_TYPE,PARENT_PID,SYSTEM_PID FROM SS_RESOURCE R
+		WHERE R.PARENT_PID =
+		(
+			SELECT PARENT_PID FROM SS_RESOURCE
+			 WHERE RESOURCE_PID= #{resourcePid}
+		)
+    </select>
+    
+    <!-- 获取在菜单中的系统的根目录 -->
+    <select id="getSystemRootPathInMenu" parameterType="java.lang.String" resultMap="resourceResultMap">
+        <include refid="selectAll" />
+         WHERE PARENT_PID = 'RE20140918025201-0224985EF23BA0C' AND RESOURCE_CODE = #{_parameter}
+    </select>
+    
+    
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.sinoservices.xascf.system.model.ResourceModel">
+        INSERT INTO `SS_RESOURCE` (ID,RESOURCE_PID,RESOURCE_NAME, RESOURCE_CODE, RESOURCE_TYPE, PARENT_PID,SYSTEM_PID,
+            CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME)    
+        VALUES (#{id},#{resourcePid},#{resourceName}, #{resourceCode}, #{resourceType},  #{parentPid},#{systemPid},
+            #{creator}, #{createTime, jdbcType=TIMESTAMP}, #{modifier}, #{modifyTime, jdbcType=TIMESTAMP})
+    </insert>
+    
+    <!-- 批量执行插入 -->
+	<insert id="addByList"  parameterType="java.util.List">  
+	
+	    	INSERT INTO `SS_RESOURCE` (RESOURCE_PID,RESOURCE_NAME, RESOURCE_CODE, RESOURCE_TYPE, PARENT_PID,SYSTEM_PID,
+            CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+			) values  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (#{item.resourcePid},#{item.resourceName}, #{item.resourceCode}, #{item.resourceType},  #{item.parentPid},#{item.systemPid},
+            #{item.creator}, #{item.createTime, jdbcType=TIMESTAMP}, #{item.modifier}, #{item.modifyTime, jdbcType=TIMESTAMP})  
+	    </foreach>  
+  </insert>  
+    
+    
+    <update id="update" parameterType="com.sinoservices.xascf.system.model.ResourceModel">
+        UPDATE `SS_RESOURCE` SET 
+        <if test="systemPid!=null and systemPid!=''">  SYSTEM_PID =#{systemPid},</if>
+        <if test="resourceName!=null and resourceName!=''">  RESOURCE_NAME =#{resourceName},</if>
+        <if test="resourceCode!=null and resourceCode!=''">  RESOURCE_CODE =#{resourceCode},</if>
+        <if test="resourceType!=null and resourceType!=''">  RESOURCE_TYPE = #{resourceType},</if>
+        <if test="parentPid!=null and parentPid!=''">   PARENT_PID = #{parentPid},</if>
+        <if test="modifier!=null and modifier!=''">   MODIFIER = #{modifier},</if>
+         MODIFY_TIME = SYSDATE()
+         WHERE RESOURCE_PID = #{resourcePid}
+    </update>
+    <delete id="delete" parameterType="java.util.List">
+        DELETE FROM `SS_RESOURCE` WHERE
+        <choose>
+            <when test="null!=list and list.size!=0">
+                RESOURCE_PID IN
+	            <foreach collection="list" item="resourcePid" index="index" open="(" separator="," close=")">
+	                #{resourcePid}
+	            </foreach>
+	        </when>
+	        <otherwise>
+	           1 != 1
+	        </otherwise>
+        </choose>
+    </delete>
+
+</mapper>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.GoodsOrderInfoMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.model.GoodsOrderInfoModel" id="goodsOrderInfoModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="goodsOrderPid" column="GOODS_ORDER_PID"/>
+		<result property="goodsOrderNo" column="GOODS_ORDER_NO"/>
+		<result property="goodsSupplierName" column="GOODS_SUPPLIER_NAME"/>
+		<result property="goodsOrderDate" column="GOODS_ORDER_DATE"/>
+		<result property="goodsOrderPrice" column="GOODS_ORDER_PRICE"/>
+		<result property="goodsName" column="GOODS_NAME"/>
+		<result property="goodsNum" column="GOODS_NUM"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					GOODS_ORDER_PID,
+					GOODS_ORDER_NO,
+					GOODS_SUPPLIER_NAME,
+					GOODS_ORDER_DATE,
+					GOODS_ORDER_PRICE,
+					GOODS_NAME,
+					GOODS_NUM,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="goodsOrderPid!=null and goodsOrderPid!=''"> AND GOODS_ORDER_PID LIKE ('%'||'goodsOrderPid'||'%' )</if>
+		<if test="goodsOrderNo!=null and goodsOrderNo!=''"> AND GOODS_ORDER_NO LIKE ('%'||'goodsOrderNo'||'%' )</if>
+		<if test="goodsSupplierName!=null and goodsSupplierName!=''"> AND GOODS_SUPPLIER_NAME LIKE ('%'||'goodsSupplierName'||'%' )</if>
+		<if test="goodsOrderDate!=null and goodsOrderDate!=''"> AND GOODS_ORDER_DATE LIKE ('%'||'goodsOrderDate'||'%' )</if>
+		<if test="goodsOrderPrice!=null and goodsOrderPrice!=''"> AND GOODS_ORDER_PRICE LIKE ('%'||'goodsOrderPrice'||'%' )</if>
+		<if test="goodsName!=null and goodsName!=''"> AND GOODS_NAME LIKE ('%'||'goodsName'||'%' )</if>
+		<if test="goodsNum!=null and goodsNum!=''"> AND GOODS_NUM LIKE ('%'||'goodsNum'||'%' )</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.model.GoodsOrderInfoModel">
+		<include refid="count"/>
+		FROM  DM_GOODS_ORDER_INFO
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="goodsOrderInfoModelResultMap" parameterType="com.sinoservices.xascf.fancing.model.GoodsOrderInfoModel">
+		<include refid="select"/>
+		FROM  DM_GOODS_ORDER_INFO
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.fancing.model.GoodsOrderInfoModel">
+		INSERT INTO DM_GOODS_ORDER_INFO (
+				GOODS_ORDER_PID,
+				GOODS_ORDER_NO,
+				GOODS_SUPPLIER_NAME,
+				GOODS_ORDER_DATE,
+				GOODS_ORDER_PRICE,
+				GOODS_NAME,
+				GOODS_NUM,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{goodsOrderPid},
+			   #{goodsOrderNo},
+			   #{goodsSupplierName},
+			   #{goodsOrderDate},
+			   #{goodsOrderPrice},
+			   #{goodsName},
+			   #{goodsNum},
+			   #{remark},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus}
+		);
+	</insert>
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO DM_GOODS_ORDER_INFO (
+				GOODS_ORDER_PID,
+				GOODS_ORDER_NO,
+				GOODS_SUPPLIER_NAME,
+				GOODS_ORDER_DATE,
+				GOODS_ORDER_PRICE,
+				GOODS_NAME,
+				GOODS_NUM,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( #{item.goodsOrderPid},
+			   #{item.goodsOrderNo},
+			   #{item.goodsSupplierName},
+			   #{item.goodsOrderDate},
+			   #{item.goodsOrderPrice},
+			   #{item.goodsName},
+			   #{item.goodsNum},
+			   #{item.remark},
+			   1,
+			   #{item.creator},
+			   #{item.recStatus})  
+	    </foreach>  
+  </insert>  
+	<!-- 批量执行更新 -->
+	<update id="updateByList" parameterType="java.util.List">
+			UPDATE DM_SHIP_ORDER_INFO 
+			<trim prefix="set" suffixOverrides=","> 
+	          <!-- 更新的字段集合 --> 
+	          <trim prefix="GOODS_ORDER_NO =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.goodsOrderNo!=null">  
+	                      when (GOODS_ORDER_PID = #{i.goodsOrderPid})  then #{i.goodsOrderNo}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="GOODS_SUPPLIER_NAME =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.goodsSupplierName!=null">  
+	                      when (GOODS_ORDER_PID = #{i.goodsOrderPid})  then #{i.goodsSupplierName}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="GOODS_ORDER_DATE =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.goodsOrderDate!=null">  
+	                      when (GOODS_ORDER_PID = #{i.goodsOrderPid})  then #{i.goodsOrderDate}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="GOODS_ORDER_PRICE =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.goodsOrderPrice!=null">  
+	                      when (GOODS_ORDER_PID = #{i.goodsOrderPid})  then #{i.goodsOrderPrice}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="GOODS_NAME =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.goodsName!=null">  
+	                      when (GOODS_ORDER_PID = #{i.goodsOrderPid})  then #{i.goodsName}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="GOODS_NUM =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.goodsNum!=null">  
+	                      when (GOODS_ORDER_PID = #{i.goodsOrderPid})  then #{i.goodsNum}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	           <trim prefix="Modifier =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                     <if test="i.modifier!=null">  
+	                      when (GOODS_ORDER_PID = #{i.goodsOrderPid})  then #{i.modifier}  
+	                     </if>  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Modify_Time =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (GOODS_ORDER_PID = #{i.goodsOrderPid})  then SYSDATE()  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Rec_Ver =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (GOODS_ORDER_PID = #{i.goodsOrderPid})  then Rec_Ver+1  
+	              </foreach>  
+	           </trim>
+         </trim>   
+         where   
+         <foreach collection="list" separator="or" item="i" index="index" >  
+          (GOODS_ORDER_PID = #{i.goodsOrderPid}) 
+      	</foreach>  
+	
+	</update>
+	<update id="update">
+		UPDATE DM_GOODS_ORDER_INFO SET
+				ID = #{id},
+				GOODS_ORDER_PID = #{goodsOrderPid},
+				GOODS_ORDER_NO = #{goodsOrderNo},
+				GOODS_SUPPLIER_NAME = #{goodsSupplierName},
+				GOODS_ORDER_DATE = #{goodsOrderDate},
+				GOODS_ORDER_PRICE = #{goodsOrderPrice},
+				GOODS_NAME = #{goodsName},
+				GOODS_NUM = #{goodsNum},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus}
+	</update>
+</mapper>

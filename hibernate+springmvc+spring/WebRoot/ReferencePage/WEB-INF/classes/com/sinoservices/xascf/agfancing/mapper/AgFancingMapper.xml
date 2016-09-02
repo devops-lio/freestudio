@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.agfancing.mapper.AgFancingMapper">
+	<resultMap type="com.sinoservices.xascf.agfancing.model.AgFancingModel" id="agfancingModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="agfancingPid" column="AGFANCING_PID"/>
+		<result property="agfancingCustomerPid" column="AGFANCING_CUSTOMER_PID"/>
+		<result property="agfancingCustomerName" column="AGFANCING_CUSTOMER_NAME"/>
+		<result property="agfancingOrderNo" column="AGFANCING_ORDER_NO"/>
+		<result property="agfancingOrderName" column="AGFANCING_ORDER_NAME"/>
+		<result property="solutionPid" column="SOLUTION_PID"/>
+		<result property="solutionName" column="SOLUTION_NAME"/>
+		<result property="billAmount" column="BILL_AMOUNT"/>
+		<result property="agfancingAmount" column="AGFANCING_AMOUNT"/>
+		<result property="agfancingActualAmount" column="AGFANCING_ACTUAL_AMOUNT"/>
+		<result property="agfancingAccount" column="AGFANCING_ACCOUNT"/>
+		<result property="agfancingRate" column="AGFANCING_RATE"/>
+		<result property="state" column="STATE"/>
+		<result property="agfancingType" column="AGFANCING_TYPE"/>
+		<result property="agfancingRepaycount" column="AGFANCING_REPAYCOUNT"/>
+		<result property="interest" column="INTEREST"/>
+		<result property="isrepay" column="ISREPAY"/>
+		<result property="notePrice" column="NOTE_PRICE"/>
+		<result property="noteCount" column="NOTE_COUNT"/>
+		<result property="mustRepaydate" column="MUST_REPAYDATE"/>
+		<result property="agfancingDate" column="AGFANCING_DATE"/>
+		<result property="applyDate" column="APPLY_DATE"/>
+		<result property="pastDate" column="PAST_DATE"/>
+		<result property="rateCycle" column="RATE_CYCLE"/>
+		<result property="startDate" column="START_DATE"/>
+		<result property="endDate" column="END_DATE"/>
+		<result property="interestDateDesc" column="INTEREST_DATE_DESC"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileUrl" column="FILE_URL"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.agfancing.view.CustomerQueryItem" id="customerQueryItemResultMap">
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="replyQuota" column="REPLY_QUOTA"/>
+		<result property="creditStartTime" column="CREDIT_START_TIME"/>
+		<result property="creditEndTime" column="CREDIT_END_TIME"/>
+		<result property="replyPrice" column="REPLY_PRICE"/>
+		<result property="notePrice" column="NOTE_PRICE"/>
+		<result property="noteDisprice" column="NOTE_DISPRICE"/>
+		<result property="operator" column="OPERATOR"/>
+		<result property="contractNo" column="CONTRACT_NO"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="evaluateReportId" column="REPORT_PID"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					T.ID,
+					T.AGFANCING_PID,
+					T.AGFANCING_CUSTOMER_PID,
+					T.AGFANCING_CUSTOMER_NAME,
+					T.AGFANCING_ORDER_NO,
+					T.AGFANCING_ORDER_NAME,
+					T.SOLUTION_PID,
+					AFB.BILL_AMOUNT,
+					T.AGFANCING_AMOUNT,
+					T.AGFANCING_ACTUAL_AMOUNT,
+					T.AGFANCING_ACCOUNT,
+					T.AGFANCING_RATE,
+					T.STATE,
+					T.AGFANCING_TYPE,
+					T.AGFANCING_REPAYCOUNT,
+					T.INTEREST,
+					T.ISREPAY,
+					T.NOTE_PRICE,
+					T.NOTE_COUNT,
+					T.MUST_REPAYDATE,
+					T.AGFANCING_DATE,
+					T.APPLY_DATE,
+					T.PAST_DATE,
+					T.RATE_CYCLE,
+					T.START_DATE,
+					T.END_DATE,
+					T.INTEREST_DATE_DESC,
+					T.FILE_NAME,
+					T.FILE_URL,
+					T.REC_VER,
+					T.CREATE_TIME,
+					T.CREATOR,
+					T.MODIFY_TIME,
+					T.MODIFIER,
+					T.REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="agfancingCustomerPid!=null and agfancingCustomerPid!=''"> AND T.AGFANCING_CUSTOMER_PID = #{agfancingCustomerPid}</if>
+		<if test="agfancingCustomerName!=null and agfancingCustomerName!=''"> AND T.AGFANCING_CUSTOMER_NAME LIKE ('%${agfancingCustomerName}%')</if>
+		<if test="agfancingOrderNo!=null and agfancingOrderNo!=''"> AND T.AGFANCING_ORDER_NO LIKE ('%${agfancingOrderNo}%')</if>
+		<if test="agfancingOrderName!=null and agfancingOrderName!=''"> AND T.AGFANCING_ORDER_NAME LIKE ('%${agfancingOrderName}%')</if>
+		<if test="solutionPid!=null and solutionPid!=''"> AND T.SOLUTION_PID = #{solutionPid}</if>
+		<if test="agfancingRate!=null and agfancingRate!=''"> AND T.AGFANCING_RATE = #{agfancingRate}</if>
+		<if test="state!=null and state!=''"> AND T.STATE = #{state}</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.agfancing.view.AgFancingCondition">
+		<include refid="count"/>
+		FROM  DM_AGFANCING T
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="agfancingModelResultMap" parameterType="com.sinoservices.xascf.agfancing.view.AgFancingCondition">
+		<include refid="select"/>
+		FROM  DM_AGFANCING T
+		LEFT JOIN (
+			SELECT
+				AB.AGFANCING_ORDER_NO,
+				SUM(IFNULL(FB.BILL_PRICE, 0)) AS BILL_AMOUNT
+			FROM
+				DM_AGFANCING_BILL AB
+			LEFT JOIN DM_FANCING_BILL FB ON AB.BILL_NO = FB.BILL_NO
+			AND FB.BILL_STATUS != '20'
+			WHERE
+				1 = 1 
+				<if test="agfancingOrderNo!=null and agfancingOrderNo!=''"> AND  AB.AGFANCING_ORDER_NO = #{agfancingOrderNo}</if>
+			GROUP BY
+				AB.AGFANCING_ORDER_NO
+		) AFB ON T.AGFANCING_ORDER_NO = AFB.AGFANCING_ORDER_NO
+		<include refid="findByExample"/>
+	</select>
+	
+	<!-- 根据再融资单号获取再融资信息 --> 
+	<select id="findByOrderNo" resultMap="agfancingModelResultMap" parameterType="String">
+		<include refid="select"/>
+		,S.SOLUTION_NAME
+		FROM DM_AGFANCING T
+		LEFT JOIN DM_AGFANCING_SOLUTION S
+		ON S.PID = T.SOLUTION_PID
+		LEFT JOIN (
+			SELECT
+				AB.AGFANCING_ORDER_NO,
+				SUM(IFNULL(FB.BILL_PRICE, 0)) AS BILL_AMOUNT
+			FROM
+				DM_AGFANCING_BILL AB
+			LEFT JOIN DM_FANCING_BILL FB ON AB.BILL_NO = FB.BILL_NO
+			AND FB.BILL_STATUS != '20'
+			WHERE
+				AB.AGFANCING_ORDER_NO = #{agfancingOrderNo}
+			GROUP BY
+				AB.AGFANCING_ORDER_NO
+		) AFB ON T.AGFANCING_ORDER_NO = AFB.AGFANCING_ORDER_NO
+		WHERE 
+			T.AGFANCING_ORDER_NO = #{agfancingOrderNo}
+	</select>
+		
+	<!-- 根据条件查询 （授信结果为单位）-->
+	<select id="getCustomerPageByCondition"  resultMap="customerQueryItemResultMap"  parameterType="com.sinoservices.xascf.agfancing.view.AgFancingCondition">
+		 SELECT
+			CR.MEMBER_NO,
+			CR.MEMBER_PID,
+			SC.MEMBER_NAME,
+			CR.REPLY_QUOTA,
+			CR.CREDIT_START_TIME,
+			CR.CREDIT_END_TIME,
+			IFNULL(C.NOTE_PRICE, 0) AS NOTE_PRICE,
+			IFNULL(C.NOTE_DISPRICE, 0) AS NOTE_DISPRICE,
+			IFNULL(C.REPLY_PRICE, 0) AS REPLY_PRICE,
+			D.USER_NAME_CN AS OPERATOR,
+			C.CONTRACT_NO,
+			CA.REPORT_PID,
+			CR.CREDIT_NO
+		FROM
+			DM_CREDIT_RESULT CR
+		LEFT JOIN DM_CREDIT_APPLY CA ON CA.CREDIT_NO = CR.CREDIT_NO
+		LEFT JOIN SS_CUSTOMER SC ON SC.MEMBER_PID = CR.MEMBER_PID
+		LEFT JOIN (
+			SELECT
+				TT.CONTRACT_NO,
+				TT.CREDIT_NO,
+				TT.MENBER_NAME,
+				TT.BUYER_PID,
+				SUM(TT.NOTE_PRICE) AS NOTE_PRICE,
+				SUM(TT.NOTE_DISPRICE) AS NOTE_DISPRICE,
+				SUM(TT.REPLY_PRICE) AS REPLY_PRICE,
+				TT.FANCING_ORDER_NO
+			FROM
+				(
+					SELECT
+						F.FANCING_ORDER_NO,
+						F.CREDIT_NO,
+						F.MENBER_NAME,
+						F.CONTRACT_NO AS CONTRACT_NO,
+						CASE WHEN F.FANCING_STATUS='60' THEN F.REPLY_PRICE ELSE 0 END AS REPLY_PRICE,
+						F.BUYER_PID,
+						IFNULL(T0.EFF_PRICE, 0) + IFNULL(T1.EFF_PRICE, 0) + IFNULL(T2.EFF_PRICE, 0) AS NOTE_PRICE,
+						(
+							IFNULL(T0.EFF_PRICE, 0) + IFNULL(T1.EFF_PRICE, 0) + IFNULL(T2.EFF_PRICE, 0)
+						) * FC.BILL_RATE / 100 AS NOTE_DISPRICE
+					FROM
+						DM_FANCING_ORDER F
+					LEFT JOIN DM_FANCING_CONTRACT FC ON FC.CONTRACT_NO = F.CONTRACT_NO
+					LEFT JOIN (
+						SELECT
+							SUM(1) AS ALL_NUM,
+							DRR.FANCING_ORDER_NO,
+							SUM(CASE WHEN DRR.ISEFFECTIVE = '1' THEN ACTUAL_AMOUNT ELSE 0 END) AS EFF_PRICE,
+							SUM(CASE WHEN DRR.ISEFFECTIVE = '1' THEN 1 ELSE 0 END) AS EFF_NUM,
+							SUM(CASE WHEN DRR.ISEFFECTIVE = '0' THEN 1 ELSE 0 END) AS NO_EFF
+						FROM
+							DM_RECEIPT DRR
+						GROUP BY
+							DRR.FANCING_ORDER_NO
+					) T0 ON T0.FANCING_ORDER_NO = F.FANCING_ORDER_NO
+					LEFT JOIN (
+						SELECT
+							SUM(1) AS ALL_NUM,
+							DSB.BUSINESS_NO,
+							SUM(CASE WHEN DSB.ISEFFECTIVE = '1' THEN 1 ELSE 0 END) AS EFF_NUM,
+							SUM(CASE WHEN DSB.ISEFFECTIVE = '1' THEN BILL_AMOUNT ELSE 0 END) AS EFF_PRICE,
+							SUM(CASE WHEN DSB.ISEFFECTIVE = '0' THEN 1 ELSE 0 END) AS NO_EFF
+						FROM
+							DM_SHIP_BILL DSB
+						GROUP BY
+							DSB.BUSINESS_NO
+					) T1 ON T1.BUSINESS_NO = F.FANCING_ORDER_NO
+					LEFT JOIN (
+						SELECT
+							SUM(1) AS ALL_NUM,
+							DST.BUSINESS_NO,
+							SUM(CASE WHEN DST.ISEFFECTIVE = '1' THEN TOTAL_PRICE ELSE 0 END) AS EFF_PRICE,
+							SUM(CASE WHEN DST.ISEFFECTIVE = '1' THEN 1 ELSE 0 END) AS EFF_NUM,
+							SUM(CASE WHEN DST.ISEFFECTIVE = '0' THEN 1 ELSE 0 END) AS NO_EFF
+						FROM
+							DM_SHIP_TURN DST
+						GROUP BY
+							DST.BUSINESS_NO
+					) T2 ON T2.BUSINESS_NO = F.FANCING_ORDER_NO
+					GROUP BY
+						F.FANCING_ORDER_NO
+				) TT
+			GROUP BY
+				TT.CONTRACT_NO
+		) C ON CR.CREDIT_NO = C.CREDIT_NO
+		LEFT JOIN (
+			SELECT
+				SU.USER_NO AS USER_NO,
+				GROUP_CONCAT(SU.USER_NAME_CN) AS USER_NAME_CN,
+				SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,
+				SU.USER_PID AS USER_PID
+			FROM
+				SS_KPICUSTOMER SSK
+			JOIN SS_USER SU ON SSK.USER_PID = SU.USER_PID
+			GROUP BY SSK.CUSTOMERSUB_PID
+		) D ON D.CUSTOMERSUB_PID = CR.MEMBER_PID
+		WHERE
+			CR.RESULT_STATUS = '20'
+		AND CR.REC_STATUS = '1'
+		AND CA.REC_STATUS = '1'
+		AND CR.MEMBER_NO NOT IN 
+			(SELECT
+					DAD.MEMBER_NO
+				FROM
+					DM_AGFANCING_DETAIL DAD
+				LEFT JOIN DM_AGFANCING DA ON DA.AGFANCING_PID = DAD.AGFANCING_PID
+				WHERE
+					DAD.REC_STATUS = '1'
+				<if test="agfancingCustomerPid!=null and agfancingCustomerPid!=''"> AND DA.AGFANCING_CUSTOMER_PID != #{agfancingCustomerPid}</if>
+			)
+		<if test="operator!=null and operator!=''"> AND D.USER_NAME_CN LIKE ('%${operator}%')</if>
+		ORDER BY CR.MEMBER_NO
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_AGFANCING (
+				AGFANCING_PID,
+				AGFANCING_CUSTOMER_PID,
+				AGFANCING_CUSTOMER_NAME,
+				AGFANCING_ORDER_NO,
+				AGFANCING_ORDER_NAME,
+				SOLUTION_PID,
+				BILL_AMOUNT,
+				AGFANCING_AMOUNT,
+				AGFANCING_ACTUAL_AMOUNT,
+				AGFANCING_ACCOUNT,
+				AGFANCING_RATE,
+				STATE,
+				AGFANCING_TYPE,
+				AGFANCING_REPAYCOUNT,
+				INTEREST,
+				ISREPAY,
+				NOTE_PRICE,
+				NOTE_COUNT,
+				MUST_REPAYDATE,
+				AGFANCING_DATE,
+				APPLY_DATE,
+				PAST_DATE,
+				RATE_CYCLE,
+				START_DATE,
+				END_DATE,
+				INTEREST_DATE_DESC,
+				FILE_NAME,
+				FILE_URL,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{agfancingPid},
+			   #{agfancingCustomerPid},
+			   #{agfancingCustomerName},
+			   #{agfancingOrderNo},
+			   #{agfancingOrderName},
+			   #{solutionPid},
+			   #{billAmount},
+			   #{agfancingAmount},
+			   #{agfancingActualAmount},
+			   #{agfancingAccount},
+			   #{agfancingRate},
+			   #{state},
+			   #{agfancingType},
+			   #{agfancingRepaycount},
+			   #{interest},
+			   #{isrepay},
+			   #{notePrice},
+			   #{noteCount},
+			   #{mustRepaydate},
+			   #{agfancingDate},
+			   #{applyDate},
+			   #{pastDate},
+			   #{rateCycle},
+			   #{startDate},
+			   #{endDate},
+			   #{interestDateDesc},
+			   #{fileName},
+			   #{fileUrl},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus}
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE DM_AGFANCING SET
+				AGFANCING_CUSTOMER_PID = #{agfancingCustomerPid},
+				AGFANCING_CUSTOMER_NAME = #{agfancingCustomerName},
+				AGFANCING_ORDER_NO = #{agfancingOrderNo},
+				AGFANCING_ORDER_NAME = #{agfancingOrderName},
+				SOLUTION_PID = #{solutionPid},
+				BILL_AMOUNT = #{billAmount},
+				AGFANCING_AMOUNT = #{agfancingAmount},
+				AGFANCING_ACTUAL_AMOUNT = #{agfancingActualAmount},
+				AGFANCING_ACCOUNT = #{agfancingAccount},
+				AGFANCING_RATE = #{agfancingRate},
+				STATE = #{state},
+				AGFANCING_TYPE = #{agfancingType},
+				AGFANCING_REPAYCOUNT = #{agfancingRepaycount},
+				INTEREST = #{interest},
+				ISREPAY = #{isrepay},
+				NOTE_PRICE = #{notePrice},
+				NOTE_COUNT = #{noteCount},
+				MUST_REPAYDATE = #{mustRepaydate},
+				AGFANCING_DATE = #{agfancingDate},
+				APPLY_DATE = #{applyDate},
+				PAST_DATE = #{pastDate},
+				RATE_CYCLE = #{rateCycle},
+				START_DATE = #{startDate},
+				END_DATE = #{endDate},
+				INTEREST_DATE_DESC = #{interestDateDesc},
+				FILE_NAME = #{fileName},
+				FILE_URL = #{fileUrl},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier}
+		WHERE AGFANCING_PID = #{agfancingPid}
+	</update>
+</mapper>

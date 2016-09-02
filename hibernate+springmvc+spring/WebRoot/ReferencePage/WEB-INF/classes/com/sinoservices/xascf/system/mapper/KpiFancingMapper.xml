@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.KpiFancingMapper">     
+    <resultMap type="com.sinoservices.xascf.system.model.KpiFancingModel" id="KpiFancingViewMap">
+        <result property="id" column="ID"/>
+        <result property="kpifancingPid" column="KPIFANCING_PID"/>
+        <result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+        <result property="kpiindexPid" column="KPIINDEX_PID"/>
+        <result property="userPid" column="USER_PID"/> 
+        <result property="kpiweights" column="KPIWEIGHTS"/>
+        <result property="interestrate" column="INTERESTRATE"/>
+        <result property="proworkStardate" column="PROWORK_STARDATE"/> 
+        <result property="proworkEnddate" column="PROWORK_ENDDATE"/> 
+        <result property="kpifancingType" column="KPIFANCING_TYPE"/> 
+        
+        <result property="remark" column="REMARK"/> 
+          
+ 		<result property="creator" column="CREATOR"/>
+ 		<result property="createTime" column="CREATE_TIME"/>
+ 		<result property="modifier" column="MODIFIER"/>
+ 		<result property="modifyTime" column="MODIFY_TIME"/>
+ 		<result property="recver" column="REC_VER"/>
+ 		<result property="recStatus" column="REC_STATUS"/>  
+    </resultMap>
+    
+    <resultMap type="com.sinoservices.xascf.system.view.KpiFancingItem" id="KpiFancingItemViewMap"> 
+        <result property="id" column="ID"/>
+        <result property="kpifancingPid" column="KPIFANCING_PID"/>
+        <result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+        <result property="kpiindexPid" column="KPIINDEX_PID"/>
+        <result property="userPid" column="USER_PID"/>  
+        <result property="kpiweights" column="KPIWEIGHTS"/>
+        <result property="interestrate" column="INTERESTRATE"/>
+        <result property="proworkStardate" column="PROWORK_STARDATE"/> 
+        <result property="proworkEnddate" column="PROWORK_ENDDATE"/> 
+        <result property="kpifancingType" column="KPIFANCING_TYPE"/> 
+        <result property="remark" column="REMARK"/> 
+          
+ 		<result property="creator" column="CREATOR"/>
+ 		<result property="createTime" column="CREATE_TIME"/>
+ 		<result property="modifier" column="MODIFIER"/>
+ 		<result property="modifyTime" column="MODIFY_TIME"/>
+ 		<result property="recver" column="REC_VER"/>
+ 		<result property="recStatus" column="REC_STATUS"/>  
+    </resultMap> 
+    
+	    <!-- 查询 -->
+	    <sql id="select">
+			 SELECT 
+				KPIFANCING_PID,	
+				FANCING_ORDER_NO,
+				KPIINDEX_PID,
+				USER_PID,
+				KPIWEIGHTS,	
+				INTERESTRATE,
+				PROWORK_STARDATE,
+				PROWORK_ENDDATE,
+				KPIFANCING_TYPE,
+				REMARK,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS   
+	    </sql>  
+    
+	    <!-- KPI员工考核查询列表 -->
+	    <sql id="Page">  
+				SELECT  
+	    </sql>
+    
+	    <!-- KPI员工考核查询计数 -->
+	    <sql id="Count">
+			SELECT 
+				COUNT(1)  
+	    </sql>
+    
+	    <!-- KPI员工考核查询条件  -->
+	    <sql id="findByKpiListWhere">
+	    	<if test="userNo != null and userNo != '' "> AND U.USER_NO = #{userNo} </if> 
+	    	<if test="kpidetalType != null and kpidetalType != ''"> AND K.KPIDETAL_TYPE = #{kpidetalType} </if>
+	    	<if test="(startTime!=null and startTime!='') and (endTime==null or endTime == '') "> AND K.KPIDETAL_DATE &gt;= #{startTime}</if>
+			<if test="(startTime ==null or startTime=='') and (endTime != null and endTime != '') "> AND K.KPIDETAL_DATE &lt;  DATE_ADD( #{endTime},INTERVAL 1 DAY)</if>
+			<if test="(startTime!=null and startTime!='') and (endTime != null and endTime != '') "> AND K.KPIDETAL_DATE BETWEEN #{startTime} and DATE_ADD( #{endTime},INTERVAL 1 DAY)</if>
+			<if test="(startTime == null and startTime == '') and (endTime == null and endTime == '') "> 
+				AND DATE_FORMAT(K.KPIDETAL_DATE,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
+			</if> 
+	    </sql> 
+	    
+	    <!-- 
+	    <select id="selectPage" resultMap="kpiIndexItemViewMap" parameterType="com.sinoservices.xascf.system.view.KpiIndexCondition">
+	    	<include refid="Page"/> 
+	    	<include refid="findByKpiListWhere"/>
+	    </select>
+	    
+	   	<select id="selectPageCount" resultType="int" parameterType="com.sinoservices.xascf.system.view.KpiIndexCondition">
+	    	<include refid="Count"/> 
+	    	<include refid="findByKpiListWhere"/>
+	    </select>
+		 -->
+		<!-- 新增"业务专员"KPI考核员工PID写入 -->
+		<insert id="insert"  parameterType="com.sinoservices.xascf.system.model.KpiFancingModel">
+			INSERT INTO SS_KPICUSTOMER( 
+				KPIINDEX_PID,
+				USER_PID,
+				CREATOR,
+				CREATE_TIME 
+			)SELECT 
+				#{kpiindexPid}, 
+				USER_PID, 
+				(SELECT USER_PID FROM SS_USER WHERE LOGIN_NAME = 'admin') AS CREATOR,
+				DATE_FORMAT(NOW(), '%Y-%m-%d')
+				FROM SS_USER
+				WHERE USER_PID = #{userPid}
+		</insert>
+	 	<insert id="addModel" parameterType="com.sinoservices.xascf.system.model.KpiFancingModel">
+	 		INSERT INTO SS_KPIFANCING
+	 			(KPIFANCING_PID,
+				FANCING_ORDER_NO,
+				USER_PID,
+				KPIWEIGHTS,	
+				INTERESTRATE,
+				PROWORK_STARDATE,
+				PROWORK_ENDDATE,
+				REMARK,
+				CREATOR,
+				CREATE_TIME,
+				REC_VER,
+				REC_STATUS ) 
+	 	VALUES(
+			 	#{kpifancingPid}, 
+			 	#{fancingOrderNo}, 
+			 	#{userPid}, 
+			 	#{kpiweights}, 
+			 	#{interestrate}, 
+			 	#{proworkStardate}, 
+			 	#{proworkEnddate}, 
+			 	#{remark}, 
+			 	#{creator},
+			 	SYSDATE(),
+			 	1,1
+	 	)
+	 	</insert>
+    
+	  
+</mapper>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinoservices.xascf.risk.mapper.ResultItemMapper">
+	<resultMap type="com.sinoservices.xascf.risk.model.ResultItemModel" id="resultItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="resultItemPid" column="RESULT_ITEM_PID"/>
+		<result property="evaluateResultPid" column="EVALUATE_RESULT_PID"/>
+		<result property="factorPid" column="FACTOR_PID"/>
+		<result property="factorParentPid" column="FACTOR_PARENT_PID"/>
+		<result property="factorName" column="FACTOR_NAME"/>
+		<result property="factorUrl" column="FACTOR_URL"/>
+		<result property="score" column="SCORE"/>
+		<result property="percentage" column="PERCENTAGE"/>
+		<result property="fullMarks" column="FULL_MARKS"/>
+		<result property="finalScore" column="FINAL_SCORE"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.risk.view.ResultItemQueryItemView" id="resultItemWithChildMap">
+		<result property="id" column="ID"/>
+		<result property="resultItemPid" column="RESULT_ITEM_PID"/>
+		<result property="evaluateResultPid" column="EVALUATE_RESULT_PID"/>
+		<result property="factorPid" column="FACTOR_PID"/>
+		<result property="factorParentPid" column="FACTOR_PARENT_PID"/>
+		<result property="factorName" column="FACTOR_NAME"/>
+		<result property="factorUrl" column="FACTOR_URL"/>
+		<result property="score" column="SCORE"/>
+		<result property="percentage" column="PERCENTAGE"/>
+		<result property="fullMarks" column="FULL_MARKS"/>
+		<result property="finalScore" column="FINAL_SCORE"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<collection property="children" column="{factorPid=FACTOR_PID,evaluateResultPid=EVALUATE_RESULT_PID}" ofType="com.sinoservices.xascf.risk.view.ResultItemQueryItemView" select="select-children"/>
+	</resultMap>
+	
+	<select id="select-children" parameterType="java.util.HashMap" resultMap="resultItemWithChildMap">
+		SELECT 
+			ID,RESULT_ITEM_PID,EVALUATE_RESULT_PID,FACTOR_PID,FACTOR_PARENT_PID,FACTOR_NAME,FACTOR_URL,SCORE,PERCENTAGE,
+			FULL_MARKS,FINAL_SCORE,REC_VER,CREATE_TIME,CREATOR,MODIFY_TIME,MODIFIER,REC_STATUS
+        FROM  RM_RESULT_ITEM
+         WHERE FACTOR_PARENT_PID =#{factorPid} AND EVALUATE_RESULT_PID =#{evaluateResultPid}
+    </select> 
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,RESULT_ITEM_PID,EVALUATE_RESULT_PID,FACTOR_PID,FACTOR_PARENT_PID,FACTOR_NAME,FACTOR_URL,SCORE,PERCENTAGE,
+					FULL_MARKS,FINAL_SCORE,REC_VER,CREATE_TIME,CREATOR,MODIFY_TIME,MODIFIER,REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="resultItemPid!=null and resultItemPid!=''"> AND RESULT_ITEM_PID =${resultItemPid}</if>
+		<if test="evaluateResultPid!=null and evaluateResultPid!=''"> AND EVALUATE_RESULT_PID =${evaluateResultPid}</if>
+		<if test="factorPid!=null and factorPid!=''"> AND FACTOR_PID =${factorPid}</if>
+		<if test="factorName!=null and factorName!=''"> AND FACTOR_NAME =${factorName}</if>
+		<if test="finalScore!=null and finalScore!=''"> AND FINAL_SCORE =${finalScore}</if>
+		 AND REC_STATUS=0
+		 ORDER BY CREATE_TIME DESC
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.risk.view.ResultItemQueryConditionView">
+		<include refid="count"/>
+		FROM  RM_RESULT_ITEM
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="resultItemResultMap" parameterType="com.sinoservices.xascf.risk.view.ResultItemQueryConditionView">
+		<include refid="select"/>
+		FROM  RM_RESULT_ITEM
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getRootResultItem" resultMap="resultItemWithChildMap" parameterType="String">
+		<include refid="select"/>
+		FROM  RM_RESULT_ITEM
+		WHERE FACTOR_PARENT_PID NOT IN (SELECT  FACTOR_PID from RM_RESULT_ITEM) AND EVALUATE_RESULT_PID = #{evaluateResultPid}
+	</select>
+	
+	
+	<!-- 新增 -->
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.sinoservices.xascf.risk.model.ResultItemModel">
+		INSERT INTO RM_RESULT_ITEM(
+			RESULT_ITEM_PID,
+			EVALUATE_RESULT_PID,
+			FACTOR_PID,
+			FACTOR_PARENT_PID,
+			FACTOR_NAME,
+			FACTOR_URL,
+			SCORE,
+			PERCENTAGE,
+			FULL_MARKS,
+			FINAL_SCORE,
+			CREATE_TIME,
+			CREATOR,
+			MODIFY_TIME,
+			MODIFIER,
+			REC_VER,
+			REC_STATUS
+		) VALUES(
+			#{resultItemPid},
+			#{evaluateResultPid},
+			#{factorPid},
+			#{factorParentPid},
+			#{factorName},
+			#{factorUrl},
+			#{score},
+			#{percentage},
+			#{fullMarks},
+			#{finalScore},
+			SYSDATE(),
+			#{creator},
+			SYSDATE(),
+			#{modifier},1,0
+		)
+	</insert>
+	
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+		INSERT INTO RM_RESULT_ITEM(
+			RESULT_ITEM_PID,
+			EVALUATE_RESULT_PID,
+			FACTOR_PID,
+			FACTOR_PARENT_PID,
+			FACTOR_NAME,
+			FACTOR_URL,
+			SCORE,
+			PERCENTAGE,
+			FULL_MARKS,
+			FINAL_SCORE,
+			CREATE_TIME,
+			CREATOR,
+			MODIFY_TIME,
+			MODIFIER,
+			REC_VER,
+			REC_STATUS
+		) VALUES
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (   
+			#{item.resultItemPid},
+			#{item.evaluateResultPid},
+			#{item.factorPid},
+			#{item.factorParentPid},
+			#{item.factorName},
+			#{item.factorUrl},
+			#{item.score},
+			#{item.percentage},
+			#{item.fullMarks},
+			#{item.finalScore},
+			SYSDATE(),
+			#{item.creator},
+			SYSDATE(),
+			#{item.modifier},1,0
+			   )  
+	    </foreach>  
+  </insert>  
+	
+	<!-- 删除 -->
+	<delete id="deleteByPids" parameterType="java.util.List"> 
+		DELETE FROM RM_RESULT_ITEM WHERE RESULT_ITEM_PID in
+		<foreach item="ids" collection="list" open="(" separator="," close=")">
+				#{ids}
+			</foreach>
+	</delete>
+	
+		<!-- 删除 -->
+	<delete id="deleteByResultPid" parameterType="String"> 
+		DELETE FROM RM_RESULT_ITEM WHERE EVALUATE_RESULT_PID = #{evaluateResultPid}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateByModel" parameterType="com.sinoservices.xascf.risk.model.ResultItemModel">
+		UPDATE RM_RESULT_ITEM SET
+		<if test="factorPid!=null and factorPid!=''">	FACTOR_PID = #{factorPid},</if>
+		<if test="factorParentPid!=null and factorParentPid!=''">	FACTOR_PARENT_PID = #{factorParentPid},</if>
+		<if test="factorName!=null and factorName!=''">	FACTOR_NAME =#{factorName} ,</if>
+		<if test="factorUrl !=null and factorUrl !=''">	FACTOR_URL =#{factorUrl} ,</if>
+		<if test="score!=null and score!=''">	SCORE = #{score},</if>
+		<if test="percentage!=null and percentage!=''">	PERCENTAGE = #{percentage},</if>
+		<if test="fullMarks!=null and fullMarks!=''">	FULL_MARKS = #{fullMarks},</if>
+		<if test="finalScore!=null and finalScore!=''">	FINAL_SCORE = #{finalScore},</if>
+		<if test="recStatus!=null and recStatus!=''">	REC_STATUS = #{recStatus},</if>
+				Modify_Time = SYSDATE(),
+				Modifier =#{modifier},
+				Rec_Ver=Rec_Ver+1 
+		WHERE RESULT_ITEM_PID=#{resultItemPid}	
+	</update>
+	
+	<!-- 通过PID获取对象 -->
+	<select id="getByPid" resultMap="resultItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  RM_RESULT_ITEM
+		WHERE RESULT_ITEM_PID=#{resultItemPid}	
+	</select>
+
+</mapper>

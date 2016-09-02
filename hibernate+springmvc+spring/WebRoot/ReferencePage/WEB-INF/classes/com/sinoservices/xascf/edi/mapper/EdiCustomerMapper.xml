@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.edi.mapper.EdiCustomerMapper">
+	<resultMap type="com.sinoservices.xascf.edi.model.EdiCustomerModel" id="EdiCustomerModel">
+		<result property="customerId" column="CUSTOMER_ID"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="loginName" column="LOGIN_NAME"/>
+		<result property="loginNameR" column="LOGIN_NAME_R"/>	
+		<result property="loginPwd" column="LOGIN_PWD"/> 
+		<result property="userNameCn" column="USER_NAME_CN"/> 	
+		<result property="tel" column="TEL"/>
+		<result property="emill" column="EMILL"/> 
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATETIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFYTIME"/>
+		<result property="ediFlag" column="EDIFLAG"/> 
+		<result property="apperrInfo" column="APPERRINFO"/>  
+		
+	</resultMap>  
+	
+	<sql id="select"> 
+		  SELECT 
+		  	CUSTOMER_ID,			
+	        MEMBER_NO,
+	        LOGIN_NAME,		
+			LOGIN_NAME_R,
+			LOGIN_PWD,
+			USER_NAME_CN,		
+			TEL,
+			EMILL,	
+			CREATOR,			
+			CREATETIME,		
+			MODIFIER,				
+			MODIFYTIME,			
+			EDIFLAG,			
+			APPERRINFO
+	</sql>
+	
+	<!-- 查询  -->
+	<select id="getEdiCustomerByCondition" resultMap="EdiCustomerModel" parameterType="com.sinoservices.xascf.edi.model.EdiCustomerModel">
+		<include refid="select"/>  
+		FROM  EDI_CUSTOMER
+		<include refid="findByExample"/> 
+	</select>
+	
+	<sql id="findByExample">
+		WHERE  1=1
+		<if test="customerId !=null and  customerId !=''">AND CUSTOMER_ID LIKE ('%${customerId}%')</if>
+		<if test="ediFlag !=null and ediFlag != ''">AND EDIFLAG LIKE ('%${ediFlag}%')</if>
+	</sql>
+
+	<update id="update" parameterType="com.sinoservices.xascf.edi.model.EdiCustomerModel">
+		UPDATE EDI_CUSTOMER  
+		<set>   
+			<if test="ediFlag != null and ediFlag != ''">EDIFLAG = #{ediFlag},</if>
+			<if test="apperrInfo != null and apperrInfo != ''">APPERRINFO = #{apperrInfo},</if>
+ 
+			<if test="modifier != null and modifier != ''">MODIFIER = #{modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''">MODIFYTIME = #{modifyTime},</if>
+		</set>
+			WHERE 
+			CUSTOMER_ID = #{customerId} 
+	</update>
+	
+	<update id="batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+        	UPDATE EDI_CUSTOMER
+            <set>
+				<if test="item.ediFlag != null and item.ediFlag != ''">EDIFLAG = #{item.ediFlag},</if>
+				<if test="item.apperrInfo != null and item.apperrInfo != ''">APPERRINFO = #{item.apperrInfo},</if>
+				MODIFIER = 'SYSTEM',
+				MODIFYTIME = SYSDATE()         	
+            </set>
+            where MEMBER_NO = #{item.memberNo}
+         </foreach>
+	</update>
+	
+</mapper>

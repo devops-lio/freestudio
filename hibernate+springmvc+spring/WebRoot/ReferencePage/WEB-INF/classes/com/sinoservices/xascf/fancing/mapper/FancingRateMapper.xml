@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.FancingRateMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.view.FancingRateItem" id="fancingRateItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="fancingRatePid" column="FANCING_RATE_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="rateType" column="RATE_TYPE"/>
+		<result property="fancingBillNo" column="FANCING_BILL_NO"/>
+		<result property="fancingRate" column="FANCING_RATE"/>
+		<result property="overdueRate" column="OVERDUE_RATE"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					FANCING_RATE_PID,
+					FANCING_ORDER_NO,
+					RATE_TYPE,
+					FANCING_BILL_NO,
+					FANCING_RATE,
+					OVERDUE_RATE,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="fancingRatePid!=null and fancingRatePid!=''"> AND FANCING_RATE_PID LIKE ('%'||'fancingRatePid'||'%' )</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO LIKE ('%'||'fancingOrderNo'||'%' )</if>
+		<if test="fancingRate!=null and fancingRate!=''"> AND FANCING_RATE LIKE ('%'||'fancingRate'||'%' )</if>
+		<if test="overdueRate!=null and overdueRate!=''"> AND OVERDUE_RATE LIKE ('%'||'overdueRate'||'%' )</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.model.FancingRateModel">
+		<include refid="count"/>
+		FROM  DM_FANCING_RATE
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="fancingRateItemResultMap" parameterType="com.sinoservices.xascf.fancing.model.FancingRateModel">
+		<include refid="select"/>
+		FROM  DM_FANCING_RATE
+		<include refid="findByExample"/>
+	</select>
+	<select id="getByOrderNo" resultMap="fancingRateItemResultMap" parameterType="String">
+		<include refid="select"/>
+			FROM  DM_FANCING_RATE
+		WHERE 	FANCING_ORDER_NO= #{_paratemer}
+	</select>
+	<select id="getByBillNo" resultMap="fancingRateItemResultMap" parameterType="String">
+		<include refid="select"/>
+			FROM  DM_FANCING_RATE
+		WHERE 	FANCING_ORDER_NO= #{_paratemer}
+	</select>
+	<insert id="insert"  parameterType="com.sinoservices.xascf.fancing.model.FancingRateModel">
+		INSERT INTO DM_FANCING_RATE (
+				FANCING_RATE_PID,
+				FANCING_ORDER_NO,
+				RATE_TYPE,
+				FANCING_BILL_NO,
+				FANCING_RATE,
+				OVERDUE_RATE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{fancingRatePid},
+			   #{fancingOrderNo},
+			   #{rateType},
+			   #{fancingBillNo},
+			   #{fancingRate},
+			   #{overdueRate},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   #{recStatus}
+		)
+	</insert>
+	
+	<update id="updateByOrderNo" parameterType="com.sinoservices.xascf.fancing.model.FancingRateModel">
+		UPDATE DM_FANCING_RATE SET
+			<if test="fancingRate!=null and fancingRate!=''"> 	FANCING_RATE = #{fancingRate},</if>
+			<if test="overdueRate!=null and overdueRate!=''"> 	OVERDUE_RATE = #{overdueRate},</if>
+			<if test="remark!=null and remark!=''"> 	REMARK = #{remark},</if>
+			<if test="modifier!=null and modifier!=''"> 	MODIFIER = #{modifier},</if>
+			<if test="recStatus!=null and recStatus!=''"> 	REC_STATUS = #{recStatus}</if>
+			MODIFY_TIME = SYSDATE(),
+			REC_VER =REC_VER+1
+		WHERE 	FANCING_ORDER_NO= #{fancingOrderNo}
+	</update>
+</mapper>

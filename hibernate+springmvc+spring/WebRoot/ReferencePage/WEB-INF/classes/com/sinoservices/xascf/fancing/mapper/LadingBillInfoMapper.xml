@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.LadingBillInfoMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.view.LadingBillInfoItem" id="ladingBillInfoItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="ladingBillPid" column="LADING_BILL_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="ladingBillNo" column="LADING_BILL_NO"/>
+		<result property="ladingBillType" column="LADING_BILL_TYPE"/>
+		<result property="ladingBillDate" column="LADING_BILL_DATE"/>
+		<result property="ladingBillGoodsname" column="LADING_BILL_GOODSNAME"/>
+		<result property="ladingBillNum" column="LADING_BILL_NUM"/>
+		<result property="ladingBillPrice" column="LADING_BILL_PRICE"/>
+		<result property="ladingBillFrom" column="LADING_BILL_FROM"/>
+		<result property="ladingBillTo" column="LADING_BILL_TO"/>
+		<result property="ladingBillClient" column="LADING_BILL_CLIENT"/>
+		<result property="ladingBillCarNo" column="LADING_BILL_CAR_NO"/>
+		<result property="ladingBillStatus" column="LADING_BILL_STATUS"/>
+		<result property="ladingBillFilename" column="LADING_BILL_FILENAME"/>
+		<result property="ladingBillFileurl" column="LADING_BILL_FILEURL"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="createTimeStr" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					LADING_BILL_PID,
+					FANCING_ORDER_NO,
+					LADING_BILL_NO,
+					LADING_BILL_TYPE,
+					LADING_BILL_DATE,
+					LADING_BILL_GOODSNAME,
+					LADING_BILL_NUM,
+					LADING_BILL_PRICE,
+					LADING_BILL_FROM,
+					LADING_BILL_TO,
+					LADING_BILL_CLIENT,
+					LADING_BILL_CAR_NO,
+					LADING_BILL_STATUS,
+					LADING_BILL_FILENAME,
+					LADING_BILL_FILEURL,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	<update id="updateByModel" parameterType="com.sinoservices.xascf.fancing.model.LadingBillInfoModel">
+		UPDATE DM_LADING_BILL_INFO SET
+			<if test="ladingBillNo!=null and ladingBillNo!=''"> LADING_BILL_NO = #{ladingBillNo},</if>
+			<if test="ladingBillType!=null and ladingBillType!=''"> LADING_BILL_TYPE = #{ladingBillType},</if>
+			<if test="ladingBillClient!=null and ladingBillClient!=''"> LADING_BILL_CLIENT = #{ladingBillClient},</if>
+			<if test="ladingBillFrom !=null and ladingBillFrom !=''"> LADING_BILL_FROM = #{ladingBillFrom},</if>
+			<if test="ladingBillTo !=null and ladingBillTo !=''"> LADING_BILL_TO = #{ladingBillTo},</if>
+			<if test="ladingBillCarNo !=null and ladingBillCarNo !=''"> LADING_BILL_CAR_NO = #{ladingBillCarNo},</if>
+			<if test="ladingBillGoodsname !=null and ladingBillGoodsname !=''"> LADING_BILL_GOODSNAME = #{ladingBillGoodsname},</if>
+			<if test="ladingBillNum !=null and ladingBillNum !=''"> LADING_BILL_NUM = #{ladingBillNum},</if>
+			<if test="ladingBillPrice !=null and ladingBillPrice !=''"> LADING_BILL_PRICE = #{ladingBillPrice},</if>
+			<if test="ladingBillDate !=null and ladingBillDate !=''"> LADING_BILL_DATE = #{ladingBillDate},</if>
+			<if test="ladingBillFileurl !=null and ladingBillFileurl !=''"> LADING_BILL_FILEURL = #{ladingBillFileurl},</if>
+			<if test="ladingBillFilename !=null and ladingBillFilename !=''"> LADING_BILL_FILENAME = #{ladingBillFilename},</if>
+			REMARK = #{remark},
+			REC_VER = REC_VER+1,
+			MODIFY_TIME = #{modifyTime}
+			WHERE 1=1   
+			<if test="ladingBillNo!=null and ladingBillNo!=''"> AND LADING_BILL_NO = #{ladingBillNo}</if>
+			<if test="ladingBillPid!=null and ladingBillPid!=''">AND LADING_BILL_PID = #{ladingBillPid}</if>
+	</update>
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="ladingBillPid!=null and ladingBillPid!=''"> AND LADING_BILL_PID LIKE ('%'||'ladingBillPid'||'%' )</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO LIKE ('%'||'fancingOrderNo'||'%' )</if>
+		<if test="ladingBillNo!=null and ladingBillNo!=''"> AND LADING_BILL_NO LIKE ('%'||'ladingBillNo'||'%' )</if>
+		<if test="ladingBillDate!=null and ladingBillDate!=''"> AND LADING_BILL_DATE LIKE ('%'||'ladingBillDate'||'%' )</if>
+		<if test="ladingBillGoodsname!=null and ladingBillGoodsname!=''"> AND LADING_BILL_GOODSNAME LIKE ('%'||'ladingBillGoodsname'||'%' )</if>
+		<if test="ladingBillNum!=null and ladingBillNum!=''"> AND LADING_BILL_NUM LIKE ('%'||'ladingBillNum'||'%' )</if>
+		<if test="ladingBillPrice!=null and ladingBillPrice!=''"> AND LADING_BILL_PRICE LIKE ('%'||'ladingBillPrice'||'%' )</if>
+		<if test="ladingBillFrom!=null and ladingBillFrom!=''"> AND LADING_BILL_FROM LIKE ('%'||'ladingBillFrom'||'%' )</if>
+		<if test="ladingBillTo!=null and ladingBillTo!=''"> AND LADING_BILL_TO LIKE ('%'||'ladingBillTo'||'%' )</if>
+		<if test="ladingBillClient!=null and ladingBillClient!=''"> AND LADING_BILL_CLIENT LIKE ('%'||'ladingBillClient'||'%' )</if>
+		<if test="ladingBillCarNo!=null and ladingBillCarNo!=''"> AND LADING_BILL_CAR_NO LIKE ('%'||'ladingBillCarNo'||'%' )</if>
+		<if test="ladingBillStatus!=null and ladingBillStatus!=''"> AND LADING_BILL_STATUS LIKE ('%'||'ladingBillStatus'||'%' )</if>
+		<if test="ladingBillFilename!=null and ladingBillFilename!=''"> AND LADING_BILL_FILENAME LIKE ('%'||'ladingBillFilename'||'%' )</if>
+		<if test="ladingBillFileurl!=null and ladingBillFileurl!=''"> AND LADING_BILL_FILEURL LIKE ('%'||'ladingBillFileurl'||'%' )</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.LadingBillInfoItem">
+		<include refid="count"/>
+		FROM  DM_LADING_BILL_INFO
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="ladingBillInfoItemResultMap" parameterType="com.sinoservices.xascf.fancing.view.LadingBillInfoItem">
+		<include refid="select"/>
+		FROM  DM_LADING_BILL_INFO
+		<include refid="findByExample"/>
+	</select>
+	<!-- 获取所有运单单号list -->
+	<select id="getLadingBillNoList" resultType="String" >
+		SELECT LADING_BILL_NO
+			FROM  DM_LADING_BILL_INFO
+	</select>
+	<!-- 根据融资单号获取融资提单列表 -->
+	<select id="getPageByOrderNo" resultMap="ladingBillInfoItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_LADING_BILL_INFO
+			WHERE FANCING_ORDER_NO=#{_parameter}
+	</select>	
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO DM_LADING_BILL_INFO (
+				LADING_BILL_PID,
+				LADING_BILL_TYPE,
+				FANCING_ORDER_NO,
+				LADING_BILL_NO,
+				LADING_BILL_DATE,
+				LADING_BILL_GOODSNAME,
+				LADING_BILL_NUM,
+				LADING_BILL_PRICE,
+				LADING_BILL_FROM,
+				LADING_BILL_TO,
+				LADING_BILL_CLIENT,
+				LADING_BILL_CAR_NO,
+				LADING_BILL_STATUS,
+				LADING_BILL_FILENAME,
+				LADING_BILL_FILEURL,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( #{item.ladingBillPid},
+	           #{item.ladingBillType},
+			   #{item.fancingOrderNo},
+			   #{item.ladingBillNo},
+			   #{item.ladingBillDate},
+			   #{item.ladingBillGoodsname},
+			   #{item.ladingBillNum},
+			   #{item.ladingBillPrice},
+			   #{item.ladingBillFrom},
+			   #{item.ladingBillTo},
+			   #{item.ladingBillClient},
+			   #{item.ladingBillCarNo},
+			   #{item.ladingBillStatus},
+			   #{item.ladingBillFilename},
+			   #{item.ladingBillFileurl},
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   1)  
+	    </foreach>  
+  </insert>  
+  <delete id="deleteByOrderNo" parameterType="String">
+      DELETE FROM DM_LADING_BILL_INFO WHERE FANCING_ORDER_NO=#{_parameter}
+  
+  </delete>
+	<insert id="insert">
+		INSERT INTO DM_LADING_BILL_INFO (
+				ID,
+				LADING_BILL_PID,
+				FANCING_ORDER_NO,
+				LADING_BILL_NO,
+				LADING_BILL_DATE,
+				LADING_BILL_GOODSNAME,
+				LADING_BILL_NUM,
+				LADING_BILL_PRICE,
+				LADING_BILL_FROM,
+				LADING_BILL_TO,
+				LADING_BILL_CLIENT,
+				LADING_BILL_CAR_NO,
+				LADING_BILL_STATUS,
+				LADING_BILL_FILENAME,
+				LADING_BILL_FILEURL,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{ladingBillPid},
+			   #{fancingOrderNo},
+			   #{ladingBillNo},
+			   #{ladingBillDate},
+			   #{ladingBillGoodsname},
+			   #{ladingBillNum},
+			   #{ladingBillPrice},
+			   #{ladingBillFrom},
+			   #{ladingBillTo},
+			   #{ladingBillClient},
+			   #{ladingBillCarNo},
+			   #{ladingBillStatus},
+			   #{ladingBillFilename},
+			   #{ladingBillFileurl},
+			   #{remark},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus}
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE DM_LADING_BILL_INFO SET
+				ID = #{id},
+				LADING_BILL_PID = #{ladingBillPid},
+				FANCING_ORDER_NO = #{fancingOrderNo},
+				LADING_BILL_NO = #{ladingBillNo},
+				LADING_BILL_DATE = #{ladingBillDate},
+				LADING_BILL_GOODSNAME = #{ladingBillGoodsname},
+				LADING_BILL_NUM = #{ladingBillNum},
+				LADING_BILL_PRICE = #{ladingBillPrice},
+				LADING_BILL_FROM = #{ladingBillFrom},
+				LADING_BILL_TO = #{ladingBillTo},
+				LADING_BILL_CLIENT = #{ladingBillClient},
+				LADING_BILL_CAR_NO = #{ladingBillCarNo},
+				LADING_BILL_STATUS = #{ladingBillStatus},
+				LADING_BILL_FILENAME = #{ladingBillFilename},
+				LADING_BILL_FILEURL = #{ladingBillFileurl},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus}
+	</update>
+</mapper>

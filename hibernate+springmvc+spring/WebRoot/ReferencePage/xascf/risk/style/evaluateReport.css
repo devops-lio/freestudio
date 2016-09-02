@@ -1,0 +1,52 @@
+#evaluateReportDiv {font-size: 14px; color: #333333;font:14px/14px tahoma,arial,"Hiragino Sans GB","Microsoft Yahei",宋体}
+#evaluateReportDiv #report {border: 1px solid #ddd;border-bottom: none;width: 1100px; margin: 0 auto;background: white;}
+#evaluateReportDiv #report .reportTitle {line-height: 40px;font-size: 22px;font-weight: bold;text-align: center;padding-bottom: 10px;}
+#evaluateReportDiv #reportInfo {width: 1100px;margin: 0 auto;}
+#evaluateReportDiv .reportTable {border: 1px solid #ddd;border-right: none;border-bottom: none;}
+#evaluateReportDiv .reportTable td {background: #FFF;line-height: 30px;border-right: 1px solid #ddd;border-bottom: 1px solid #ddd;}
+#evaluateReportDiv .reportTable .header {line-height: 40px;padding-top:5px;font-size: 16px;font-weight: bold;text-align: center;}
+#evaluateReportDiv .reportTable textarea {margin: 3px 3px 3px 3px;line-height:15px;resize: none;wrod-warp:true;}
+#evaluateReportDiv .paddingLeft {padding-left: 5px;}
+#evaluateReportDiv .reportTable .firstLine td{background:#f0f0f0;}
+#evaluateReportDiv .reportTable .firstLine .noBg{background:#fff;}
+#evaluateReportDiv .gudong { border: none;}
+#evaluateReportDiv .gudong td {text-align: center; border-right: 1px solid #ddd; line-height: 30px;}
+#evaluateReportDiv .gudong .firstLine > td {line-height: 30px;width: 180px;}
+#evaluateReportDiv .gudong textarea {margin: 3px 0px 0px 3px;}
+#evaluateReportDiv .gudong input {width: 150px;}
+#evaluateReportDiv .duiwai .firstLine > td { line-height: 30px; width: 137px;}
+#evaluateReportDiv .duiwai td {line-height: 35px;text-align: center;}
+#evaluateReportDiv .duiwai input {width: 120px;}
+#evaluateReportDiv #companyCredit td, #companyRealCredit td {text-align: center;line-height: 30px;padding-left: 5px;padding-right: 5px;}
+#evaluateReportDiv #companyCredit input, #companyRealCredit input {width: 140px;}
+#evaluateReportDiv #detail input, #detail select {width: 100px;}
+#evaluateReportDiv #detail .firstline > td, #companyCredit .firstline > td, .firstline > td {line-height: 30px;}
+#evaluateReportDiv #upSupplier td, #downBuy td {text-align: center;line-height: 30px;}
+#evaluateReportDiv #upSupplier .firstLine > td, #downBuy .firstLine > td {line-height: 30px;}
+#evaluateReportDiv #upSupplier input[type=text], #upSupplier select, #downBuy input[type=text], #downBuy select {width: 130px;}
+#evaluateReportDiv .caiwu input[type=text] {width: 100px;}
+#evaluateReportDiv .caiwu td {line-height: 30px;text-align: center;}
+#evaluateReportDiv #cash td {line-height: 30px;text-align: center;}
+#evaluateReportDiv #bankFlow td, #yingshou td { text-align: center;}
+#evaluateReportDiv #bankFlow input[type=text]{width: 85px;}
+#evaluateReportDiv #yingshou input[type=text] {width: 135px;} 
+#evaluateReportDiv .tdleft {width: 100px;text-align: right;}
+#evaluateReportDiv .tdright {width: 300px;}
+#evaluateReportDiv .tdTitle {width: 90px; text-align: center;}
+#evaluateReportDiv .tdContent {padding-left: 5px;width: 100px;}
+#evaluateReportDiv .tdContent input, .tdContent select {width: 100px;}
+#evaluateReportDiv .w35 { width: 35px;}
+#evaluateReportDiv .w100 {width: 100px;}
+#evaluateReportDiv .w120 { width: 120px;}
+#evaluateReportDiv .w140 {width: 140px;}
+#evaluateReportDiv .w150 {width: 150px;}
+#evaluateReportDiv .w180 {width: 180px;}
+#evaluateReportDiv .w200 {width: 200px;}
+#evaluateReportDiv .w240 { width: 240px;}
+#evaluateReportDiv .w250 { width: 250px;}
+#evaluateReportDiv .w280 { width: 280px; }
+#evaluateReportDiv .w300 {width: 300px;}
+#evaluateReportDiv .borderNon {border-right: none;border-bottom: none;}
+#evaluateReportDiv .textarea2{height:35px;}
+#evaluateReportDiv .textarea3{height:50px;width:240px;margin-bottom:3px;padding-left:5px;}
+#evaluateReportDiv .textarea5{height:80px; width:450px;}

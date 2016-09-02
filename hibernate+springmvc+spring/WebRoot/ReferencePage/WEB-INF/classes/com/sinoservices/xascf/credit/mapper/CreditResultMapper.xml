@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.CreditResultMapper">
+	<resultMap type="com.sinoservices.xascf.credit.model.CreditResultModel" id="creditResultModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditResultNo" column="CREDIT_RESULT_NO"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="memberType" column="MEMBER_TYPE"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="replyQuota" column="REPLY_QUOTA"/>
+		<result property="creditStartTime" column="CREDIT_START_TIME"/>
+		<result property="creditEndTime" column="CREDIT_END_TIME"/>
+		<result property="financingType" column="FINANCING_TYPE"/>
+		<result property="financingMethod" column="FINANCING_METHOD"/>
+		<result property="financingNature" column="FINANCING_NATURE"/>
+		<result property="guaranteeType" column="GUARANTEE_TYPE"/>
+		<result property="termRate" column="TERM_RATE"/>
+		<result property="overdueRate" column="OVERDUE_RATE"/>
+		<result property="isBond" column="IS_BOND"/>
+		<result property="bondRate" column="BOND_RATE"/>
+		<result property="bondPrice" column="BOND_PRICE"/>
+		<result property="openPrice" column="OPEN_PRICE"/>
+		<result property="serveMethod" column="SERVE_METHOD"/>
+		<result property="serveRate" column="SERVE_RATE"/>
+		<result property="creditRemark" column="CREDIT_REMARK"/>
+		<result property="creditApproval" column="CREDIT_APPROVAL"/>
+		<result property="creditResult" column="CREDIT_RESULT"/>
+		<result property="passResult" column="PASS_RESULT"/>
+		<result property="passRate" column="PASS_RATE"/>
+		<result property="backResult" column="BACK_RESULT"/>
+		<result property="backRate" column="BACK_RATE"/>
+		<result property="againResult" column="AGAIN_RESULT"/>
+		<result property="gaginRate" column="GAGIN_RATE"/>
+		<result property="replyTime" column="REPLY_TIME"/>
+		<result property="replier" column="REPLIER"/>
+		<result property="resultStatus" column="RESULT_STATUS"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.credit.view.CreditResultItem" id="creditResultItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditResultNo" column="CREDIT_RESULT_NO"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="memberType" column="MEMBER_TYPE"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="replyQuota" column="REPLY_QUOTA"/>
+		<result property="creditStartTime" column="CREDIT_START_TIME"/>
+		<result property="creditEndTime" column="CREDIT_END_TIME"/>
+		<result property="financingType" column="FINANCING_TYPE"/>
+		<result property="financingMethod" column="FINANCING_METHOD"/>
+		<result property="financingNature" column="FINANCING_NATURE"/>
+		<result property="guaranteeType" column="GUARANTEE_TYPE"/>
+		<result property="termRate" column="TERM_RATE"/>
+		<result property="overdueRate" column="OVERDUE_RATE"/>
+		<result property="isBond" column="IS_BOND"/>
+		<result property="bondRate" column="BOND_RATE"/>
+		<result property="bondPrice" column="BOND_PRICE"/>
+		<result property="openPrice" column="OPEN_PRICE"/>
+		<result property="serveMethod" column="SERVE_METHOD"/>
+		<result property="serveRate" column="SERVE_RATE"/>
+		<result property="creditRemark" column="CREDIT_REMARK"/>
+		<result property="creditApproval" column="CREDIT_APPROVAL"/>
+		<result property="creditResult" column="CREDIT_RESULT"/>
+		<result property="passResult" column="PASS_RESULT"/>
+		<result property="passRate" column="PASS_RATE"/>
+		<result property="backResult" column="BACK_RESULT"/>
+		<result property="backRate" column="BACK_RATE"/>
+		<result property="againResult" column="AGAIN_RESULT"/>
+		<result property="gaginRate" column="GAGIN_RATE"/>
+		<result property="replyTime" column="REPLY_TIME"/>
+		<result property="replier" column="REPLIER"/>
+		<result property="resultStatus" column="RESULT_STATUS"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="remainAmount" column="REMAIN_AMOUNT"/>
+		<result property="userAmount" column="USED_AMOUNT"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					DCR.PID,
+					CREDIT_RESULT_NO,
+					CREDIT_NO,
+					DCR.MEMBER_PID,
+					MEMBER_TYPE,
+					DCR.MEMBER_NO,
+					MEMBER_NAME,
+					REPLY_QUOTA,
+					CREDIT_START_TIME,
+					CREDIT_END_TIME,
+					FINANCING_TYPE,
+					FINANCING_METHOD,
+					FINANCING_NATURE,
+					GUARANTEE_TYPE,
+					TERM_RATE,
+					OVERDUE_RATE,
+					IS_BOND,
+					BOND_RATE,
+					BOND_PRICE,
+					OPEN_PRICE,
+					SERVE_METHOD,
+					SERVE_RATE,
+					CREDIT_REMARK,
+					CREDIT_APPROVAL,
+					CREDIT_RESULT,
+					PASS_RESULT,
+					PASS_RATE,
+					BACK_RESULT,
+					BACK_RATE,
+					AGAIN_RESULT,
+					GAGIN_RATE,
+					REPLY_TIME,RESULT_STATUS,
+					REPLIER
+					
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<select id="getModelByCondition" resultMap="creditResultModelResultMap" parameterType="com.sinoservices.xascf.credit.model.CreditResultModel">
+		<include refid="select"/>
+		FROM  DM_CREDIT_RESULT DCR
+		JOIN  SS_CUSTOMER SCC ON SCC.MEMBER_PID=DCR.MEMBER_PID
+		WHERE 1=1 
+		<if test="creditResultNo!=null and creditResultNo!=''"> AND CREDIT_RESULT_NO =#{creditResultNo}</if>
+		<if test="creditNo!=null and creditNo!=''"> AND CREDIT_NO=#{creditNo}</if>
+		<if test="memberPid!=null and memberPid!=''"> AND MEMBER_PID =#{memberPid}</if>
+		<if test="memberNo!=null and memberNo!=''"> AND MEMBER_NO =#{memberNo}</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS =#{recStatus}</if>
+		<if test="resultStatus!=null and resultStatus!=''"> AND RESULT_STATUS =#{resultStatus}</if>
+		ORDER BY DCR.CREATE_TIME DESC
+	</select>
+	<select id="getListForPopByCondition" resultMap="creditResultModelResultMap" parameterType="com.sinoservices.xascf.credit.model.CreditResultModel">
+		SELECT 
+					CREDIT_RESULT_NO,
+					SCC.MEMBER_NAME,
+					DCA.CREDIT_NO,
+					SCC.MEMBER_PID,
+					DCA.MEMBER_TYPE,
+					DCR.MEMBER_NO,
+					REPLY_QUOTA,
+					CREDIT_START_TIME,
+					CREDIT_END_TIME
+		FROM  DM_CREDIT_RESULT DCR
+		JOIN  DM_CREDIT_APPLY DCA ON DCR.CREDIT_NO=DCA.CREDIT_NO
+		JOIN SS_KPICUSTOMER SKI ON SKI.CUSTOMERSUB_PID = DCR.MEMBER_PID
+		JOIN  SS_CUSTOMER SCC ON SCC.MEMBER_PID=DCA.MEMBER_PID
+		WHERE DCR.RESULT_STATUS='20' AND DCA.`STATUS`='60' AND SCC.REC_STATUS='2'
+		<if test="creditResultNo!=null and creditResultNo!=''"> AND CREDIT_RESULT_NO LIKE ('%${creditResultNo}%' )</if>
+		<if test="creditNo!=null and creditNo!=''"> AND DCR.CREDIT_NO LIKE ('%${creditNo}%' )</if>
+		<if test="memberName!=null and memberName!=''"> AND SCC.MEMBER_NAME LIKE ('%${memberName}%' )</if>
+		<if test="memberNo!=null and memberNo!=''"> AND DCR.MEMBER_NO LIKE ('%${memberNo}%' )</if>
+		<if test="userPid !=null and userPid !=''"> AND SKI.USER_PID =#{userPid} </if>
+		ORDER BY DCR.CREATE_TIME DESC
+	</select>
+	
+	
+	<!-- 前端根据会员PID查看最新的授信结果 -->
+	<select id="getItemByMemberPid" resultMap="creditResultItemResultMap" parameterType="String">
+		SELECT 
+				DCR.PID,
+				DCR.CREDIT_RESULT_NO,
+				CREDIT_NO,
+				DCR.MEMBER_PID,
+				MEMBER_TYPE,
+				DCR.MEMBER_NO,
+				REPLY_QUOTA,
+				CREDIT_START_TIME,
+				CREDIT_END_TIME,
+				FINANCING_TYPE,
+				FINANCING_METHOD,
+				FINANCING_NATURE,
+				GUARANTEE_TYPE,
+				TERM_RATE,
+				OVERDUE_RATE,
+				IS_BOND,
+				BOND_RATE,
+				BOND_PRICE,
+				OPEN_PRICE,
+				SERVE_METHOD,
+				SERVE_RATE,
+				CREDIT_REMARK,
+				CREDIT_APPROVAL,
+				CREDIT_RESULT,
+				PASS_RESULT,
+				PASS_RATE,
+				BACK_RESULT,
+				BACK_RATE,
+				AGAIN_RESULT,
+				GAGIN_RATE,
+				REPLY_TIME,RESULT_STATUS,
+				REPLIER,
+			    (DCR.REPLY_QUOTA - IFNULL(T.ALL_PRICE,0) + IFNULL(T.REPAY_PRICE,0)) AS REMAIN_AMOUNT,
+			    (IFNULL(T.ALL_PRICE,0) - IFNULL(T.REPAY_PRICE,0)) AS USED_AMOUNT
+			FROM  DM_CREDIT_RESULT DCR 
+			LEFT JOIN (
+						SELECT
+							FC.MEMBER_PID,
+							FC.CREDIT_RESULT_NO,
+							SUM(
+								IFNULL(
+									FO.REPLY_PRICE,
+									FO.REQUEST_PRICE
+								)
+							) AS ALL_PRICE,
+							SUM(
+								IFNULL(BR.REPAYMENT_PRICE, 0)
+							) AS REPAY_PRICE
+						FROM
+							DM_FANCING_CONTRACT FC
+						LEFT JOIN DM_FANCING_ORDER FO ON FC.CONTRACT_NO = FO.CONTRACT_NO
+						LEFT JOIN DM_FANCING_BILL FB ON FB.FANCING_ORDER_NO = FO.FANCING_ORDER_NO
+						LEFT JOIN DM_BILLREBACK_RECORD BR ON FB.BILL_NO = BR.BILL_NO
+						WHERE
+							FB.BILL_TYPE = '1'
+						GROUP BY
+							FC.CREDIT_RESULT_NO
+					) T ON T.CREDIT_RESULT_NO=DCR.CREDIT_RESULT_NO 
+		WHERE DCR.MEMBER_PID=#{_parameter}
+		ORDER BY DCR.CREATE_TIME DESC
+		LIMIT 1
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.credit.model.CreditResultModel">
+		INSERT INTO DM_CREDIT_RESULT (
+				PID,
+				CREDIT_RESULT_NO,
+				CREDIT_NO,
+				MEMBER_PID,
+				MEMBER_TYPE,
+				MEMBER_NO,
+				REPLY_QUOTA,
+				CREDIT_START_TIME,
+				CREDIT_END_TIME,
+				FINANCING_TYPE,
+				FINANCING_METHOD,
+				FINANCING_NATURE,
+				GUARANTEE_TYPE,
+				TERM_RATE,
+				OVERDUE_RATE,
+				IS_BOND,
+				BOND_RATE,
+				BOND_PRICE,
+				OPEN_PRICE,
+				SERVE_METHOD,
+				SERVE_RATE,
+				CREDIT_REMARK,
+				CREDIT_APPROVAL,
+				CREDIT_RESULT,
+				PASS_RESULT,
+				PASS_RATE,
+				BACK_RESULT,
+				BACK_RATE,
+				AGAIN_RESULT,
+				GAGIN_RATE,
+				REPLY_TIME,
+				REPLIER,
+				RESULT_STATUS,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{creditResultNo},
+			   #{creditNo},
+			   #{memberPid},
+			   #{memberType},
+			   #{memberNo},
+			   #{replyQuota},
+			   #{creditStartTime},
+			   #{creditEndTime},
+			   #{financingType},
+			   #{financingMethod},
+			   #{financingNature},
+			   #{guaranteeType},
+			   #{termRate},
+			   #{overdueRate},
+			   #{isBond},
+			   #{bondRate},
+			   #{bondPrice},
+			   #{openPrice},
+			   #{serveMethod},
+			   #{serveRate},
+			   #{creditRemark},
+			   #{creditApproval},
+			   #{creditResult},
+			   #{passResult},
+			   #{passRate},
+			   #{backResult},
+			   #{backRate},
+			   #{againResult},
+			   #{gaginRate},
+			   #{replyTime},
+			   #{replier},
+			   #{resultStatus},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			  1
+		)
+	</insert>
+	<delete id="deleteByCreditNo" parameterType="String">
+	   DELETE FROM DM_CREDIT_RESULT
+	   WHERE CREDIT_NO =#{_parameter}
+	</delete>
+	<update id="updateByCreditReuestPid" parameterType="com.sinoservices.xascf.credit.model.CreditResultModel">
+		UPDATE DM_CREDIT_RESULT SET
+			<if test="creditResultNo !=null and creditResultNo !=''">	CREDIT_RESULT_NO = #{creditResultNo},</if>
+			<if test="creditNo !=null and creditNo !=''">	CREDIT_NO = #{creditNo},</if>
+			<if test="memberPid !=null and memberPid !=''">	MEMBER_PID = #{memberPid},</if>
+			<if test="memberType !=null and memberType !=''">	MEMBER_TYPE = #{memberType},</if>
+			<if test="memberNo !=null and memberNo !=''">	MEMBER_NO = #{memberNo},</if>
+			<if test="replyQuota !=null and replyQuota !=''">	REPLY_QUOTA = #{replyQuota},</if>
+			<if test="creditStartTime !=null and creditStartTime !=''">	CREDIT_START_TIME = #{creditStartTime},</if>
+			<if test="creditEndTime !=null and creditEndTime !=''">	CREDIT_END_TIME = #{creditEndTime},</if>
+			<if test="financingType !=null and financingType !=''">	FINANCING_TYPE = #{financingType},</if>
+			<if test="financingMethod !=null and financingMethod !=''">	FINANCING_METHOD = #{financingMethod},</if>
+			<if test="financingNature !=null and financingNature !=''">	FINANCING_NATURE = #{financingNature},</if>
+			<if test="guaranteeType !=null and guaranteeType !=''">	GUARANTEE_TYPE = #{guaranteeType},</if>
+			<if test="termRate !=null and termRate !=''">	TERM_RATE = #{termRate},</if>
+			<if test="overdueRate !=null and overdueRate !=''">	OVERDUE_RATE = #{overdueRate},</if>
+			<if test="isBond !=null and isBond !=''">	IS_BOND = #{isBond},</if>
+			<if test="bondRate !=null and bondRate !=''">	BOND_RATE = #{bondRate},</if>
+			<if test="bondPrice !=null and bondPrice !=''">	BOND_PRICE = #{bondPrice},</if>
+			<if test="openPrice !=null and openPrice !=''">	OPEN_PRICE = #{openPrice},</if>
+			<if test="serveMethod !=null and serveMethod !=''">	SERVE_METHOD = #{serveMethod},</if>
+			<if test="serveRate !=null and serveRate !=''">	SERVE_RATE = #{serveRate},</if>
+			<if test="creditRemark !=null and creditRemark !=''">	CREDIT_REMARK = #{creditRemark},</if>
+			<if test="creditApproval !=null and creditApproval !=''">	CREDIT_APPROVAL = #{creditApproval},</if>
+			<if test="creditResult !=null and creditResult !=''">	CREDIT_RESULT = #{creditResult},</if>
+			<if test="passResult !=null and passResult !=''">	PASS_RESULT = #{passResult},</if>
+			<if test="passRate !=null and passRate !=''">	PASS_RATE = #{passRate},</if>
+			<if test="backResult !=null and backResult !=''">	BACK_RESULT = #{backResult},</if>
+			<if test="backRate !=null and backRate !=''">	BACK_RATE = #{backRate},</if>
+			<if test="againResult !=null and againResult !=''">	AGAIN_RESULT = #{againResult},</if>
+			<if test="gaginRate !=null and gaginRate !=''">	GAGIN_RATE = #{gaginRate},</if>
+			<if test="replyTime !=null and replyTime !=''">	REPLY_TIME = #{replyTime},</if>
+			<if test="replier !=null and replier !=''">	REPLIER = #{replier},</if>
+			<if test="resultStatus !=null and resultStatus !=''">	RESULT_STATUS = #{resultStatus},</if>
+			<if test="recStatus !=null and recStatus !=''">	REC_STATUS = #{recStatus}, </if>
+				MODIFIER = #{modifier},
+				REC_VER = REC_VER+1,
+				MODIFY_TIME = SYSDATE()
+				WHERE PID = #{pid}
+	</update>
+</mapper>

@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.agfancing.mapper.AgFancingBillMapper">
+	<resultMap type="com.sinoservices.xascf.agfancing.view.FancingBillItem" id="fancingBillItemResultMap">
+		<result property="agfancingBillPid" column="AGFANCING_BILL_PID"/>
+		<result property="agfancingOrderNo" column="AGFANCING_ORDER_NO"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="pid" column="PID"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="billType" column="BILL_TYPE"/>
+		<result property="billTypeEn" column="BILL_TYPE"/>
+		<result property="billNo" column="BILL_NO"/>
+		<result property="billPno" column="BILL_PNO"/>
+		<result property="startDate" column="START_DATE"/>
+		<result property="rebackDate" column="REBACK_DATE"/>
+		<result property="latestTime" column="LATEST_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="createTimeStr" column="CREATE_TIME"/>
+		<result property="repayTime" column="REPAYMENT_TIME"/>
+		<result property="billPrice" column="BILL_PRICE"/>
+		<result property="backPrice" column="BACK_PRICE"/>
+		<result property="remainingPrice" column="REMAINING_PRICE"/>
+		<result property="billStatus" column="BILL_STATUS"/>
+		<result property="remark" column="REMARK"/>
+		<result property="rate" column="RATE"/>
+		<result property="delayDate" column="DELAY_DATE"/>
+		<result property="delayMulpitle" column="DELAY_MULPITLE"/>
+		<result property="rateCycle" column="RATE_CYCLE"/>
+		<result property="buyerPid" column="BUYER_PID"/>
+		<result property="buyerName" column="BUYER_NAME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileUrl" column="FILE_URL"/>
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.agfancing.view.LoanNoticeItem" id="loanNoticeItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="loanPid" column="LOAN_PID"/>
+		<result property="loanNo" column="LOAN_NO"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="loanMemberPid" column="LOAN_MEMBER_PID"/>
+		<result property="loanMemberName" column="LOAN_MEMBER_NAME"/>
+		<result property="loanOperatorName" column="LOAN_OPERATOR_NAME"/>
+		<result property="loanPrice" column="LOAN_PRICE"/>
+		<result property="loanDate" column="LOAN_DATE"/>
+		<result property="payDate" column="PAY_DATE"/>
+		<result property="loanOperatorPid" column="LOAN_OPERATOR_PID"/>
+		<result property="loanBankPayee" column="LOAN_BANK_PAYEE"/>
+		<result property="loanBankName" column="LOAN_BANK_NAME"/>
+		<result property="loanBankAccount" column="LOAN_BANK_ACCOUNT"/>
+		<result property="accountType" column="ACCOUNT_TYPE"/>
+		<result property="accountOpenbank" column="ACCOUNT_OPENBANK"/>
+		<result property="account" column="ACCOUNT"/>
+		<result property="loanStatus" column="LOAN_STATUS"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileUrl" column="FILE_URL"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					DAB.AGFANCING_BILL_PID,
+					DAB.AGFANCING_ORDER_NO,
+					DAB.BILL_NO,
+		          	DAB.FANCING_ORDER_NO,
+					DAB.MEMBER_PID,
+					FB.PID,
+					FB.BILL_TYPE,
+					FB.BILL_PNO,
+					FB.BILL_STATUS,
+					FB.BILL_PRICE,
+					IFNULL(BRR.REPAYMENT_PRICE, 0) AS BACK_PRICE,
+					(BILL_PRICE - (IFNULL(BRR.REPAYMENT_PRICE, 0))) AS REMAINING_PRICE,
+					FB.REBACK_DATE,	BR.REPAYMENT_TIME,
+					FB.START_DATE,FB.LATEST_TIME,
+					SC.MEMBER_NAME,
+					FB.REMARK,
+					DAB.CREATOR,
+					DAB.CREATE_TIME,
+					DAB.MODIFIER,
+					DAB.MODIFY_TIME,
+					DAB.REC_VER,
+					DAB.REC_STATUS,
+					LR.FILE_NAME,
+					LR.FILE_URL,
+					FO.BUYER_PID,
+					FO.BUYER_NAME
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="agfancingOrderNo!=null and agfancingOrderNo!=''"> AND DAB.AGFANCING_ORDER_NO = #{agfancingOrderNo}</if>
+		<if test="billNo!=null and billNo!=''"> AND DAB.BILL_NO LIKE ('%${billNo}%')</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND DAB.FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%')</if>
+		<if test="memberPid!=null and memberPid!=''"> AND DAB.MEMBER_PID = #{memberPid} </if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.agfancing.view.AgFancingCondition">
+		<include refid="count"/>
+		FROM  DM_AGFANCING_BILL DAB
+		LEFT JOIN DM_FANCING_BILL FB ON DAB.BILL_NO = FB.BILL_NO
+		LEFT JOIN DM_FANCING_ORDER FO ON DAB.FANCING_ORDER_NO = FO.FANCING_ORDER_NO
+		LEFT JOIN FM_LOAN_RECORD LR	ON DAB.FANCING_ORDER_NO = LR.FANCING_ORDER_NO
+		LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO = FB.BILL_NO
+		LEFT JOIN SS_CUSTOMER SC ON FB.MENBER_PID = SC.MEMBER_PID
+		LEFT JOIN 
+			(SELECT SUM(BR.REPAYMENT_PRICE) AS REPAYMENT_PRICE,BR.BILL_NO
+				FROM DM_BILLREBACK_RECORD BR
+					GROUP BY BR.BILL_NO)
+			 BRR ON BRR.BILL_NO = FB.BILL_NO
+		<include refid="findByExample"/>
+		<if test="exceptBillStatus!=null and exceptBillStatus!=''"> AND FB.BILL_STATUS != #{exceptBillStatus} </if>
+	</select>
+	
+	<select id="findByCondition" resultMap="fancingBillItemResultMap" parameterType="com.sinoservices.xascf.agfancing.view.AgFancingCondition">
+		<include refid="select"/>
+		FROM DM_AGFANCING_BILL DAB
+		LEFT JOIN DM_FANCING_BILL FB ON DAB.BILL_NO = FB.BILL_NO
+		LEFT JOIN DM_FANCING_ORDER FO ON DAB.FANCING_ORDER_NO = FO.FANCING_ORDER_NO
+		LEFT JOIN FM_LOAN_RECORD LR	ON DAB.FANCING_ORDER_NO = LR.FANCING_ORDER_NO
+		LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO = FB.BILL_NO
+		LEFT JOIN SS_CUSTOMER SC ON FB.MENBER_PID = SC.MEMBER_PID
+		LEFT JOIN 
+			(SELECT SUM(BR.REPAYMENT_PRICE) AS REPAYMENT_PRICE,BR.BILL_NO
+				FROM DM_BILLREBACK_RECORD BR
+					GROUP BY BR.BILL_NO)
+			 BRR ON BRR.BILL_NO = FB.BILL_NO
+		<include refid="findByExample"/>
+		<if test="exceptBillStatus!=null and exceptBillStatus!=''"> AND FB.BILL_STATUS != #{exceptBillStatus} </if>
+	</select>
+	
+	<!-- 账单列表 -->
+	<select id="getBillPageByCondition" resultMap="fancingBillItemResultMap" parameterType="com.sinoservices.xascf.agfancing.view.AgFancingCondition">
+		SELECT 
+					FB.MENBER_PID AS MEMBER_PID,
+					FB.PID,
+					FB.FANCING_ORDER_NO,
+					FB.BILL_TYPE,
+					FB.BILL_NO,
+					FB.BILL_PNO,
+					FB.BILL_STATUS,
+					FB.BILL_PRICE,
+					IFNULL(BRR.REPAYMENT_PRICE, 0) AS BACK_PRICE,
+					(BILL_PRICE - (IFNULL(BRR.REPAYMENT_PRICE, 0))) AS REMAINING_PRICE,
+					FB.REBACK_DATE,	BR.REPAYMENT_TIME,
+					FB.START_DATE,FB.LATEST_TIME,
+					SC.MEMBER_NAME,
+					FB.CREATE_TIME AS CREATE_TIME,
+					FB.REMARK,
+					LR.FILE_NAME,
+					LR.FILE_URL
+		FROM
+			DM_FANCING_BILL FB
+		LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO = FB.BILL_NO
+		LEFT JOIN FM_LOAN_RECORD LR ON LR.FANCING_ORDER_NO = FB.FANCING_ORDER_NO
+		LEFT JOIN SS_CUSTOMER SC ON FB.MENBER_PID = SC.MEMBER_PID
+		LEFT JOIN 
+			(SELECT SUM(BR.REPAYMENT_PRICE) AS REPAYMENT_PRICE,BR.BILL_NO
+				FROM DM_BILLREBACK_RECORD BR
+					GROUP BY BR.BILL_NO)
+			 BRR ON BRR.BILL_NO = FB.BILL_NO
+		WHERE 1=1
+		<if test="memberPid!=null and memberPid!=''"> AND FB.MENBER_PID = #{memberPid} </if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FB.FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%' )</if>
+		AND FB.BILL_NO NOT IN
+			(
+				SELECT
+					DAB.BILL_NO
+				FROM
+					DM_AGFANCING_BILL DAB
+				WHERE
+					DAB.REC_STATUS = '1'
+				<if test="memberPid!=null and memberPid!=''"> AND DAB.MEMBER_PID = #{memberPid} </if>
+				<if test="agfancingOrderNo!=null and agfancingOrderNo!=''"> AND DAB.AGFANCING_ORDER_NO != #{agfancingOrderNo} </if>
+			)
+		AND FB.BILL_TYPE='1'
+		GROUP BY BILL_NO
+		ORDER BY FB.BILL_NO
+	</select>
+	
+	<select id="getFancingByCondition" resultMap="loanNoticeItemResultMap" parameterType="com.sinoservices.xascf.agfancing.view.AgFancingCondition">
+		SELECT 
+					FLN.LOAN_PID,
+					FLN.LOAN_NO,
+					FLN.FANCING_ORDER_NO,
+					FLN.LOAN_MEMBER_PID,
+					FLN.LOAN_MEMBER_NAME,
+					FLN.LOAN_PRICE,
+					FLN.LOAN_DATE,
+					FLR.LOAN_DATE AS PAY_DATE,
+					FLN.LOAN_OPERATOR_PID,
+					FLN.LOAN_BANK_PAYEE,
+					FLN.LOAN_BANK_NAME,
+					FLN.LOAN_BANK_ACCOUNT,
+					FLN.ACCOUNT_TYPE,
+					FLN.ACCOUNT_OPENBANK,
+					FLN.ACCOUNT,
+					FLN.LOAN_STATUS,
+					FLR.FILE_NAME,
+					FLR.FILE_URL
+		FROM DM_AGFANCING_BILL DAB
+		LEFT JOIN FM_LOAN_NOTICE FLN ON DAB.FANCING_ORDER_NO = FLN.FANCING_ORDER_NO
+		LEFT JOIN FM_LOAN_RECORD FLR ON FLR.LOAN_NO=FLN.LOAN_NO
+		WHERE 1=1
+		AND DAB.AGFANCING_ORDER_NO = #{agfancingOrderNo}
+		AND DAB.MEMBER_PID = #{memberPid}
+		AND FLN.LOAN_STATUS = '2'
+	</select>
+	
+	<select id="getFancingCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.agfancing.view.AgFancingCondition">
+		<include refid="count"/>
+		FROM DM_AGFANCING_BILL DAB
+		LEFT JOIN FM_LOAN_NOTICE FLN ON DAB.FANCING_ORDER_NO = FLN.FANCING_ORDER_NO
+		LEFT JOIN FM_LOAN_RECORD FLR ON FLR.LOAN_NO=FLN.LOAN_NO
+		WHERE 1=1
+		AND DAB.AGFANCING_ORDER_NO = #{agfancingOrderNo}
+		AND DAB.MEMBER_PID = #{memberPid}
+		AND FLN.LOAN_STATUS = '2'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_AGFANCING_BILL (
+				AGFANCING_BILL_PID,
+				AGFANCING_ORDER_NO,
+				BILL_NO,
+				FANCING_ORDER_NO,
+				MEMBER_PID,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{agfancingBillPid},
+			   #{agfancingOrderNo},
+			   #{billNo},
+			   #{fancingOrderNo},
+			   #{memberPid},
+			   #{creator},
+			   #{createTime},
+			   #{modifier},
+			   #{modifyTime},
+			   #{recVer},
+			   #{recStatus}
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE DM_AGFANCING_BILL SET
+				AGFANCING_BILL_PID = #{agfancingBillPid},
+				AGFANCING_ORDER_NO = #{agfancingOrderNo},
+				BILL_NO = #{billNo},
+				FANCING_ORDER_NO = #{fancingOrderNo},
+				MEMBER_PID = #{memberPid},
+				CREATOR = #{creator},
+				CREATE_TIME = #{createTime},
+				MODIFIER = #{modifier},
+				MODIFY_TIME = #{modifyTime},
+				REC_VER = #{recVer},
+				REC_STATUS = #{recStatus}
+		WHERE AGFANCING_BILL_PID = #{agfancingBillPid}
+	</update>
+	
+ 	<!-- 删除 -->
+   	<delete id="deleteByAgfancingOrderNo" parameterType="String">
+   		DELETE FROM DM_AGFANCING_BILL WHERE AGFANCING_ORDER_NO=#{agfancingOrderNo}
+   	</delete>
+   	
+   	<!-- 批量新增 -->
+   	<insert id="insertList" parameterType="java.util.List">
+   		INSERT INTO DM_AGFANCING_BILL (
+				AGFANCING_BILL_PID,
+				AGFANCING_ORDER_NO,
+				BILL_NO,
+				FANCING_ORDER_NO,
+				MEMBER_PID,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+			)VALUES
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (
+				#{item.agfancingBillPid},
+				#{item.agfancingOrderNo},
+				#{item.billNo},
+				#{item.fancingOrderNo},
+			   	#{item.memberPid},
+				#{item.creator},
+				#{item.createTime},
+				#{item.modifier},
+				#{item.modifyTime},
+				#{item.recVer},
+				#{item.recStatus}
+		  	)
+	    </foreach>
+   	</insert>
+</mapper>

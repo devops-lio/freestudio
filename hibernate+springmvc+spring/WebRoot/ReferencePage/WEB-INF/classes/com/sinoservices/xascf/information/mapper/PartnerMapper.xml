@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.information.mapper.PartnerMapper">
+	
+	<resultMap type="com.sinoservices.xascf.information.model.PartnerModel" id="partnerModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="partnerPid" column="PARTNER_PID"/>
+		<result property="partnerName" column="PARTNER_NAME"/>
+		<result property="partnerLogo" column="PARTNER_LOGO"/>
+		<result property="partnerUrl" column="PARTNER_URL"/>
+		<result property="remark" column="REMARK"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="createTimeStr" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+		  SELECT 
+			ID,
+			PARTNER_PID,
+			PARTNER_NAME,
+			PARTNER_LOGO,
+			PARTNER_URL,
+			REMARK,
+			CREATOR,
+			date_format(CREATE_TIME, '%Y-%m-%d %H:%i:%s') as CREATE_TIME,
+			MODIFIER,
+			MODIFY_TIME,
+			REC_VER,
+			REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="partnerPid !=null and partnerPid !=''"> AND PARTNER_PID LIKE ('%${partnerPid}%')</if>
+		<if test="partnerName !=null and partnerName !=''"> AND PARTNER_NAME LIKE ('%${partnerName}%')</if>
+		<if test="partnerLogo !=null and partnerLogo !=''"> AND PARTNER_LOGO LIKE ('%${partnerLogo}%' )</if>
+		<if test="partnerUrl !=null and partnerUrl !=''"> AND PARTNER_URL LIKE ('%${partnerUrl}%')</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%${remark}%')</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%')</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%${createTime}%')</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%')</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%${modifyTime}%')</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%${recVer}%')</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%')</if>
+	</sql> 
+
+	<select id="findByCondition" resultMap="partnerModelResultMap" parameterType="com.sinoservices.xascf.information.model.PartnerModel">
+		<include refid="select"/>
+		FROM  IM_PARTNER PA 
+		<include refid="findByExample"/>
+	</select>  
+	
+	<select id="getPartnerByPid" resultMap="partnerModelResultMap" parameterType="java.lang.String">
+		<include refid="select"/>
+		FROM  IM_PARTNER PA 
+			WHERE PA.PARTNER_PID=#{partnerPid}
+    </select>
+	
+	
+	<!-- count-->
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.information.model.PartnerModel">
+		<include refid="count"/>
+		FROM  IM_PARTNER PA 
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO IM_PARTNER (
+				ID,
+				PARTNER_PID,
+				PARTNER_NAME,
+				PARTNER_LOGO,
+				PARTNER_URL,
+				REMARK,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{partnerPid},
+			   #{partnerName},
+			   #{partnerLogo},
+			   #{partnerUrl},
+			   #{remark},
+			   #{creator},
+			   #{createTime},
+			   #{modifier},
+			   #{modifyTime},
+			   #{recVer},
+			   #{recStatus}
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE IM_PARTNER SET
+			<if test="partnerName !=null and partnerName !=''"> PARTNER_NAME = #{partnerName},</if>
+			<if test="partnerLogo !=null and partnerLogo !=''">	PARTNER_LOGO = #{partnerLogo},</if>
+			<if test="partnerUrl !=null and partnerUrl !=''">	PARTNER_URL = #{partnerUrl},</if>
+			<if test="remark !=null and remark !=''">	REMARK = #{remark},</if>
+			<if test="recStatus !=null and recStatus !=''">	REC_STATUS = #{recStatus},</if>
+				Rec_Ver = Rec_Ver+1,
+		  		MODIFY_TIME=SYSDATE(),
+		  		MODIFIER=#{modifier} 		
+		WHERE PARTNER_PID=#{partnerPid}	
+	</update>
+	
+	<delete id="deleteByPids" parameterType="java.util.List">
+        UPDATE IM_PARTNER  SET
+        	REC_STATUS = '1',
+		  	MODIFY_TIME=SYSDATE()
+        WHERE 
+        <choose>
+             <when test="null!=list and list.size!=0">
+                PARTNER_PID IN
+                <foreach collection="list" item="partnerPid" index="index" open="(" separator="," close=")">
+                    #{partnerPid}
+                </foreach>
+            </when>
+            <otherwise>
+               1 != 1
+            </otherwise>
+        </choose>
+    </delete>
+</mapper>

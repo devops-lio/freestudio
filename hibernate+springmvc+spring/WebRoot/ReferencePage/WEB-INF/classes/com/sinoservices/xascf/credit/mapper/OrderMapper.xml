@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.OrderMapper">
+	<resultMap type="com.sinoservices.xascf.credit.view.OrderItem" id="orderItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="orderNo" column="ORDER_NO"/>
+		<result property="delveryNo" column="DELVERY_NO"/>
+		<result property="orderBarcode" column="ORDER_BARCODE"/>
+		<result property="isEffective" column="ISEFFECTIVE"/>
+		<result property="buyPid" column="BUY_PID"/>
+		<result property="buyName" column="BUY_NAME"/>
+		<result property="singleName" column="SINGLE_NAME"/>
+		<result property="singleDate" column="SINGLE_DATE"/>
+		<result property="tranType" column="TRAN_TYPE"/>
+		<result property="orderStatus" column="ORDER_STATUS"/>
+		<result property="reqArrivalDate" column="REQ_ARRIVAL_DATE"/>
+		<result property="reqDeliveryDate" column="REQ_DELIVERY_DATE"/>
+		<result property="shipperAddress" column="SHIPPER_ADDRESS"/>
+		<result property="shipperTel" column="SHIPPER_TEL"/>
+		<result property="shipperContact" column="SHIPPER_CONTACT"/>
+		<result property="quantity" column="QUANTITY"/>
+		<result property="valume" column="VALUME"/>
+		<result property="billAmount" column="BILL_AMOUNT"/>
+		<result property="isHaveBill" column="IS_HAVE_BILL"/>
+		<result property="isHaveAccount" column="IS_HAVE_ACCOUNT"/>
+		<result property="weight" column="WEIGHT"/>
+		<result property="preAmount" column="PRE_AMOUNT"/>
+		<result property="amountReceived" column="AMOUNT_RECEIVED"/>
+		<result property="totalAmount" column="TOTAL_AMOUNT"/>
+		<result property="toDate" column="TO_DATE"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileRename" column="FILE_RENAME"/>
+		<result property="fileUrl" column="FILE_URL"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					CREDIT_NO,
+					ORDER_NO,
+					DELVERY_NO,
+					ORDER_BARCODE,
+					BUY_PID,ISEFFECTIVE,
+					BUY_NAME,
+					SINGLE_NAME,
+					SINGLE_DATE,
+					TRAN_TYPE,
+					ORDER_STATUS,
+					REQ_ARRIVAL_DATE,
+					REQ_DELIVERY_DATE,
+					SHIPPER_ADDRESS,
+					SHIPPER_TEL,
+					SHIPPER_CONTACT,
+					QUANTITY,
+					VALUME,
+					BILL_AMOUNT,
+					IS_HAVE_BILL,
+					IS_HAVE_ACCOUNT,
+					WEIGHT,
+					PRE_AMOUNT,
+					AMOUNT_RECEIVED,
+					TOTAL_AMOUNT,
+					TO_DATE,
+					FILE_NAME,
+					FILE_RENAME,
+					FILE_URL,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="creditNo!=null and creditNo!=''"> AND CREDIT_NO LIKE ('%${creditNo}%' )</if>
+		<if test="orderNo!=null and orderNo!=''"> AND ORDER_NO LIKE ('%${orderNo}%' )</if>
+		<if test="delveryNo!=null and delveryNo!=''"> AND DELVERY_NO LIKE ('%${delveryNo}%' )</if>
+		<if test="orderBarcode!=null and orderBarcode!=''"> AND ORDER_BARCODE LIKE ('%${orderBarcode}%' )</if>
+		<if test="buyPid!=null and buyPid!=''"> AND BUY_PID LIKE ('%${buyPid}%' )</if>
+		<if test="buyName!=null and buyName!=''"> AND BUY_NAME LIKE ('%${buyName}%' )</if>
+		<if test="singleName!=null and singleName!=''"> AND SINGLE_NAME LIKE ('%${singleName}%' )</if>
+		<if test="singleDate!=null and singleDate!=''"> AND SINGLE_DATE LIKE ('%${singleDate}%' )</if>
+		<if test="tranType!=null and tranType!=''"> AND TRAN_TYPE LIKE ('%${tranType}%' )</if>
+		<if test="orderStatus!=null and orderStatus!=''"> AND ORDER_STATUS LIKE ('%${orderStatus}%' )</if>
+		<if test="reqArrivalDate!=null and reqArrivalDate!=''"> AND REQ_ARRIVAL_DATE LIKE ('%${reqArrivalDate}%' )</if>
+		<if test="reqDeliveryDate!=null and reqDeliveryDate!=''"> AND REQ_DELIVERY_DATE LIKE ('%${reqDeliveryDate}%' )</if>
+		<if test="shipperAddress!=null and shipperAddress!=''"> AND SHIPPER_ADDRESS LIKE ('%${shipperAddress}%' )</if>
+		<if test="shipperTel!=null and shipperTel!=''"> AND SHIPPER_TEL LIKE ('%${shipperTel}%' )</if>
+		<if test="shipperContact!=null and shipperContact!=''"> AND SHIPPER_CONTACT LIKE ('%${shipperContact}%' )</if>
+		<if test="toDate!=null and toDate!=''"> AND TO_DATE LIKE ('%${toDate}%' )</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.credit.model.OrderModel">
+		<include refid="count"/>
+		FROM  DM_ORDER
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="orderItemResultMap" parameterType="com.sinoservices.xascf.credit.model.OrderModel">
+		<include refid="select"/>
+		FROM  DM_ORDER
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.credit.model.OrderModel">
+		INSERT INTO DM_ORDER (
+				PID,
+				CREDIT_NO,
+				ORDER_NO,
+				DELVERY_NO,
+				ORDER_BARCODE,
+				BUY_PID,
+				BUY_NAME,
+				SINGLE_NAME,
+				SINGLE_DATE,
+				TRAN_TYPE,
+				ORDER_STATUS,
+				REQ_ARRIVAL_DATE,
+				REQ_DELIVERY_DATE,
+				SHIPPER_ADDRESS,
+				SHIPPER_TEL,
+				SHIPPER_CONTACT,
+				QUANTITY,
+				VALUME,
+				BILL_AMOUNT,
+				IS_HAVE_BILL,
+				IS_HAVE_ACCOUNT,
+				WEIGHT,
+				PRE_AMOUNT,
+				AMOUNT_RECEIVED,
+				TOTAL_AMOUNT,
+				TO_DATE,
+				ISEFFECTIVE,
+				FILE_NAME,
+				FILE_RENAME,
+				FILE_URL,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{creditNo},
+			   #{orderNo},
+			   #{delveryNo},
+			   #{orderBarcode},
+			   #{buyPid},
+			   #{buyName},
+			   #{singleName},
+			   #{singleDate},
+			   #{tranType},
+			   #{orderStatus},
+			   #{reqArrivalDate},
+			   #{reqDeliveryDate},
+			   #{shipperAddress},
+			   #{shipperTel},
+			   #{shipperContact},
+			   #{quantity},
+			   #{valume},
+			   #{billAmount},
+			   #{isHaveBill},
+			   #{isHaveAccount},
+			   #{weight},
+			   #{preAmount},
+			   #{amountReceived},
+			   #{totalAmount},
+			   #{toDate},
+			   #{isEffective},
+			   #{fileName},
+			   #{fileRename},
+			   #{fileUrl},
+			   #{remark},
+			   1,
+			   #{createTime},
+			   #{creator},
+			   1
+		)
+	</insert>
+	<insert id="addByList" parameterType="java.util.List">  
+	    	INSERT INTO DM_ORDER (
+				PID,
+				CREDIT_NO,
+				ORDER_NO,
+				DELVERY_NO,
+				ORDER_BARCODE,
+				BUY_PID,
+				BUY_NAME,
+				SINGLE_NAME,
+				SINGLE_DATE,
+				TRAN_TYPE,
+				ORDER_STATUS,
+				REQ_ARRIVAL_DATE,
+				REQ_DELIVERY_DATE,
+				SHIPPER_ADDRESS,
+				SHIPPER_TEL,
+				SHIPPER_CONTACT,
+				QUANTITY,
+				VALUME,
+				BILL_AMOUNT,
+				IS_HAVE_BILL,
+				IS_HAVE_ACCOUNT,
+				WEIGHT,
+				PRE_AMOUNT,
+				AMOUNT_RECEIVED,
+				TOTAL_AMOUNT,
+				TO_DATE,
+				ISEFFECTIVE,
+				FILE_NAME,
+				FILE_RENAME,
+				FILE_URL,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (   #{item.pid},
+			   #{item.creditNo},
+			   #{item.orderNo},
+			   #{item.delveryNo},
+			   #{item.orderBarcode},
+			   #{item.buyPid},
+			   #{item.buyName},
+			   #{item.singleName},
+               #{item.singleDate}, 
+			   #{item.tranType},
+			   #{item.orderStatus},
+			   #{item.reqArrivalDate},
+			   #{item.reqDeliveryDate},
+			   #{item.shipperAddress},
+			   #{item.shipperTel},
+			   #{item.shipperContact},
+			   #{item.quantity},
+			   #{item.valume},
+			   #{item.billAmount},
+			   #{item.isHaveBill},
+			   #{item.isHaveAccount},
+			   #{item.weight},
+			   #{item.preAmount},
+			   #{item.amountReceived},
+			   #{item.totalAmount},
+			   #{item.toDate},
+			   1,
+			   #{item.fileName},
+			   #{item.fileRename},
+			   #{item.fileUrl},
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   1)  
+	    </foreach>  
+  </insert>  
+  <delete id="deleteByCreditNo" parameterType="String">
+      DELETE FROM DM_ORDER WHERE CREDIT_NO=#{_parameter} 
+  
+  </delete>
+  <delete id="deleteByBusnessNo" parameterType="String">
+      DELETE FROM DM_ORDER WHERE CREDIT_NO=#{_parameter} AND ISEFFECTIVE='1'
+  
+  </delete>
+  <delete id="deleteByPid" parameterType="String">
+      DELETE FROM DM_ORDER WHERE PID=#{_parameter}
+  
+  </delete>
+	<update id="update">
+		UPDATE DM_ORDER SET
+				
+				CREDIT_NO = #{creditNo},
+				ORDER_NO = #{orderNo},
+				DELVERY_NO = #{delveryNo},
+				ORDER_BARCODE = #{orderBarcode},
+				BUY_PID = #{buyPid},
+				BUY_NAME = #{buyName},
+				SINGLE_NAME = #{singleName},
+				SINGLE_DATE = #{singleDate},
+				TRAN_TYPE = #{tranType},
+				ORDER_STATUS = #{orderStatus},
+				REQ_ARRIVAL_DATE = #{reqArrivalDate},
+				REQ_DELIVERY_DATE = #{reqDeliveryDate},
+				SHIPPER_ADDRESS = #{shipperAddress},
+				SHIPPER_TEL = #{shipperTel},
+				SHIPPER_CONTACT = #{shipperContact},
+				QUANTITY = #{quantity},
+				VALUME = #{valume},
+				BILL_AMOUNT = #{billAmount},
+				IS_HAVE_BILL = #{isHaveBill},
+				IS_HAVE_ACCOUNT = #{isHaveAccount},
+				WEIGHT = #{weight},
+				PRE_AMOUNT = #{preAmount},
+				AMOUNT_RECEIVED = #{amountReceived},
+				TOTAL_AMOUNT = #{totalAmount},
+				TO_DATE = #{toDate},
+				FILE_NAME = #{fileName},
+				FILE_RENAME = #{fileRename},
+				FILE_URL = #{fileUrl},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus}
+			WHERE PID = #{pid}
+	</update>
+	
+	<!-- 无分页查找所有订单 -->
+	<select id="findByNo" resultMap="orderItemResultMap"  parameterType="com.sinoservices.xascf.credit.view.OrderCondition">
+		<include refid="select"/>
+		FROM DM_ORDER
+		WHERE
+			1=1
+			<if test="isEffective !=null and isEffective !=''"> AND ISEFFECTIVE =#{isEffective}</if>
+			AND CREDIT_NO=#{creditNo}
+	</select>
+	
+		<!-- 查看订单号是否已经存在 -->
+	<select id="getOrderNoList" resultType="String" parameterType="java.util.List">
+		SELECT ORDER_NO FROM DM_ORDER
+		WHERE 1=1 AND ORDER_NO IN
+		<foreach item="orderNos" collection="list" open="(" separator="," close=")">
+			#{orderNos}
+		</foreach>
+	</select>
+	<update id="updateToNoEffectiveByOrderNo" parameterType="String">
+		UPDATE DM_ORDER SET
+				ISEFFECTIVE=0,
+				REC_VER=REC_VER+1,
+				MODIFY_TIME=SYSDATE()
+			WHERE CREDIT_NO=#{_parameter}
+	</update>
+</mapper>

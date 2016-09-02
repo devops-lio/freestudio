@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.CreditApplyMapper">
+
+	<!-- creditEntity结果集 -->
+	<resultMap type="com.sinoservices.xascf.credit.view.CreditEntity" id="creditEntityResultMap">
+		<collection property="creditApplyItem" resultMap="creditApplyItemResultMap"/>
+		<collection property="rateModel" resultMap="rateModelResultMap"/>
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.credit.model.RateModel" id="rateModelResultMap">
+		<result property="pid" column="RATE_PID"/>
+		<result property="type" column="TYPE"/>
+		<result property="businessOrderNo" column="BUSINESS_ORDER_NO"/>
+		<result property="termRate" column="TERM_RATE"/>
+		<result property="overdueRate" column="OVERDUE_RATE"/>
+		<result property="expandRate" column="EXPAND_RATE"/>
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.credit.view.CreditApplyItem" id="creditApplyItemResultMap">
+		<result property="pid" column="PID"/>
+		<result property="operatorPid" column="OPERATOR_PID"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="memberType" column="MEMBER_TYPE"/>
+		<result property="memberTypeCn" column="MEMBER_TYPE"/>
+		<result property="creditQuota" column="CREDIT_QUOTA"/>
+		<result property="effectiveStartTime" column="EFFECTIVE_START_TIME"/>
+		<result property="effectiveStartTimeStr" column="EFFECTIVE_START_TIME"/>
+		<result property="effectiveEndTime" column="EFFECTIVE_END_TIME"/>
+		<result property="effectiveEndTimeStr" column="EFFECTIVE_END_TIME"/>
+		<result property="financingType" column="FINANCING_TYPE"/>
+		<result property="financingTypeCn" column="FINANCING_TYPE"/>
+		<result property="financingMethod" column="FINANCING_METHOD"/>
+		<result property="financingMethodCn" column="FINANCING_METHOD"/>
+		<result property="financingNature" column="FINANCING_NATURE"/>
+		<result property="financingNatureCn" column="FINANCING_NATURE"/>
+		<result property="isBond" column="IS_BOND"/>
+		<result property="isBondEn" column="IS_BOND"/>
+		<result property="serveMethod" column="SERVE_METHOD"/>
+		<result property="serveMethodCn" column="SERVE_METHOD"/>
+		<result property="status" column="STATUS"/>
+		<result property="statusCn" column="STATUS"/>
+		<result property="billType" column="BILL_TYPE"/>
+		<result property="billTypeCn" column="BILL_TYPE"/>
+		<result property="isPrepay" column="IS_PREPAY"/>
+		<result property="isPrepayCn" column="IS_PREPAY"/>
+		<result property="prepayBillType" column="PREPAY_BILL_TYPE"/>
+		<result property="prepayBillTypeCn" column="PREPAY_BILL_TYPE"/>
+		<result property="financingCount" column="FINANCING_COUNT"/>
+		<result property="remaingAmount" column="REMAING_AMOUNT"/>
+		<result property="usedAmount" column="USED_AMOUNT"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="userNameCn" column="USER_NAME_CN"/>
+		
+		<result property="score" column="SCORE"/>
+		<result property="termRate" column="TERM_RATE"/>
+		<result property="overdueTimes" column="OVERDUE_TIMES"/>
+		
+		<result property="bondRate" column="BOND_RATE"/>
+		<result property="serveRate" column="SERVE_RATE"/>
+		<result property="customerStatus" column="CUSTOMER_STATUS"/>
+		
+		
+		<result property="reportPid" column="REPORT_PID"/>
+		<result property="reportTitle" column="REPORT_TITLE"/>
+		<result property="resultNo" column="RESULT_NO"/>
+		<result property="resultQuto" column="RESULT_QUTO"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					PID,
+					OPERATOR_PID,
+					CREDIT_NO,
+					MEMBER_PID,
+					MEMBER_TYPE,
+					CREDIT_QUOTA,
+					EFFECTIVE_START_TIME,
+					EFFECTIVE_END_TIME,
+					FINANCING_TYPE,
+					FINANCING_METHOD,
+					FINANCING_NATURE,
+					IS_BOND,
+					SERVE_METHOD,
+					STATUS,
+					BILL_TYPE,
+					IS_PREPAY,
+					PREPAY_BILL_TYPE,
+					FINANCING_COUNT,
+					REMAING_AMOUNT,
+					USED_AMOUNT,
+					BOND_RATE,
+					SERVE_RATE
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="operatorPid!=null and operatorPid!=''"> AND OPERATOR_PID = '${operatorPid}'</if>
+		<if test="creditNo!=null and creditNo!=''"> AND CREDIT_NO LIKE ('%${creditNo}%' )</if>
+		<if test="memberPid!=null and memberPid!=''"> AND MEMBER_PID = '${memberPid}'</if>
+		<if test="memberType!=null and memberType!=''"> AND MEMBER_TYPE LIKE ('%${memberType}%')</if>
+		<if test="creditQuota!=null and creditQuota!=''"> AND CREDIT_QUOTA = '${creditQuota}'</if>
+		<if test="effectiveStartTime!=null and effectiveStartTime!=''"> AND EFFECTIVE_START_TIME &gt;= #{effectiveStartTime}</if>
+		<if test="effectiveEndTime!=null and effectiveEndTime!=''"> AND EFFECTIVE_END_TIME  &lt;= #{effectiveEndTime}</if>
+		<if test="financingType!=null and financingType!=''"> AND FINANCING_TYPE LIKE ('%${financingType}%' )</if>
+		<if test="financingMethod!=null and financingMethod!=''"> AND FINANCING_METHOD LIKE ('%${financingMethod}%' )</if>
+		<if test="financingNature!=null and financingNature!=''"> AND FINANCING_NATURE LIKE ('%${financingNature}%' )</if>
+		<if test="status!=null and status!=''"> AND STATUS LIKE ('%${status}%' )</if>
+		<if test="billType!=null and billType!=''"> AND BILL_TYPE LIKE ('%${billType}%' )</if>
+		<if test="isPrepay!=null and isPrepay!=''"> AND IS_PREPAY LIKE ('%${isPrepay}%' )</if>
+		<if test="prepayBillType!=null and prepayBillType!=''"> AND PREPAY_BILL_TYPE LIKE ('%${prepayBillType}%' )</if>
+		<if test="financingCount!=null and financingCount!=''"> AND FINANCING_COUNT = '${financingCount}'</if>
+		<if test="remaingAmount!=null and remaingAmount!=''"> AND REMAING_AMOUNT = '${remaingAmount}'</if>
+		<if test="usedAmount!=null and usedAmount!=''"> AND USED_AMOUNT = '${usedAmount}'</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%${remark}%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%${recVer}%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME = #{createTime}</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME = #{modifyTime}</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%' )</if>
+		<if test="bondRate!=null and bondRate!=''"> AND BOND_RATE LIKE ('%${bondRate}%' )</if>
+		<if test="serveRate!=null and serveRate!=''"> AND SERVE_RATE LIKE ('%${serveRate}%' )</if>
+		
+	</sql>
+	
+	<!-- 分页计算 -->
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.credit.view.CreditApplyCondition">
+		<include refid="count"/>
+		FROM (
+		SELECT DISTINCT 
+				a.PID,
+				a.OPERATOR_PID,
+				a.CREDIT_NO,
+				a.MEMBER_PID,
+				a.MEMBER_TYPE,
+				a.CREDIT_QUOTA,
+				<!-- 
+				(CASE  WHEN a.STATUS NOT IN('10','20','30') THEN e.CREDIT_START_TIME 
+																ELSE a.EFFECTIVE_START_TIME 
+																END) AS EFFECTIVE_START_TIME,
+				(CASE  WHEN a.STATUS NOT IN('10','20','30') THEN e.CREDIT_END_TIME 
+																ELSE a.EFFECTIVE_END_TIME
+																END) AS EFFECTIVE_END_TIME,
+				 -->
+				c.CREDIT_START_TIME  AS EFFECTIVE_START_TIME,
+				c.CREDIT_END_TIME    AS EFFECTIVE_END_TIME,
+				a.FINANCING_TYPE,
+				a.IS_BOND,
+				a.SERVE_METHOD,
+				a.FINANCING_METHOD,
+				a.FINANCING_NATURE,
+				a.STATUS,
+				a.BILL_TYPE,
+				a.IS_PREPAY,
+				a.PREPAY_BILL_TYPE,
+				a.FINANCING_COUNT,
+				a.REMAING_AMOUNT,
+				a.USED_AMOUNT,
+				b.MEMBER_NO,
+				b.MEMBER_NAME,
+				b.CUSTOMER_STATUS,
+				c.CREDIT_RESULT_NO AS RESULT_NO, c.REPLY_QUOTA  AS RESULT_QUTO,
+				d.SCORE
+		FROM  DM_CREDIT_APPLY a
+		LEFT JOIN SS_CUSTOMER b ON a.MEMBER_PID=b.MEMBER_PID
+		LEFT JOIN DM_CREDIT_RESULT c ON c.CREDIT_NO=a.CREDIT_NO
+		LEFT JOIN RM_EVALUATE_RESULT d ON a.CREDIT_NO=d.EVALUATE_OBJECT_NO
+		JOIN SS_KPICUSTOMER SKI ON SKI.CUSTOMERSUB_PID=a.MEMBER_PID
+		WHERE
+		1=1
+		<if test="memberPid!=null and memberPid!=''"> AND a.MEMBER_PID = '${memberPid}'</if>
+		<if test="status!=null and status!=''"> AND STATUS LIKE ('%${status}%' )</if>
+		<if test="creditNo!=null and creditNo!=''"> AND a.CREDIT_NO LIKE ('%${creditNo}%' )</if>
+		<if test="creditQuota!=null and creditQuota!=''"> AND CREDIT_QUOTA = '${creditQuota}'</if>
+		<if test="effectiveStartTime!=null and effectiveStartTime!=''"> AND EFFECTIVE_START_TIME &gt;= #{effectiveStartTime}</if>
+		<if test="effectiveEndTime!=null and effectiveEndTime!=''"> AND EFFECTIVE_END_TIME  &lt;= #{effectiveEndTime}</if>
+		<if test="financingType!=null and financingType!=''"> AND a.FINANCING_TYPE LIKE ('%${financingType}%' )</if>
+		<if test="financingMethod!=null and financingMethod!=''"> AND a.FINANCING_METHOD LIKE ('%${financingMethod}%' )</if>
+		<if test="financingNature !=null and financingNature !=''"> AND a.FINANCING_NATURE LIKE ('%${financingNature}%' )</if>
+		<if test="billType!=null and billType!=''"> AND BILL_TYPE LIKE ('%${billType}%' )</if>
+		<if test="isPrepay!=null and isPrepay!=''"> AND IS_PREPAY LIKE ('%${isPrepay}%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND a.REC_STATUS LIKE ('%${recStatus}%' )</if>
+		<if test="memberName!=null and memberName!=''"> AND b.MEMBER_NAME LIKE ('%${memberName}%' )</if>
+		<if test="operatorPid !=null and operatorPid !=''"> AND SKI.USER_PID =#{operatorPid} </if>
+		AND b.REC_STATUS='2'
+		) R
+	</select>
+	
+	<!-- 分页查找 -->
+	<select id="findByCondition" resultMap="creditApplyItemResultMap" parameterType="com.sinoservices.xascf.credit.view.CreditApplyCondition">
+		SELECT 		DISTINCT
+					a.PID,
+					a.OPERATOR_PID,
+					a.CREDIT_NO,
+					a.MEMBER_PID,
+					a.MEMBER_TYPE,
+					a.CREDIT_QUOTA,
+					<!-- 
+					(CASE  WHEN a.STATUS NOT IN('10','20','30') THEN e.CREDIT_START_TIME 
+																	ELSE a.EFFECTIVE_START_TIME 
+																	END) AS EFFECTIVE_START_TIME,
+					(CASE  WHEN a.STATUS NOT IN('10','20','30') THEN e.CREDIT_END_TIME 
+																	ELSE a.EFFECTIVE_END_TIME
+																	END) AS EFFECTIVE_END_TIME,
+					 -->
+					c.CREDIT_START_TIME  AS EFFECTIVE_START_TIME,
+					c.CREDIT_END_TIME    AS EFFECTIVE_END_TIME,
+					a.FINANCING_TYPE,
+					a.IS_BOND,
+					a.SERVE_METHOD,
+					a.FINANCING_METHOD,
+					a.FINANCING_NATURE,
+					a.STATUS,
+					a.BILL_TYPE,
+					a.IS_PREPAY,
+					a.PREPAY_BILL_TYPE,
+					a.FINANCING_COUNT,
+					a.REMAING_AMOUNT,
+					a.USED_AMOUNT,
+					b.MEMBER_NO,
+					b.MEMBER_NAME,
+					b.CUSTOMER_STATUS,
+					c.CREDIT_RESULT_NO AS RESULT_NO, c.REPLY_QUOTA  AS RESULT_QUTO,
+					d.SCORE
+					
+		FROM  DM_CREDIT_APPLY a
+		LEFT JOIN SS_CUSTOMER b ON a.MEMBER_PID=b.MEMBER_PID
+		LEFT JOIN DM_CREDIT_RESULT c ON c.CREDIT_NO=a.CREDIT_NO
+		LEFT JOIN RM_EVALUATE_RESULT d ON a.CREDIT_NO=d.EVALUATE_OBJECT_NO
+		LEFT JOIN SS_KPICUSTOMER SKI ON SKI.CUSTOMERSUB_PID=a.MEMBER_PID
+		WHERE
+		1=1
+		<if test="memberPid!=null and memberPid!=''"> AND a.MEMBER_PID = '${memberPid}'</if>
+		<if test="status!=null and status!=''"> AND STATUS = '${status}'</if>
+		<if test="creditNo!=null and creditNo!=''"> AND a.CREDIT_NO LIKE ('%${creditNo}%' )</if>
+		<if test="creditQuota!=null and creditQuota!=''"> AND CREDIT_QUOTA = '${creditQuota}'</if>
+		<if test="effectiveStartTime!=null and effectiveStartTime!=''"> AND EFFECTIVE_START_TIME &gt;= #{effectiveStartTime}</if>
+		<if test="effectiveEndTime!=null and effectiveEndTime!=''"> AND EFFECTIVE_END_TIME  &lt;= #{effectiveEndTime}</if>
+		<if test="financingType!=null and financingType!=''"> AND a.FINANCING_TYPE LIKE ('%${financingType}%' )</if>
+		<if test="financingMethod!=null and financingMethod!=''"> AND a.FINANCING_METHOD LIKE ('%${financingMethod}%' )</if>
+		<if test="financingNature !=null and financingNature !=''"> AND a.FINANCING_NATURE LIKE ('%${financingNature}%' )</if>
+		<if test="billType!=null and billType!=''"> AND BILL_TYPE LIKE ('%${billType}%' )</if>
+		<if test="isPrepay!=null and isPrepay!=''"> AND IS_PREPAY LIKE ('%${isPrepay}%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND a.REC_STATUS LIKE ('%${recStatus}%' )</if>
+		<if test="memberName!=null and memberName!=''"> AND b.MEMBER_NAME LIKE ('%${memberName}%' )</if>
+		<if test="operatorPid !=null and operatorPid !=''"> AND SKI.USER_PID =#{operatorPid} </if>
+		AND b.REC_STATUS='2'
+		ORDER BY a.CREATE_TIME DESC
+	</select>
+	<!-- 用于放款申请通过后查看授信是否按次收取手续费 -->
+	<select id="getCreditItemByFancingNo" resultMap="creditApplyItemResultMap" parameterType="String">
+		SELECT 
+					DCA.PID,
+					DCA.OPERATOR_PID,
+					DCA.CREDIT_NO,
+					DCA.MEMBER_PID,
+					DCA.MEMBER_TYPE,
+					CREDIT_QUOTA,
+					EFFECTIVE_START_TIME,
+					EFFECTIVE_END_TIME,
+					FINANCING_TYPE,
+					FINANCING_METHOD,
+					FINANCING_NATURE,
+					STATUS,
+					BILL_TYPE,
+					IS_PREPAY,
+					DCA.IS_BOND,
+					DCA.SERVE_METHOD,
+					PREPAY_BILL_TYPE,
+					FINANCING_COUNT,
+					REMAING_AMOUNT,
+					USED_AMOUNT
+				FROM DM_CREDIT_APPLY DCA 
+				JOIN DM_FANCING_ORDER FO ON FO.CREDIT_NO=DCA.CREDIT_NO
+				WHERE FO.FANCING_ORDER_NO=#{_parameter}
+	</select>
+	
+	<!-- 放款申请发起根据授信编号和委托方Pid查看授信详情信息 -->
+	<select id="getItemByCreditBuyRelCondition" resultMap="creditEntityResultMap" parameterType="com.sinoservices.xascf.credit.view.CreditbuyRelCondition">
+		SELECT
+					DCA.PID,
+					OPERATOR_PID,
+					DCA.CREDIT_NO,
+					MEMBER_PID,
+					MEMBER_TYPE,
+					CREDIT_QUOTA,
+					IS_BOND,
+					SERVE_METHOD,
+					EFFECTIVE_START_TIME,
+					EFFECTIVE_END_TIME,
+					FINANCING_TYPE,
+					FINANCING_METHOD,
+					FINANCING_NATURE,
+					STATUS,
+					DCR.BILL_TYPE,
+					DCR.IS_PREPAY,
+					DCR.PRE_BILL_TYPE as PREPAY_BILL_TYPE,
+					FINANCING_COUNT,
+					DR.PID AS RATE_PID,
+					DR.OVERDUE_RATE,
+					DR.EXPAND_RATE,
+					DR.TERM_RATE,
+					(
+						CREDIT_QUOTA * (
+							IFNULL(DCR.CREDIT_PERCENT, 1)
+						) / 100 - (
+							IFNULL(TT.ALL_REPLY_PRICE, 0)
+						)
+					) AS REMAING_AMOUNT,
+					IFNULL(TT.ALL_REPLY_PRICE, 0) AS USED_AMOUNT
+				FROM
+					DM_CREDIT_APPLY DCA
+				JOIN DM_CREDITBUY_REL DCR ON DCA.CREDIT_NO = DCR.CREDIT_NO
+				LEFT JOIN (
+					SELECT
+						CREDIT_NO,
+						SUM(DFO.REQUEST_PRICE) AS ALL_REQUEST_PRICE,
+						SUM(DFO.REPLY_PRICE) AS ALL_REPLY_PRICE
+					FROM
+						DM_FANCING_ORDER DFO
+					WHERE 1=1 
+					<if test="buyPid!=null and buyPid!=''">	AND DFO.BUYER_PID = #{buyPid}</if>
+					<if test="creditNo!=null and creditNo!=''"> AND DFO.CREDIT_NO = #{creditNo}</if>
+					GROUP BY
+						DFO.CREDIT_NO,
+						DFO.BUYER_PID
+				) TT ON DCA.CREDIT_NO = TT.CREDIT_NO
+				LEFT JOIN DM_RATE DR ON DCA.CREDIT_NO = DR.BUSINESS_ORDER_NO
+				WHERE 1=1 
+				<if test="creditNo!=null and creditNo!=''">AND	DCA.CREDIT_NO = #{creditNo}</if>
+				<if test="buyPid!=null and buyPid!=''">AND DCR.BUY_PID=#{buyPid}</if>
+	</select>
+	<!-- 前端根据会员PID查看最新的授信结果 -->
+	<select id="getItemByMemberPid" resultMap="creditEntityResultMap" parameterType="String">
+		SELECT 
+					DCA.PID,
+					OPERATOR_PID,
+					DCA.CREDIT_NO,
+					MEMBER_PID,
+					MEMBER_TYPE,
+					CREDIT_QUOTA,
+					EFFECTIVE_START_TIME,
+					EFFECTIVE_END_TIME,
+					FINANCING_TYPE,
+					IS_BOND,
+					SERVE_METHOD,
+					FINANCING_METHOD,
+					FINANCING_NATURE,
+					STATUS,
+					BILL_TYPE,
+					IS_PREPAY,
+					PREPAY_BILL_TYPE,
+					FINANCING_COUNT,
+					DR.PID AS RATE_PID,
+          			DR.OVERDUE_RATE,
+					DR.EXPAND_RATE,
+					DR.TERM_RATE,
+				(CREDIT_QUOTA-(IFNULL(TT.ALL_REPLY_PRICE,0))) AS	REMAING_AMOUNT,
+				IFNULL(TT.ALL_REPLY_PRICE,0) AS	USED_AMOUNT
+				FROM  DM_CREDIT_APPLY DCA 
+				LEFT JOIN(
+				SELECT * FROM FANCINGLOAN
+				) TT ON DCA.CREDIT_NO=TT.CREDIT_NO
+				LEFT JOIN DM_RATE DR ON DCA.CREDIT_NO=DR.BUSINESS_ORDER_NO
+			WHERE DCA.MEMBER_PID=#{_parameter} AND DCA.REC_STATUS = '1'
+			ORDER BY DCA.`STATUS` DESC,DCA.CREATE_TIME DESC
+	</select>
+	
+	<!-- 新增 -->
+	<insert id="insert" parameterType="com.sinoservices.xascf.credit.model.CreditApplyModel">
+		INSERT INTO DM_CREDIT_APPLY (
+				PID,
+				OPERATOR_PID,
+				CREDIT_NO,
+				MEMBER_PID,
+				MEMBER_TYPE,
+				CREDIT_QUOTA,
+				EFFECTIVE_START_TIME,
+				EFFECTIVE_END_TIME,
+				FINANCING_TYPE,
+				FINANCING_METHOD,
+				FINANCING_NATURE,
+				STATUS,
+				BILL_TYPE,
+				IS_PREPAY,
+				PREPAY_BILL_TYPE,
+				FINANCING_COUNT,
+				REMAING_AMOUNT,
+				USED_AMOUNT,
+				IS_BOND,
+				SERVE_METHOD,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REPORT_PID,
+				REPORT_TITLE,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{operatorPid},
+			   #{creditNo},
+			   #{memberPid},
+			   #{memberType},
+			   #{creditQuota},
+			   #{effectiveStartTime},
+			   #{effectiveEndTime},
+			   #{financingType},
+			   #{financingMethod},
+			   #{financingNature},
+			   #{status},
+			   #{billType},
+			   #{isPrepay},
+			   #{prepayBillType},
+			   #{financingCount},
+			   #{remaingAmount},
+			   #{usedAmount},
+			   #{isBond},
+			   #{serveMethod},
+			   #{remark},
+			   1,
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{reportPid},
+			   #{reportTitle},
+			   1
+		);
+	</insert>
+	
+	<!-- 根据creditNo删除 -->
+	<update id="deleteCredit" parameterType="String">
+		UPDATE DM_CREDIT_APPLY
+		SET REC_STATUS='0'
+		WHERE
+			1=1
+			AND CREDIT_NO=#{_parameter}
+			AND REC_STATUS='1'
+	</update>
+	
+	<!-- 根据creditNo查找 -->
+	<select id="findByNo" resultMap="creditApplyItemResultMap" parameterType="String">
+		SELECT
+			a.PID,
+			a.OPERATOR_PID,
+			a.CREDIT_NO,
+			a.MEMBER_PID,
+			a.MEMBER_TYPE,
+			a.CREDIT_QUOTA,
+			a.EFFECTIVE_START_TIME,
+			a.EFFECTIVE_END_TIME,
+			a.FINANCING_TYPE,
+			a.FINANCING_METHOD,
+			a.FINANCING_NATURE,
+			a.IS_BOND,
+			a.SERVE_METHOD,
+			a.STATUS,
+			a.BILL_TYPE,
+			a.IS_PREPAY,
+			a.PREPAY_BILL_TYPE,
+			a.FINANCING_COUNT,
+			a.REMAING_AMOUNT,
+			a.USED_AMOUNT,
+			b.MEMBER_NO,
+			b.MEMBER_NAME,
+			a.BOND_RATE,
+			a.SERVE_RATE,
+			a.REPORT_PID,
+			a.REPORT_TITLE,
+      		GROUP_CONCAT(SU.USER_NAME_CN) AS USER_NAME_CN
+			
+		FROM  DM_CREDIT_APPLY a,SS_CUSTOMER b
+		LEFT JOIN SS_KPICUSTOMER SKI ON b.MEMBER_PID=SKI.CUSTOMERSUB_PID
+		LEFT JOIN SS_USER SU ON SU.USER_PID=SKI.USER_PID
+		WHERE
+			1=1
+			AND a.CREDIT_NO=#{_parameter}
+			AND a.MEMBER_PID=b.MEMBER_PID
+			AND b.REC_STATUS
+			AND a.REC_STATUS
+		GROUP BY a.CREDIT_NO
+	</select>
+	
+	<update id="updateByPid" parameterType="com.sinoservices.xascf.credit.model.CreditApplyModel">
+		UPDATE DM_CREDIT_APPLY SET
+			<if test=" operatorPid !=null and operatorPid !=''">	OPERATOR_PID = #{operatorPid},</if>
+			<if test=" creditNo !=null and creditNo !=''">	CREDIT_NO = #{creditNo},</if>
+			<if test=" memberPid !=null and memberPid !=''">	MEMBER_PID = #{memberPid},</if>
+			<if test=" memberType !=null and memberType !=''">	MEMBER_TYPE = #{memberType},</if>
+			<if test=" creditQuota !=null and creditQuota !=''">	CREDIT_QUOTA = #{creditQuota},</if>
+			<if test=" effectiveStartTime !=null and effectiveStartTime !=''">	EFFECTIVE_START_TIME = #{effectiveStartTime},</if>
+			<if test=" effectiveEndTime !=null and effectiveEndTime !=''">	EFFECTIVE_END_TIME = #{effectiveEndTime},</if>
+			<if test=" financingType !=null and financingType !=''">	FINANCING_TYPE = #{financingType},</if>
+			<if test=" financingMethod !=null and financingMethod !=''">	FINANCING_METHOD = #{financingMethod},</if>
+			<if test=" financingNature !=null and financingNature !=''">	FINANCING_NATURE = #{financingNature},</if>
+			<if test=" status !=null and status !=''">	STATUS = #{status},</if>
+			<if test=" isBond !=null and isBond !=''">	IS_BOND = #{isBond},</if>
+			<if test=" serveMethod !=null and serveMethod !=''">	SERVE_METHOD = #{serveMethod},</if>
+			<if test=" billType !=null and billType !=''">	BILL_TYPE = #{billType},</if>
+			<if test=" isPrepay !=null and isPrepay !=''">	IS_PREPAY = #{isPrepay},</if>
+			<if test=" prepayBillType !=null and prepayBillType !=''">	PREPAY_BILL_TYPE = #{prepayBillType},</if>
+			<if test=" financingCount !=null and financingCount !=''">	FINANCING_COUNT = #{financingCount},</if>
+			<if test=" remaingAmount !=null and remaingAmount !=''">	REMAING_AMOUNT = #{remaingAmount},</if>
+			<if test=" usedAmount !=null and usedAmount !=''">	USED_AMOUNT = #{usedAmount},</if>
+			<if test=" remark !=null and remark !=''">	REMARK = #{remark},</if>
+			<if test=" modifier !=null and modifier !=''">	MODIFIER = #{modifier},</if>
+			<if test=" recStatus !=null and recStatus !=''">	REC_STATUS = #{recStatus},</if>
+			
+			<if test=" bondRate !=null and bondRate !=''">	BOND_RATE = #{bondRate},</if>
+			<if test=" serveRate !=null and serveRate !=''">	SERVE_RATE = #{serveRate},</if>
+			
+			<if test=" reportPid !=null and reportPid !=''">	REPORT_PID = #{reportPid},</if>
+			<if test=" reportTitle !=null and reportTitle !=''">	REPORT_TITLE = #{reportTitle},</if>
+			
+			MODIFY_TIME = SYSDATE(),REC_VER=REC_VER+1
+				WHERE PID = #{pid}
+	</update>
+	<!-- 放款申请查询授信审批已通过且属于自己客户的授信结果 -->
+	<sql id="findByFancingRequestPop">
+		WHERE 1=1 
+			<if test="userPid!=null and userPid!=''"> AND USER_PID =#{userPid}</if>
+			<if test="memberNo!=null and memberNo!=''"> AND MEMBER_NO =#{memberNo}</if>
+			<if test="memberName!=null and memberName!=''"> AND MEMBER_NAME =#{memberName}</if>
+			<if test="memberPid !=null and memberPid !=''"> AND MEMBER_PID =#{memberPid}</if>
+			<if test="status!=null and status!=''">AND  CA.`STATUS` =#{status}</if>
+	</sql>
+	<select id="getCountCustomerForFancingRequest" resultType="int" parameterType="com.sinoservices.xascf.credit.view.CreditApplyItem">
+		SELECT 
+				COUNT(1)
+				FROM DM_CREDIT_APPLY CA 
+				JOIN SS_CUSTOMER CU ON CA.MEMBER_PID=CU.MEMBER_PID
+				 JOIN (
+							SELECT	SU.USER_NO AS USER_NO,	SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,	SU.USER_PID AS USER_PID
+							FROM	SS_KPICUSTOMER SSK
+							JOIN SS_USER SU ON 	SSK.USER_PID = SU.USER_PID
+						 ) 	T_USER
+								ON T_USER.CUSTOMERSUB_PID=CA.MEMBER_PID
+		<include refid="findByFancingRequestPop"/>						
+	</select>
+	<select id="getCustomerForFancingRequest" resultMap="creditApplyItemResultMap" parameterType="com.sinoservices.xascf.credit.view.CreditApplyItem">
+		SELECT 
+				CU.MEMBER_NO,CU.MEMBER_NAME,
+				CU.MEMBER_PID,
+				CA.CREDIT_NO,
+				CA.CREDIT_QUOTA,
+				CA.REMAING_AMOUNT
+				FROM DM_CREDIT_APPLY CA 
+				JOIN SS_CUSTOMER CU ON CA.MEMBER_PID=CU.MEMBER_PID
+				 JOIN (
+							SELECT	SU.USER_NO AS USER_NO,	SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,	SU.USER_PID AS USER_PID
+							FROM	SS_KPICUSTOMER SSK
+							JOIN SS_USER SU ON 	SSK.USER_PID = SU.USER_PID
+						 ) 	T_USER
+								ON T_USER.CUSTOMERSUB_PID=CA.MEMBER_PID
+		<include refid="findByFancingRequestPop"/>						
+	</select>
+	<!-- 授信申请发起检查会员是否有再走的授信流程 -->
+	<select id="customerCheck" resultMap="creditApplyItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM DM_CREDIT_APPLY
+		WHERE
+			1=1
+			AND MEMBER_PID=#{_parameter}
+			AND REC_STATUS='1'
+			<!-- AND STATUS!='00' AND STATUS!='01' -->
+			AND STATUS!='000'
+			
+	</select>
+	<!-- 会员修改检查会员是否有再走的授信流程 -->
+	<select id="customerCheckForUpdateCustomer" resultMap="creditApplyItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM DM_CREDIT_APPLY
+		WHERE
+			1=1
+			AND MEMBER_PID=#{_parameter}
+			AND REC_STATUS='1'
+			AND STATUS!='00' AND STATUS!='01'
+			AND STATUS!='000' AND STATUS!='001'
+			
+	</select>
+	<!-- 授信作废 -->
+	<update id="abolish" parameterType="String">
+		UPDATE DM_CREDIT_APPLY
+		SET STATUS="000"
+		WHERE
+			1=1
+			AND MEMBER_PID=#{_parameter}
+			AND REC_STATUS='1'
+	</update>
+	
+</mapper>

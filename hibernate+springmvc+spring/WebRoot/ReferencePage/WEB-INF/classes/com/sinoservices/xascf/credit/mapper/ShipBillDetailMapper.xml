@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.ShipBillDetailMapper">
+	<resultMap type="com.sinoservices.xascf.credit.model.ShipBillDetailModel" id="dmShipBillDetailModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="shipBillPid" column="SHIP_BILL_PID"/>
+		<result property="shipBillNo" column="SHIP_BILL_NO"/>
+		<result property="shipNo" column="SHIP_NO"/>
+		<result property="buyName" column="BUY_NAME"/>
+		<result property="buyPid" column="BUY_PID"/>
+		<result property="startPalce" column="START_PALCE"/>
+		<result property="toPlace" column="TO_PLACE"/>
+		<result property="consigneeName" column="CONSIGNEE_NAME"/>
+		<result property="serviceType" column="SERVICE_TYPE"/>
+		<result property="goodsName" column="GOODS_NAME"/>
+		<result property="goodsNum" column="GOODS_NUM"/>
+		<result property="goodsValume" column="GOODS_VALUME"/>
+		<result property="deliveryFee" column="DELIVERY_FEE"/>
+		<result property="operationFee" column="OPERATION_FEE"/>
+		<result property="insuranceFee" column="INSURANCE_FEE"/>
+		<result property="delivertoFee" column="DELIVERTO_FEE"/>
+		<result property="shipFee" column="SHIP_FEE"/>
+		<result property="shipPrice" column="SHIP_PRICE"/>
+		<result property="allPrice" column="ALL_PRICE"/>
+		<result property="shipStatus" column="SHIP_STATUS"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					SHIP_BILL_PID,
+					SHIP_BILL_NO,
+					SHIP_NO,
+					BUY_NAME,
+					BUY_PID,
+					START_PALCE,
+					TO_PLACE,
+					CONSIGNEE_NAME,
+					SERVICE_TYPE,
+					GOODS_NAME,
+					GOODS_NUM,
+					GOODS_VALUME,
+					DELIVERY_FEE,
+					OPERATION_FEE,
+					INSURANCE_FEE,
+					DELIVERTO_FEE,
+					SHIP_FEE,
+					SHIP_PRICE,
+					ALL_PRICE,
+					SHIP_STATUS,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="pid!=null and pid!=''"> AND PID LIKE ('%'||'pid'||'%' )</if>
+		<if test="shipBillNo!=null and shipBillNo!=''"> AND SHIP_BILL_NO LIKE ('%'||'shipBillNo'||'%' )</if>
+		<if test="shipNo!=null and shipNo!=''"> AND SHIP_NO LIKE ('%'||'shipNo'||'%' )</if>
+		<if test="buyName!=null and buyName!=''"> AND BUY_NAME LIKE ('%'||'buyName'||'%' )</if>
+		<if test="buyPid!=null and buyPid!=''"> AND BUY_PID LIKE ('%'||'buyPid'||'%' )</if>
+		<if test="startPalce!=null and startPalce!=''"> AND START_PALCE LIKE ('%'||'startPalce'||'%' )</if>
+		<if test="toPlace!=null and toPlace!=''"> AND TO_PLACE LIKE ('%'||'toPlace'||'%' )</if>
+		<if test="consigneeName!=null and consigneeName!=''"> AND CONSIGNEE_NAME LIKE ('%'||'consigneeName'||'%' )</if>
+		<if test="serviceType!=null and serviceType!=''"> AND SERVICE_TYPE LIKE ('%'||'serviceType'||'%' )</if>
+		<if test="goodsName!=null and goodsName!=''"> AND GOODS_NAME LIKE ('%'||'goodsName'||'%' )</if>
+		<if test="goodsNum!=null and goodsNum!=''"> AND GOODS_NUM LIKE ('%'||'goodsNum'||'%' )</if>
+		<if test="goodsValume!=null and goodsValume!=''"> AND GOODS_VALUME LIKE ('%'||'goodsValume'||'%' )</if>
+		<if test="deliveryFee!=null and deliveryFee!=''"> AND DELIVERY_FEE LIKE ('%'||'deliveryFee'||'%' )</if>
+		<if test="operationFee!=null and operationFee!=''"> AND OPERATION_FEE LIKE ('%'||'operationFee'||'%' )</if>
+		<if test="insuranceFee!=null and insuranceFee!=''"> AND INSURANCE_FEE LIKE ('%'||'insuranceFee'||'%' )</if>
+		<if test="delivertoFee!=null and delivertoFee!=''"> AND DELIVERTO_FEE LIKE ('%'||'delivertoFee'||'%' )</if>
+		<if test="shipFee!=null and shipFee!=''"> AND SHIP_FEE LIKE ('%'||'shipFee'||'%' )</if>
+		<if test="shipPrice!=null and shipPrice!=''"> AND SHIP_PRICE LIKE ('%'||'shipPrice'||'%' )</if>
+		<if test="allPrice!=null and allPrice!=''"> AND ALL_PRICE LIKE ('%'||'allPrice'||'%' )</if>
+		<if test="shipStatus!=null and shipStatus!=''"> AND SHIP_STATUS LIKE ('%'||'shipStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.model.ShipBillDetailModel">
+		<include refid="count"/>
+		FROM  DM_SHIP_BILL_DETAIL
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="dmShipBillDetailModelResultMap" parameterType="com.sinoservices.xascf.credit.model.ShipBillDetailModel">
+		<include refid="select"/>
+		FROM  DM_SHIP_BILL_DETAIL
+		<include refid="findByExample"/>
+	</select>
+	<select id="getPageByShipBillNo" resultMap="dmShipBillDetailModelResultMap" parameterType="String">
+		<include refid="select"/>
+			FROM  DM_SHIP_BILL_DETAIL
+			WHERE SHIP_BILL_NO=#{_parameter}
+	</select>
+	<select id="getPageByShipBillPid" resultMap="dmShipBillDetailModelResultMap" parameterType="String">
+		<include refid="select"/>
+			FROM  DM_SHIP_BILL_DETAIL
+			WHERE SHIP_BILL_PID=#{_parameter}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_SHIP_BILL_DETAIL (
+				PID,
+				SHIP_BILL_PID,
+				SHIP_BILL_NO,
+				SHIP_NO,
+				BUY_NAME,
+				BUY_PID,
+				START_PALCE,
+				TO_PLACE,
+				CONSIGNEE_NAME,
+				SERVICE_TYPE,
+				GOODS_NAME,
+				GOODS_NUM,
+				GOODS_VALUME,
+				DELIVERY_FEE,
+				OPERATION_FEE,
+				INSURANCE_FEE,
+				DELIVERTO_FEE,
+				SHIP_FEE,
+				SHIP_PRICE,
+				ALL_PRICE,
+				SHIP_STATUS,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{shipBillPid},
+			   #{shipBillNo},
+			   #{shipNo},
+			   #{buyName},
+			   #{buyPid},
+			   #{startPalce},
+			   #{toPlace},
+			   #{consigneeName},
+			   #{serviceType},
+			   #{goodsName},
+			   #{goodsNum},
+			   #{goodsValume},
+			   #{deliveryFee},
+			   #{operationFee},
+			   #{insuranceFee},
+			   #{delivertoFee},
+			   #{shipFee},
+			   #{shipPrice},
+			   #{allPrice},
+			   #{shipStatus},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   1
+		)
+	</insert>
+	<insert id="addByList" parameterType="java.util.List">  
+	    	INSERT INTO DM_SHIP_BILL_DETAIL (
+				PID,
+				SHIP_BILL_PID,
+				SHIP_BILL_NO,
+				SHIP_NO,
+				BUY_NAME,
+				BUY_PID,
+				START_PALCE,
+				TO_PLACE,
+				CONSIGNEE_NAME,
+				SERVICE_TYPE,
+				GOODS_NAME,
+				GOODS_NUM,
+				GOODS_VALUME,
+				DELIVERY_FEE,
+				OPERATION_FEE,
+				INSURANCE_FEE,
+				DELIVERTO_FEE,
+				SHIP_FEE,
+				SHIP_PRICE,
+				ALL_PRICE,
+				SHIP_STATUS,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( #{item.pid},
+			   #{item.shipBillPid},
+			   #{item.shipBillNo},
+			   #{item.shipNo},
+			   #{item.buyName},
+			   #{item.buyPid},
+			   #{item.startPalce},
+			   #{item.toPlace},
+			   #{item.consigneeName},
+			   #{item.serviceType},
+			   #{item.goodsName},
+			   #{item.goodsNum},
+			   #{item.goodsValume},
+			   #{item.deliveryFee},
+			   #{item.operationFee},
+			   #{item.insuranceFee},
+			   #{item.delivertoFee},
+			   #{item.shipFee},
+			   #{item.shipPrice},
+			   #{item.allPrice},
+			   #{item.shipStatus},
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   1)  
+	    </foreach>  
+  </insert>  
+  <delete id="deleteByShipBillNo" parameterType="String">
+      DELETE FROM DM_SHIP_BILL_DETAIL WHERE SHIP_BILL_NO=#{_parameter}
+  </delete>
+	<update id="update">
+		UPDATE DM_SHIP_BILL_DETAIL SET
+				ID = #{id},
+				PID = #{pid},
+				SHIP_BILL_NO = #{shipBillNo},
+				SHIP_NO = #{shipNo},
+				BUY_NAME = #{buyName},
+				BUY_PID = #{buyPid},
+				START_PALCE = #{startPalce},
+				TO_PLACE = #{toPlace},
+				CONSIGNEE_NAME = #{consigneeName},
+				SERVICE_TYPE = #{serviceType},
+				GOODS_NAME = #{goodsName},
+				GOODS_NUM = #{goodsNum},
+				GOODS_VALUME = #{goodsValume},
+				DELIVERY_FEE = #{deliveryFee},
+				OPERATION_FEE = #{operationFee},
+				INSURANCE_FEE = #{insuranceFee},
+				DELIVERTO_FEE = #{delivertoFee},
+				SHIP_FEE = #{shipFee},
+				SHIP_PRICE = #{shipPrice},
+				ALL_PRICE = #{allPrice},
+				SHIP_STATUS = #{shipStatus},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus},
+	</update>
+	<!-- 根据对账单号查找 -->
+	<select id="findByShipNo" resultMap="dmShipBillDetailModelResultMap" parameterType="java.util.List">
+		<include refid="select"/>
+		FROM DM_SHIP_BILL_DETAIL
+		WHERE
+			1=1
+			AND SHIP_BILL_NO IN
+			    <foreach collection="list" item="no"  open="(" separator="," close=")">  
+		        	#{no}  
+			    </foreach>  
+	</select>
+</mapper>

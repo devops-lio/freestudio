@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.CreditResultSugMapper">
+	<resultMap type="com.sinoservices.xascf.credit.model.CreditResultSugModel" id="creditResultSugModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditResultNo" column="CREDIT_RESULT_NO"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="commitorPid" column="COMMITOR_PID"/>
+		<result property="commitorName" column="COMMITOR_NAME"/>
+		<result property="commitorNo" column="COMMITOR_NO"/>
+		<result property="replySuggestion" column="REPLY_SUGGESTION"/>
+		<result property="replyVote" column="REPLY_VOTE"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					CREDIT_RESULT_NO,
+					CREDIT_NO,
+					COMMITOR_PID,
+					COMMITOR_NAME,
+					COMMITOR_NO,
+					REPLY_SUGGESTION,
+					REPLY_VOTE,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="creditResultNo!=null and creditResultNo!=''"> AND CREDIT_RESULT_NO = #{creditResultNo}</if>
+		<if test="creditNo!=null and creditNo!=''"> AND CREDIT_NO = #{creditNo}</if>
+		<if test="commitorPid!=null and commitorPid!=''"> AND COMMITOR_PID = #{commitorPid}</if>
+		<if test="commitorNo!=null and commitorNo!=''"> AND COMMITOR_NO = #{commitorNo}</if>
+		<if test="replySuggestion!=null and replySuggestion!=''"> AND REPLY_SUGGESTION = #{replySuggestion}</if>
+		<if test="replyVote!=null and replyVote!=''"> AND REPLY_VOTE = #{replyVote}</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS = #{recStatus}</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.credit.model.CreditResultSugModel">
+		<include refid="count"/>
+		FROM  DM_CREDIT_RESULT_SUG
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="creditResultSugModelResultMap" parameterType="com.sinoservices.xascf.credit.model.CreditResultSugModel">
+		<include refid="select"/>
+		FROM  DM_CREDIT_RESULT_SUG
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.credit.model.CreditResultSugModel">
+		INSERT INTO DM_CREDIT_RESULT_SUG (
+				PID,
+				CREDIT_RESULT_NO,
+				CREDIT_NO,
+				COMMITOR_PID,
+				COMMITOR_NAME,
+				COMMITOR_NO,
+				REPLY_SUGGESTION,
+				REPLY_VOTE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{creditResultNo},
+			   #{creditNo},
+			   #{commitorPid},
+			   #{commitorName},
+			   #{commitorNo},
+			   #{replySuggestion},
+			   #{replyVote},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   1
+		)
+	</insert>
+	<insert id="addByList" parameterType="java.util.List">  
+	    	INSERT INTO DM_CREDIT_RESULT_SUG (
+				PID,
+				CREDIT_RESULT_NO,
+				CREDIT_NO,
+				COMMITOR_PID,
+				COMMITOR_NAME,
+				COMMITOR_NO,
+				REPLY_SUGGESTION,
+				REPLY_VOTE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (  #{item.pid},
+			   #{item.creditResultNo},
+			   #{item.creditNo},
+			   #{item.commitorPid},
+			   #{item.commitorName},
+			   #{item.commitorNo},
+			   #{item.replySuggestion},
+			   #{item.replyVote},
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   1)  
+	    </foreach>  
+  </insert>  
+	<delete id="deleteByResultNo" parameterType="String">
+		DELETE FROM DM_CREDIT_RESULT_SUG
+		WHERE CREDIT_RESULT_NO=#{_parameter}
+	</delete>
+	
+</mapper>

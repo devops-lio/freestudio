@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.MaterialCreditDetailMapper">
+	<resultMap type="com.sinoservices.xascf.credit.model.MaterialCreditDetailModel" id="materialCreditDetailModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditMaterialPid" column="CREDIT_MATERIAL_PID"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileRename" column="FILE_RENAME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					CREDIT_MATERIAL_PID,
+					FILE_NAME,
+					FILE_RENAME,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="pid!=null and pid!=''"> AND PID LIKE ('%'||'pid'||'%' )</if>
+		<if test="creditMaterialPid!=null and creditMaterialPid!=''"> AND CREDIT_MATERIAL_PID LIKE ('%'||'creditMaterialPid'||'%' )</if>
+		<if test="fileName!=null and fileName!=''"> AND FILE_NAME LIKE ('%'||'fileName'||'%' )</if>
+		<if test="fileRename!=null and fileRename!=''"> AND FILE_RENAME LIKE ('%'||'fileRename'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.model.MaterialCreditDetailModel">
+		<include refid="count"/>
+		FROM  DM_MATERIAL_CREDIT_DETAIL
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="materialCreditDetailModelResultMap" parameterType="com.sinoservices.xascf.credit.model.MaterialCreditDetailModel">
+		<include refid="select"/>
+		FROM  DM_MATERIAL_CREDIT_DETAIL
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_MATERIAL_CREDIT_DETAIL (
+				ID,
+				PID,
+				CREDIT_MATERIAL_PID,
+				FILE_NAME,
+				FILE_RENAME,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{pid},
+			   #{creditMaterialPid},
+			   #{fileName},
+			   #{fileRename},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus}
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE DM_MATERIAL_CREDIT_DETAIL SET
+				ID = #{id},
+				PID = #{pid},
+				CREDIT_MATERIAL_PID = #{creditMaterialPid},
+				FILE_NAME = #{fileName},
+				FILE_RENAME = #{fileRename},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus},
+	</update>
+	
+	<!-- 插入list -->
+	<insert id="insertList" parameterType="java.util.List">
+		INSERT INTO DM_MATERIAL_CREDIT_DETAIL (
+				PID,
+				CREDIT_MATERIAL_PID,
+				FILE_NAME,
+				FILE_RENAME,
+				FILE_URL,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES 
+			<foreach collection="list" item="item" index="index" separator=",">
+			  ( #{item.pid},
+			   #{item.creditMaterialPid},
+			   #{item.fileName},
+			   #{item.fileRename},
+			   #{item.flleUrl},
+			   1,
+			   #{item.createTime},
+			   #{item.creator},
+			   #{item.modifyTime},
+			   #{item.modifier},
+			   1)
+			</foreach>
+	</insert>
+</mapper>

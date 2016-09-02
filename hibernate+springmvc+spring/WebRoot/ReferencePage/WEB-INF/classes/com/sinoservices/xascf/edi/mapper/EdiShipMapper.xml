@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.edi.mapper.EdiShipMapper">
+	<resultMap type="com.sinoservices.xascf.edi.model.EdiShipModel" id="EdiShipModel">
+		<result property="shipId" column="SHIP_ID"/>
+		<result property="shipNo" column="SHIP_NO"/>
+		<result property="fancingOrderId" column="FANCING_ORDER_ID"/>
+		<result property="sendCode" column="SEND_CODE"/>
+		<result property="sendName" column="SEND_NAME"/>
+		<result property="carrierCode" column="CARRIER_CODE"/>
+		<result property="carrierName" column="CARRIER_NAME"/>
+		<result property="sendPhone" column="SEND_PHONE"/>
+		<result property="carNo" column="CAR_NO"/>
+		<result property="mainDriverName" column="MAIN_DRIVER_NAME"/>
+		<result property="startAddress" column="START_ADDRESS"/>
+		<result property="aimName" column="AIM_NAME"/>
+		<result property="payType" column="PAY_TYPE"/>
+		<result property="payPrice" column="PAY_PRICE"/>
+		<result property="receiverPhone" column="RECEIVER_PHONE"/>
+		<result property="receiverName" column="RECEIVER_NAME"/>
+		<result property="goodsName" column="GOODS_NAME"/>
+		<result property="quantity" column="QUANTITY"/>
+		<result property="weight" column="WEIGHT"/>
+		<result property="transferFee" column="TRANSFER_FEE"/>
+		<result property="toDate" column="TO_DATE"/>
+	</resultMap>  
+	
+	<sql id="select"> 
+		  SELECT 
+			SHIP_ID,
+			SHIP_NO,
+			FANCING_ORDER_ID,
+			SEND_CODE,
+			SEND_NAME,
+			CARRIER_CODE,
+			CARRIER_NAME,
+			SEND_PHONE,
+			CAR_NO,
+			MAIN_DRIVER_NAME,
+			START_ADDRESS,
+			AIM_NAME,
+			PAY_TYPE,
+			PAY_PRICE,
+			RECEIVER_PHONE,
+			RECEIVER_NAME,
+			GOODS_NAME,
+			QUANTITY,
+			WEIGHT,
+			TRANSFER_FEE,
+			TO_DATE
+	</sql>
+	
+	<!-- 查询  -->
+	<select id="getEdiShipByCondition" resultMap="EdiShipModel" parameterType="com.sinoservices.xascf.edi.model.EdiShipModel">
+		<include refid="select"/>  
+		FROM  EDI_SHIP
+		<include refid="findByExample"/> 
+	</select>
+	
+	<sql id="findByExample">
+		WHERE  1=1
+		<if test="shipId !=null and  shipId !=''">AND SHIP_ID = #{shipId}</if>
+		<if test="fancingOrderId !=null and fancingOrderId != ''">AND FANCING_ORDER_ID = #{fancingOrderId}</if>
+	</sql>
+
+</mapper>

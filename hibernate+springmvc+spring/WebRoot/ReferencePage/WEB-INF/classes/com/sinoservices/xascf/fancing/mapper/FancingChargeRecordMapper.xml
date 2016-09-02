@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.FancingChargeRecordMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.model.FancingChargeRecordModel" id="fancingChargeRecordModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="chargeRecordPid" column="CHARGE_RECORD_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="chargeNo" column="CHARGE_NO"/>
+		<result property="repayPrice" column="REPAY_PRICE"/>
+		<result property="repayDate" column="REPAY_DATE"/>
+		<result property="repayNo" column="REPAY_NO"/>
+		<result property="repalyBanktoNo" column="REPALY_BANKTO_NO"/>
+		<result property="repayBankNo" column="REPAY_BANK_NO"/>
+		<result property="repaymentType" column="REPAYMENT_TYPE"/>
+		<result property="ioFlag" column="IO_FLAG"/>
+		<result property="remark" column="REMARK"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					CHARGE_RECORD_PID,
+					FANCING_ORDER_NO,
+					CHARGE_NO,
+					REPAY_PRICE,
+					REPAY_DATE,
+					REPAY_NO,
+					REPALY_BANKTO_NO,
+					REPAY_BANK_NO,
+					REPAYMENT_TYPE,
+					IO_FLAG,
+					REMARK,
+					CREATOR,
+					CREATE_TIME,
+					MODIFIER,
+					MODIFY_TIME,
+					REC_VER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%' )</if>
+		<if test="chargeNo!=null and chargeNo!=''"> AND CHARGE_NO LIKE ('%${chargeNo}%' )</if>
+		<if test="repayDate!=null and repayDate!=''"> AND REPAY_DATE LIKE ('%${repayDate}%' )</if>
+		<if test="repayNo!=null and repayNo!=''"> AND REPAY_NO LIKE ('%${repayNo}%' )</if>
+		<if test="repalyBanktoNo!=null and repalyBanktoNo!=''"> AND REPALY_BANKTO_NO LIKE ('%${repalyBanktoNo}%' )</if>
+		<if test="repayBankNo!=null and repayBankNo!=''"> AND REPAY_BANK_NO LIKE ('%${repayBankNo}%' )</if>
+		<if test="repaymentType!=null and repaymentType!=''"> AND REPAYMENT_TYPE =#{repaymentType}</if>
+		<if test="ioFlag!=null and ioFlag!=''"> AND IO_FLAG =#{ioFlag}</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.fancing.model.FancingChargeRecordModel">
+		<include refid="count"/>
+		FROM  DM_FANCING_CHARGE_RECORD
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="fancingChargeRecordModelResultMap" parameterType="com.sinoservices.xascf.fancing.model.FancingChargeRecordModel">
+		<include refid="select"/>
+		FROM  DM_FANCING_CHARGE_RECORD
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getFancingChargeRecordByChargeNo" resultMap="fancingChargeRecordModelResultMap" parameterType="Map">
+		<include refid="select"/>
+		FROM  DM_FANCING_CHARGE_RECORD
+		WHERE CHARGE_NO=#{chargeNo} AND IO_FLAG=#{ioFlag }
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.fancing.model.FancingChargeRecordModel">
+		INSERT INTO DM_FANCING_CHARGE_RECORD (
+				CHARGE_RECORD_PID,
+				FANCING_ORDER_NO,
+				CHARGE_NO,
+				REPAY_PRICE,
+				REPAY_DATE,
+				REPAY_NO,
+				REPALY_BANKTO_NO,
+				REPAY_BANK_NO,
+				REPAYMENT_TYPE,
+				IO_FLAG,
+				REMARK,
+				CREATOR,
+				CREATE_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{chargeRecordPid},
+			   #{fancingOrderNo},
+			   #{chargeNo},
+			   #{repayPrice},
+			   #{repayDate},
+			   #{repayNo},
+			   #{repalyBanktoNo},
+			   #{repayBankNo},
+			   #{repaymentType},
+			   #{ioFlag},
+			   #{remark},
+			   #{creator},
+			   SYSDATE(),
+			   1,
+			   1
+		)
+	</insert>
+	
+	<update id="updateByPid" parameterType="com.sinoservices.xascf.fancing.model.FancingChargeRecordModel">
+		UPDATE DM_FANCING_CHARGE_RECORD SET
+			<if test="fancingOrderNo !=null and fancingOrderNo !=''">	FANCING_ORDER_NO = #{fancingOrderNo},</if>
+			<if test="chargeNo !=null and chargeNo !=''">	CHARGE_NO = #{chargeNo},</if>
+			<if test="repayPrice !=null and repayPrice !=''">	REPAY_PRICE = #{repayPrice},</if>
+			<if test="repayDate !=null and repayDate !=''">	REPAY_DATE = #{repayDate},</if>
+			<if test="repayNo !=null and repayNo !=''">	REPAY_NO = #{repayNo},</if>
+			<if test="repalyBanktoNo !=null and repalyBanktoNo !=''">	REPALY_BANKTO_NO = #{repalyBanktoNo},</if>
+			<if test="repayBankNo !=null and repayBankNo !=''">	REPAY_BANK_NO = #{repayBankNo},</if>
+			<if test="repaymentType !=null and repaymentType !=''">	REPAYMENT_TYPE = #{repaymentType},</if>
+			<if test="ioFlag !=null and ioFlag !=''">	IO_FLAG = #{ioFlag},</if>
+			<if test="remark !=null and remark !=''">	REMARK = #{remark},</if>
+			<if test="modifier !=null and modifier !=''">	MODIFIER = #{modifier},</if>
+			<if test="modifyTime !=null and modifyTime !=''">	MODIFY_TIME = #{modifyTime},</if>
+			REC_VER=REC_VER+1
+		WHERE CHARGE_RECORD_PID = #{chargeRecordPid}
+	</update>
+</mapper>

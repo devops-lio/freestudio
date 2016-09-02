@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.UserRoleMapper">
+
+    <resultMap type="com.sinoservices.xascf.system.model.UserRoleModel" id="userRoleResultMap">
+        <id property="id" column="ID"/>
+        <result property="userRolePid" column="USER_ROLE_PID"/>
+        <result property="userPid" column="USER_PID"/>
+        <result property="rolePid" column="ROLE_PID"/>
+        <result property="creator" column="CREATOR"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="modifier" column="MODIFIER"/>
+        <result property="modifyTime" column="MODIFY_TIME"/>
+    </resultMap>
+    
+    <sql id="selectAll">
+        SELECT ID, USER_ROLE_PID,USER_PID, ROLE_PID, CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+         FROM SS_USER_ROLE
+    </sql>
+
+    <sql id="findByExampleWhere">
+        WHERE 1=1
+        <if test="id!=null and id!=''"> AND ID = #{id}</if>
+        <if test="userRolePid!=null and userRolePid!=''"> AND USER_ROLE_PID = #{userRolePid}</if>
+        <if test="userPid!=null and userPid!=''"> AND USER_PID = #{userPid}</if>
+        <if test="rolePid!=null and rolePid!=''"> AND ROLE_PID = #{rolePid}</if>
+    </sql>
+
+    <select id="getPage" parameterType="com.sinoservices.xascf.system.model.UserRoleModel" resultMap="userRoleResultMap">
+        <include refid="selectAll" />
+        <include refid="findByExampleWhere" />
+    </select>
+    
+    <select id="getNoPageList" parameterType="com.sinoservices.xascf.system.model.UserRoleModel" resultMap="userRoleResultMap">
+        <include refid="selectAll" />
+        <include refid="findByExampleWhere" />
+    </select>
+    
+    <select id="countByCondtion" parameterType="com.sinoservices.xascf.system.model.UserRoleModel" resultType="int">
+        SELECT COUNT(1) FROM SS_USER_ROLE
+        <include refid="findByExampleWhere" />
+    </select>
+    
+     <select id="getRolePidListByUserPid" parameterType="String" resultType="String">
+         SELECT  ROLE_PID
+         FROM SS_USER_ROLE WHERE USER_PID=#{userPid}
+    </select>
+    <insert id="insert" parameterType="com.sinoservices.xascf.system.model.UserRoleModel">
+        INSERT INTO SS_USER_ROLE (ID,USER_ROLE_PID, USER_PID, ROLE_PID,
+            CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME)    
+        VALUES (#{id},#{userRolePid}, #{userPid}, #{rolePid},
+            #{creator}, #{createTime, jdbcType=TIMESTAMP}, #{modifier}, #{modifyTime, jdbcType=TIMESTAMP})
+    </insert>
+    
+    <update id="update" parameterType="com.sinoservices.xascf.system.model.UserRoleModel">
+        UPDATE SS_USER_ROLE SET USER_PID = #{userPid}, ROLE_PID = #{rolePid},
+            CREATOR = #{creator}, CREATE_TIME = #{createTime}, MODIFIER = #{modifier}, MODIFY_TIME = #{modifyTime}
+         WHERE USER_ROLE_PID = #{userRolePid}
+    </update>
+    
+    <delete id="delete" parameterType="java.util.List">
+        DELETE FROM SS_USER_ROLE WHERE 
+        <choose>
+             <when test="null!=list and list.size!=0">
+                USER_ROLE_PID IN
+                <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </when>
+            <otherwise>
+               1 != 1
+            </otherwise>
+        </choose>
+    </delete>
+    
+    <delete id="deleteByModelList" parameterType="java.util.List">
+        DELETE FROM SS_USER_ROLE WHERE 1 = 1
+        <choose>
+            <when test="null!=list and list.size!=0">
+	            <foreach collection="list" item="item" index="index" open="AND (" separator="OR" close=")">
+	               (ROLE_PID = #{item.rolePid} AND USER_PID = #{item.userPid})
+	            </foreach>
+	        </when>
+	        <otherwise>
+	           1 != 1
+	        </otherwise>
+        </choose>
+    </delete>
+    <delete id="deleteByModel" parameterType="com.sinoservices.xascf.system.model.UserRoleModel">
+        DELETE FROM SS_USER_ROLE WHERE 1 = 1 AND ROLE_ID = #{rolePid} AND USER_ID = #{userPid}
+    </delete>
+    
+</mapper>

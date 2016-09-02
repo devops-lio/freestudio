@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.risk.mapper.TemplatesMapper">
+	<resultMap type="com.sinoservices.xascf.risk.view.TemplatesView" id="templatesViewResultMap">
+		<result property="id" column="ID"/>
+		<result property="templatePid" column="TEMPLATE_PID"/>
+		<result property="templateType" column="TEMPALTE_TYPE"/>
+		<result property="templateName" column="TEMPLATE_NAME"/>
+		<result property="templateCode" column="TEMPLATE_CODE"/>
+		<result property="templateIndustry" column="TEMPLATE_INDUSTRY"/>
+		<result property="industryCode" column="INDUSTRY_CODE"/>
+		<result property="isDefault" column="IS_DEFAULT"/>
+		<result property="remark" column="REMARK"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					TEMPLATE_PID,
+					TEMPALTE_TYPE,
+					TEMPLATE_NAME,
+					TEMPLATE_CODE,
+					TEMPLATE_INDUSTRY,
+					INDUSTRY_CODE,
+					IS_DEFAULT,
+					REMARK,
+					CREATOR,
+					CREATE_TIME,
+					MODIFIER,
+					MODIFY_TIME,
+					REC_VER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="templateName!=null and templateName!=''"> AND TEMPLATE_NAME LIKE ('%${templateName}%' )</if>
+		<if test="templateCode!=null and templateCode!=''"> AND TEMPLATE_CODE LIKE ('%${templateCode}%' )</if>
+		<if test="templateIndustry!=null and templateIndustry!=''"> AND TEMPLATE_INDUSTRY LIKE ('%${templateIndustry}%' )</if>
+		<if test="industryCode!=null and industryCode!=''"> AND INDUSTRY_CODE LIKE ('%${industryCode}%' )</if>
+		<if test="isDefault!=null and isDefault!=''"> AND IS_DEFAULT =${isDefault}</if>
+		<if test="templateType!=null and templateType!=''"> AND TEMPALTE_TYPE LIKE ('${templateType}')</if>
+		ORDER BY CREATE_TIME DESC
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.risk.view.TemplatesView">
+		<include refid="count"/>
+		FROM  RM_TEMPLATES
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getDefaultTemplateByCondition" resultMap="templatesViewResultMap" parameterType="com.sinoservices.xascf.risk.view.TemplatesView">
+		<include refid="select"/>
+		FROM  RM_TEMPLATES
+		WHERE IS_DEFAULT = '1' 
+		<if test="industryCode !=null and industryCode !=''"> AND INDUSTRY_CODE = #{industryCode}</if>
+		<if test="templateType !=null and templateType !=''"> AND TEMPALTE_TYPE = #{templateType}</if>
+		ORDER BY CREATE_TIME DESC
+		LIMIT 1
+	</select>
+	
+	
+	<select id="getPage" resultMap="templatesViewResultMap" parameterType="com.sinoservices.xascf.risk.view.TemplatesView">
+		<include refid="select"/>
+		FROM  RM_TEMPLATES
+		<include refid="findByExample"/>
+	</select>
+	<select id="getTemplatePopJoinItem" resultMap="templatesViewResultMap" parameterType="com.sinoservices.xascf.risk.view.TemplatesView">
+			SELECT 
+					
+					TEMPLATE_PID,
+					TEMPALTE_TYPE,
+					TEMPLATE_NAME,
+					TEMPLATE_CODE,
+					TEMPLATE_INDUSTRY,
+					INDUSTRY_CODE,
+					IS_DEFAULT,
+					REMARK
+				FROM RM_TEMPLATES 
+			<include refid="findByExample"/>
+	</select>
+	<insert id="insert" parameterType="com.sinoservices.xascf.risk.model.TemplatesModel">
+		INSERT INTO RM_TEMPLATES (
+				TEMPLATE_PID,
+				TEMPALTE_TYPE,
+				TEMPLATE_NAME,
+				TEMPLATE_CODE,
+				TEMPLATE_INDUSTRY,
+				INDUSTRY_CODE,
+				IS_DEFAULT,
+				REMARK,
+				CREATOR,
+				CREATE_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{templatePid},
+			   #{templateType},
+			   #{templateName},
+			   #{templateCode},
+			   #{templateIndustry},
+			   #{industryCode},
+			   #{isDefault},
+			   #{remark},
+			   #{creator},
+			   SYSDATE(),
+			   1,
+			   0
+		)
+	</insert>
+	
+	<update id="updateByPid" parameterType="com.sinoservices.xascf.risk.model.TemplatesModel">
+		UPDATE RM_TEMPLATES SET
+			<if test="templateName!=null and templateName!=''">	TEMPLATE_NAME = #{templateName},</if>
+			<if test="templateType!=null and templateType!=''">	TEMPALTE_TYPE = #{templateType},</if>
+			<if test="templateCode!=null and templateCode!=''">	TEMPLATE_CODE = #{templateCode},</if>
+			<if test="templateIndustry!=null and templateIndustry!=''">	TEMPLATE_INDUSTRY = #{templateIndustry},</if>
+			<if test="industryCode!=null and industryCode!=''">	INDUSTRY_CODE = #{industryCode},</if>
+			<if test="isDefault!=null and isDefault!=''">	IS_DEFAULT = #{isDefault},</if>
+			<if test="remark!=null and remark!=''">	REMARK = #{remark},</if>
+			<if test="modifier!=null and modifier!=''">	MODIFIER = #{modifier},</if>
+			<if test="recStatus!=null and recStatus!=''">	REC_STATUS = #{recStatus},</if>
+				MODIFY_TIME =SYSDATE(),
+				REC_VER = REC_VER+1
+			WHERE TEMPLATE_PID = #{templatePid}	
+	</update>
+	
+	<delete id="deleteByPid" parameterType="java.util.List">
+		DELETE FROM RM_TEMPLATES WHERE TEMPLATE_PID IN
+		<foreach item="pid" collection="list" open="(" separator="," close=")">
+				#{pid}
+			</foreach>
+	</delete>
+</mapper>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.funds.mapper.FundTransactionMapper">
+	<resultMap type="com.sinoservices.xascf.funds.model.FundTransactionModel" id="fundTransactionModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="fundTransactionPid" column="FUND_TRANSACTION_PID"/>
+		<result property="businessNo" column="BUSINESS_NO"/>
+		<result property="transactionSerialNo" column="TRANSACTION_SERIAL_NO"/>
+		<result property="serialType" column="SERIAL_TYPE"/>
+		<result property="transactionDate" column="TRANSACTION_DATE"/>
+		<result property="transactionAmount" column="TRANSACTION_AMOUNT"/>
+		<result property="bankNo" column="BANK_NO"/>
+		<result property="incomeType" column="INCOME_TYPE"/>
+		<result property="transactionObject" column="TRANSACTION_OBJECT"/>
+		<result property="transactionObjectAccount" column="TRANSACTION_OBJECT_ACCOUNT"/>
+		<result property="transactionType" column="TRANSACTION_TYPE"/>
+		<result property="businessType" column="BUSINESS_TYPE"/>
+		<result property="fundType" column="FUND_TYPE"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					FUND_TRANSACTION_PID,
+					BUSINESS_NO,
+					TRANSACTION_SERIAL_NO,
+					SERIAL_TYPE,
+					date_format(TRANSACTION_DATE, '%Y-%m-%d %H:%i:%s') as TRANSACTION_DATE ,
+					TRANSACTION_AMOUNT,
+					BANK_NO,
+					INCOME_TYPE,
+					TRANSACTION_OBJECT,
+					TRANSACTION_OBJECT_ACCOUNT,
+					TRANSACTION_TYPE,
+					BUSINESS_TYPE,
+					FUND_TYPE,
+					CREATOR,
+					CREATE_TIME,
+					MODIFIER,
+					MODIFY_TIME,
+					REC_VER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%${id}%')</if>
+		<if test="fundTransactionPid!=null and fundTransactionPid!=''"> AND FUND_TRANSACTION_PID LIKE ('%${fundTransactionPid}%')</if>
+		<if test="businessNo !=null and businessNo !=''"> AND BUSINESS_NO LIKE ('%${businessNo}%')</if>
+		<if test="transactionSerialNo!=null and transactionSerialNo!=''"> AND TRANSACTION_SERIAL_NO LIKE ('%${transactionSerialNo}%')</if>
+		<if test="serialType !=null and serialType !=''"> AND SERIAL_TYPE LIKE ('%${serialType}%')</if>
+		<if test="transactionDate!=null and transactionDate!=''"> AND TRANSACTION_DATE LIKE ('%${transactionDate}%')</if>
+		<if test="transactionAmount!=null and transactionAmount!=''"> AND TRANSACTION_AMOUNT LIKE ('%${transactionAmount}%')</if>
+		<if test="bankNo!=null and bankNo!=''"> AND BANK_NO LIKE ('%${bankNo}%')</if>
+		<if test="incomeType !=null and incomeType !=''"> AND INCOME_TYPE LIKE ('%${incomeType}%')</if>
+		<if test="transactionObject !=null and transactionObject !=''"> AND TRANSACTION_OBJECT LIKE ('%${transactionObject}%')</if>
+		<if test="transactionObjectAccount !=null and transactionObjectAccount !=''"> AND TRANSACTION_OBJECT_ACCOUNT LIKE ('%${transactionObjectAccount}%')</if>
+		<if test="transactionType!=null and transactionType!=''"> AND TRANSACTION_TYPE LIKE ('%${transactionType}%')</if>
+		<if test="businessType!=null and businessType!=''"> AND BUSINESS_TYPE LIKE ('%${businessType}%')</if>
+		<if test="fundType!=null and fundType!=''"> AND FUND_TYPE LIKE ('%${fundType}%')</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%')</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%${createTime}%')</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%')</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%${modifyTime}%')</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%${recVer}%')</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%')</if>
+		<if test="(transactionDateFrom!=null and transactionDateFrom!='') and (transactionDateTo==null or transactionDateTo == '') "> AND TRANSACTION_DATE &gt;= #{transactionDateFrom}</if>
+		<if test="(transactionDateFrom==null or transactionDateFrom=='') and (transactionDateTo!=null and transactionDateTo != '') "> AND TRANSACTION_DATE &lt;  DATE_ADD( #{transactionDateTo},INTERVAL 1 DAY)</if>
+		<if test="(transactionDateFrom!=null and transactionDateFrom!='') and (transactionDateTo!=null and transactionDateTo != '') "> AND TRANSACTION_DATE between #{transactionDateFrom} and DATE_ADD( #{transactionDateTo},INTERVAL 1 DAY)</if> 
+		ORDER BY CREATE_TIME DESC
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.funds.view.FundTransactionQueryConditionView">
+		<include refid="count"/>
+		FROM  FM_FUND_TRANSACTION
+	<!--	select count(0)
+        from FM_FUND_TRANSACTION tran-->
+        
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="fundTransactionModelResultMap" parameterType="com.sinoservices.xascf.funds.view.FundTransactionQueryConditionView">
+		<include refid="select"/>
+		FROM  FM_FUND_TRANSACTION 
+		<!-- select tran.*
+             from FM_FUND_TRANSACTION tran
+             LEFT JOIN FM_LOAN_RECORD recode on tran.BUSINESS_NO=recode.FANCING_ORDER_NO
+            
+             group by tran.ID-->
+		 <include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO FM_FUND_TRANSACTION (
+				ID,
+				FUND_TRANSACTION_PID,
+				BUSINESS_NO,
+				TRANSACTION_SERIAL_NO,
+				SERIAL_TYPE,
+				TRANSACTION_DATE,
+				TRANSACTION_AMOUNT,
+				BANK_NO,
+				INCOME_TYPE,
+				TRANSACTION_OBJECT,
+				TRANSACTION_OBJECT_ACCOUNT,
+				TRANSACTION_TYPE,
+				BUSINESS_TYPE,
+				FUND_TYPE,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{fundTransactionPid},
+			   #{businessNo},
+			   #{transactionSerialNo},
+			   #{serialType},
+			   #{transactionDate},
+			   #{transactionAmount},
+			   #{bankNo},
+			   #{incomeType},
+			   #{transactionObject},
+			   #{transactionObjectAccount},
+			   #{transactionType},
+			   #{businessType},
+			   #{fundType},
+			   #{creator},
+			   SYSDATE(),
+			   #{modifier},
+			   #{modifyTime},
+			   1,
+			   0
+		);
+	</insert>
+	
+	<!-- 批量新增-->
+	<insert id="batchInsert" parameterType="java.util.List">  
+		INSERT INTO FM_FUND_TRANSACTION (
+				ID,
+				FUND_TRANSACTION_PID,
+				BUSINESS_NO,
+				TRANSACTION_SERIAL_NO,
+				SERIAL_TYPE,
+				TRANSACTION_DATE,
+				TRANSACTION_AMOUNT,
+				BANK_NO,
+				INCOME_TYPE,
+				TRANSACTION_OBJECT,
+				TRANSACTION_OBJECT_ACCOUNT,
+				TRANSACTION_TYPE,
+				BUSINESS_TYPE,
+				FUND_TYPE,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (   
+	 		   #{item.id},
+			   #{item.fundTransactionPid},
+			   #{item.businessNo},
+			   #{item.transactionSerialNo},
+			   #{item.serialType},
+			   #{item.transactionDate},
+			   #{item.transactionAmount},
+			   #{item.bankNo},
+			   #{item.incomeType},
+			   #{item.transactionObject},
+			   #{item.transactionObjectAccount},
+			   #{item.transactionType},
+			   #{item.businessType},
+			   #{item.fundType},
+			   #{item.creator},
+			   SYSDATE(),
+			   #{item.modifier},
+			   SYSDATE(),
+			   1,
+			   0
+			   )  
+	    </foreach>  
+  </insert>  
+	
+	<update id="update">
+		UPDATE FM_FUND_TRANSACTION SET
+				<if test="transactionSerialNo !=null and transactionSerialNo !=''"> TRANSACTION_SERIAL_NO = #{transactionSerialNo},</if>
+				<if test="serialType !=null and serialType !=''"> SERIAL_TYPE = #{serialType},</if>
+				<if test="transactionDate !=null and transactionDate !=''"> TRANSACTION_DATE = #{transactionDate},</if>
+				<if test="transactionAmount !=null and transactionAmount !=''"> TRANSACTION_AMOUNT = #{transactionAmount},</if>
+				<if test="bankNo !=null and bankNo !=''"> BANK_NO = #{bankNo},</if>
+				<if test="incomeType !=null and incomeType !=''"> INCOME_TYPE = #{incomeType},</if>
+				<if test="transactionObject !=null and transactionObject !=''"> TRANSACTION_OBJECT = #{transactionObject},</if>
+				<if test="transactionObjectAccount !=null and transactionObjectAccount !=''"> TRANSACTION_OBJECT_ACCOUNT = #{transactionObjectAccount},</if>
+				<if test="transactionType !=null and transactionType !=''"> TRANSACTION_TYPE = #{transactionType},</if>
+				<if test="businessType !=null and businessType !=''"> BUSINESS_TYPE = #{businessType},</if>
+				<if test="fundType !=null and fundType !=''"> FUND_TYPE = #{fundType},</if>
+				<if test="recStatus !=null and recStatus !=''"> REC_STATUS = #{recStatus},</if>
+				REC_VER = REC_VER+1,
+		  		MODIFY_TIME=SYSDATE(),
+		  		MODIFIER=#{modifier}
+		WHERE BUSINESS_NO = #{businessNo} AND REC_STATUS=0
+				<if test="transactionType !=null and transactionType !=''"> AND TRANSACTION_TYPE = #{transactionType}</if>
+				<if test="fundType !=null and fundType !=''"> AND FUND_TYPE = #{fundType}</if>
+	</update>
+</mapper>

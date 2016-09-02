@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.agfancing.mapper.AgFancingSolutionAuthorMapper">
+	<resultMap type="com.sinoservices.xascf.agfancing.model.AgFancingSolutionAuthorModel" id="agFancingAuthorResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="solutionPid" column="SOLUTION_PID"/>
+		<result property="authorPid" column="AUTHOR_PID"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					SOLUTION_PID,
+					AUTHOR_PID,
+					REC_STATUS,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER
+		]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="pid!=null and pid!=''"> AND PID = #{pid} </if>
+		<if test="solutionPid !=null and solutionPid !=''"> AND SOLUTION_PID like ('%${solutionPid}%') </if>
+		<if test="authorPid !=null and authorPid !=''">  AND AUTHOR_PID like ('%${authorPid}%') </if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS =#{recStatus}</if>
+	</sql>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingSolutionAuthorModel">
+		INSERT INTO DM_AGFANCING_SOLUTION_AUTHOR (
+					PID,
+					SOLUTION_PID,
+					AUTHOR_PID,
+					REC_STATUS,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER
+		) VALUES (
+			   #{pid},
+			   #{solutionPid},
+			   #{authorPid},
+			   1,
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   SYSDATE(),
+			   #{modifier}
+		)
+	</insert>
+	
+	<insert id="insertList" parameterType="java.util.List">
+		INSERT INTO DM_AGFANCING_SOLUTION_AUTHOR (
+					PID,
+					SOLUTION_PID,
+					AUTHOR_PID,
+					REC_STATUS,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER
+		) VALUES 
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+			   #{item.pid},
+			   #{item.solutionPid},
+			   #{item.authorPid},
+			   1,
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   SYSDATE(),
+			   #{item.modifier}
+		)
+		</foreach>
+	</insert>
+	
+  	<delete id="deleteBySoPid" parameterType="String">
+  		DELETE FROM DM_AGFANCING_SOLUTION_AUTHOR WHERE SOLUTION_PID=#{pid}
+ 	 </delete>
+</mapper>

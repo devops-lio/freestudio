@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.businessQuery.mapper.BusinessQueryMapper">
+	<resultMap type="com.sinoservices.xascf.businessQuery.view.BusinessQueryItem" id="businessQueryItemResultMap">
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="replyQuota" column="CONTRACT_AMOUNT"/>
+		<result property="creditStartTime" column="CREDIT_FROM"/>
+		<result property="creditEndTime" column="CREDIT_TO"/>
+		<result property="termRate" column="RATE"/>
+		<result property="serveRate" column="SERVICE_RATE"/>
+		<result property="bondRate" column="BOND_RATE"/>
+		<result property="buyTotal" column="BUY_TOTAL"/>
+		<result property="replyPrice" column="REPLY_PRICE"/>
+		<result property="notePrice" column="NOTE_PRICE"/>
+		<result property="noteDisprice" column="NOTE_DISPRICE"/>
+		<result property="operator" column="OPERATOR"/>
+		<result property="contractNo" column="CONTRACT_NO"/>
+		<result property="agCustomerName" column="AGFANCING_CUSTOMER_NAME"/>
+		<result property="agCustomerPid" column="AGFANCING_CUSTOMER_PID"/>
+		<result property="agBillAmount" column="BILL_AMOUNT"/>
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.businessQuery.view.BusinessAllMsgItem" id="businessAllMsgItemResultMap">
+		<result property="allReplyPrice" column="ALLREPLY_PRICE"/>
+		<result property="allNotePrice" column="ALLNOTE_PRICE"/>
+		<result property="allNoteDisprice" column="ALLNOTE_DISPRICE"/>
+	</resultMap>
+	
+	
+	<resultMap type="com.sinoservices.xascf.businessQuery.view.BusinessBuyItem" id="businessBuyItemResultMap">
+		<result property="buyPid" column="BUY_PID"/>
+		<result property="buyName" column="BUY_NAME"/>
+		<result property="creditPercent" column="CREDIT_PERCENT"/>
+		<result property="billType" column="BILL_TYPE"/>
+		<result property="disCount" column="DISCOUNT"/>
+		<result property="replyPrice" column="REPLY_PRICE"/>
+		<result property="notePrice" column="NOTE_PRICE"/>
+		<result property="noteDisprice" column="NOTE_DISPRICE"/>
+		<result property="operator" column="OPERATOR"/>
+		<result property="agCustomerName" column="AGFANCING_CUSTOMER_NAME"/>
+		<result property="agCustomerPid" column="AGFANCING_CUSTOMER_PID"/>
+		<result property="agBillPrice" column="BILL_PRICE"/>
+	</resultMap>
+	
+	
+	<resultMap type="com.sinoservices.xascf.businessQuery.view.BusinessOrderItem" id="businessOrderItemResultMap">
+		<result property="buyPid" column="BUYER_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="buyerName" column="BUYER_NAME"/>
+		<result property="replyPrice" column="REPLY_PRICE"/>
+		<result property="payToTime" column="PAY_TO_TIME"/>
+		<result property="notePrice" column="NOTE_PRICE"/>
+		<result property="noteDisprice" column="NOTE_DISPRICE"/>
+		<result property="requestTime" column="REQUEST_TIME"/>
+		<result property="noteType" column="NOTE_TYPE"/>
+		<result property="fancingStatus" column="FANCING_STATUS"/>
+		<result property="termDate" column="TERM_DATE"/>
+		<result property="latestTime" column="LATEST_TIME"/>
+		<result property="billPrice" column="BILL_PRICE"/>
+		<result property="payTime" column="REBACK_DATE"/>
+		<result property="agCustomerName" column="AGFANCING_CUSTOMER_NAME"/>
+		<result property="agCustomerPid" column="AGFANCING_CUSTOMER_PID"/>
+		<result property="agBillPrice" column="AG_BILL_PRICE"/>
+	</resultMap>
+	
+	
+	<sql id="findByExampleBuy">
+		WHERE 1=1
+		<if test="buyPid!=null and buyPid!=''"> AND BUY_PID LIKE ('%${buyPid}%')</if>
+		<if test="buyName!=null and buyName!=''"> AND BUY_NAME LIKE ('%${buyName}%')</if>
+		<if test="creditPercent!=null and creditPercent!=''"> AND CREDIT_PERCENT LIKE ('%${creditPercent}%')</if>
+		<if test="billType!=null and billType!=''"> AND BILL_TYPE  =('${billType}')</if>
+		<if test="disCount!=null and disCount!=''"> AND RATE LIKE ('%${DISCOUNT}%')</if>
+		<if test="replyPrice!=null and replyPrice!=''"> AND REPLY_PRICE LIKE ('%${replyPrice}%')</if>
+		<if test="notePrice!=null and notePrice!=''"> AND BOND_RATE LIKE ('%${notePrice}%')</if>
+		<if test="noteDisprice!=null and noteDisprice!=''"> AND NOTE_DISPRICE LIKE ('%${noteDisprice}%')</if>
+		<if test="operator!=null and operator!=''"> AND OPERATOR LIKE ('%${operator}%')</if>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="memberName!=null and memberName!=''"> AND MEMBER_NAME LIKE ('%${memberName}%')</if>
+		<if test="replyQuota!=null and replyQuota!=''"> AND CONTRACT_AMOUNT LIKE ('%${replyQuota}%')</if>
+		<if test="creditStartTime!=null and creditStartTime!=''"> AND CREDIT_FROM = ('${creditStartTime}')</if>
+		<if test="creditEndTime!=null and creditEndTime!=''"> AND CREDIT_TO  =('${creditEndTime}')</if>
+		<if test="termRate!=null and termRate!=''"> AND RATE LIKE ('%${termRate}%')</if>
+		<if test="serveRate!=null and serveRate!=''"> AND SERVICE_RATE LIKE ('%${serveRate}%')</if>
+		<if test="bondRate!=null and bondRate!=''"> AND BOND_RATE LIKE ('%${bondRate}%')</if>
+		<if test="buyTotal!=null and buyTotal!=''"> AND BUY_TOTAL LIKE ('%${buyTotal}%')</if>
+		<if test="replyPrice!=null and replyPrice!=''"> AND REPLY_PRICE LIKE ('%${replyPrice}%')</if>
+		<if test="notePrice!=null and notePrice!=''"> AND NOTE_PRICE LIKE ('%${notePrice}%')</if>
+		<if test="noteDisprice!=null and noteDisprice!=''"> AND NOTE_DISPRICE LIKE ('%${noteDisprice}%')</if>
+		<if test="operator!=null and operator!=''"> AND OPERATOR LIKE ('%${operator}%')</if>
+		<if test="contractNo!=null and contractNo!=''"> AND CONTRACT_NO LIKE ('%${contractNo}%' )</if>
+	</sql>
+	
+	
+	
+	<!-- 根据条件查找个数 （合同为单位）-->
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.businessQuery.view.BusinessQueryCondition">
+		SELECT 
+		COUNT(1) FROM (
+		  SELECT 
+			a.MEMBER_NAME,a.MEMBER_PID,
+			a.CONTRACT_AMOUNT,
+			a.CREDIT_FROM,
+			a.CREDIT_TO,
+			a.RATE,
+			a.SERVICE_RATE,
+			a.BOND_RATE,
+			b.BUY_TOTAL,
+			c.REPLY_PRICE,
+			c.NOTE_PRICE,
+			c.NOTE_DISPRICE,
+			d.USER_NAME_CN AS OPERATOR,
+			a.CONTRACT_NO,
+			T_AG.AGFANCING_CUSTOMER_NAME,
+			T_AG.AGFANCING_CUSTOMER_PID,
+			T_AG.BILL_AMOUNT
+		FROM DM_FANCING_CONTRACT a 
+		LEFT JOIN (SELECT 
+					COUNT(*) AS BUY_TOTAL ,
+					CONTRACT_NO 
+					FROM DM_CONTRACTBUY_REL 
+					GROUP BY CONTRACT_NO 
+					) b ON a.CONTRACT_NO=b.CONTRACT_NO
+		LEFT JOIN(
+				SELECT DAD.BILL_AMOUNT,
+				DAD.MEMBER_PID,
+				DAG.AGFANCING_CUSTOMER_PID,
+				DAG.AGFANCING_CUSTOMER_NAME
+				 FROM DM_AGFANCING DAG 
+				LEFT JOIN DM_AGFANCING_DETAIL DAD ON DAG.AGFANCING_PID=DAD.AGFANCING_PID
+			) T_AG ON T_AG.MEMBER_PID=a.MEMBER_PID
+		LEFT JOIN (
+		<include refid="getAllNotePrice"></include> GROUP BY TT.CONTRACT_NO
+		) c ON a.CONTRACT_NO=c.CONTRACT_NO
+		LEFT JOIN (
+			SELECT
+				SU.USER_NO AS USER_NO,
+				GROUP_CONCAT(SU.USER_NAME_CN) AS USER_NAME_CN,
+				SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,
+				SU.USER_PID AS USER_PID
+			FROM
+				SS_KPICUSTOMER SSK
+			JOIN SS_USER SU ON SSK.USER_PID = SU.USER_PID
+			GROUP BY SSK.CUSTOMERSUB_PID
+		) d ON d.CUSTOMERSUB_PID = a.MEMBER_PID					
+		WHERE 1=1 AND a.`STATUS`='20'
+		<if test="memberName!=null and memberName!=''"> AND a.MEMBER_NAME LIKE ('%${memberName}%')</if>
+		<if test="operator!=null and operator!=''"> AND d.USER_NAME_CN LIKE ('%${operator}%')</if>
+		GROUP BY  a.CONTRACT_NO ) TTTT
+	</select>
+	
+	<!-- 根据条件查询 （合同为单位）-->
+	<select id="findByCondition"  resultMap="businessQueryItemResultMap"  parameterType="com.sinoservices.xascf.businessQuery.view.BusinessQueryCondition">
+		 SELECT 
+			a.MEMBER_NAME,a.MEMBER_PID,
+			a.CONTRACT_AMOUNT,
+			a.CREDIT_FROM,
+			a.CREDIT_TO,
+			a.RATE,
+			a.SERVICE_RATE,
+			a.BOND_RATE,
+			b.BUY_TOTAL,
+			c.REPLY_PRICE,
+			c.NOTE_PRICE,
+			c.NOTE_DISPRICE,
+			d.USER_NAME_CN AS OPERATOR,
+			a.CONTRACT_NO,
+			T_AG.AGFANCING_CUSTOMER_NAME,
+			T_AG.AGFANCING_CUSTOMER_PID,
+			T_AG.BILL_AMOUNT
+		FROM DM_FANCING_CONTRACT a 
+		LEFT JOIN (SELECT 
+					COUNT(*) AS BUY_TOTAL ,
+					CONTRACT_NO 
+					FROM DM_CONTRACTBUY_REL 
+					GROUP BY CONTRACT_NO 
+					) b ON a.CONTRACT_NO=b.CONTRACT_NO
+	    LEFT JOIN(
+				SELECT DAD.BILL_AMOUNT,
+				DAD.MEMBER_PID,
+				DAG.AGFANCING_CUSTOMER_PID,
+				DAG.AGFANCING_CUSTOMER_NAME
+				 FROM DM_AGFANCING DAG 
+				LEFT JOIN DM_AGFANCING_DETAIL DAD ON DAG.AGFANCING_PID=DAD.AGFANCING_PID
+			) T_AG ON T_AG.MEMBER_PID=a.MEMBER_PID
+		LEFT JOIN (
+		<include refid="getAllNotePrice"></include> GROUP BY TT.CONTRACT_NO
+		) c ON a.CONTRACT_NO=c.CONTRACT_NO
+		LEFT JOIN (
+			SELECT
+				SU.USER_NO AS USER_NO,
+				GROUP_CONCAT(SU.USER_NAME_CN) AS USER_NAME_CN,
+				SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,
+				SU.USER_PID AS USER_PID
+			FROM
+				SS_KPICUSTOMER SSK
+			JOIN SS_USER SU ON SSK.USER_PID = SU.USER_PID
+			GROUP BY SSK.CUSTOMERSUB_PID
+		) d ON d.CUSTOMERSUB_PID = a.MEMBER_PID	
+		WHERE 1=1 AND a.`STATUS`='20'
+		<if test="memberName!=null and memberName!=''"> AND a.MEMBER_NAME LIKE ('%${memberName}%')</if>
+		<if test="operator!=null and operator!=''"> AND d.USER_NAME_CN LIKE ('%${operator}%')</if>
+		GROUP BY  a.CONTRACT_NO
+	</select>
+	<!-- 集合合同号查询有效票据金额、折扣金额 、放款金额-->
+	<sql id="getAllNotePrice">
+			SELECT 
+				TT.CONTRACT_NO,TT.BUYER_PID,
+				SUM(TT.NOTE_PRICE) AS NOTE_PRICE,
+				SUM(TT.NOTE_DISPRICE) AS NOTE_DISPRICE,
+				SUM(TT.REPLY_PRICE) AS REPLY_PRICE,
+				TT.FANCING_ORDER_NO
+			FROM (	SELECT F.FANCING_ORDER_NO,F.CONTRACT_NO AS CONTRACT_NO,
+									CASE WHEN F.FANCING_STATUS='60' THEN F.REPLY_PRICE ELSE 0 END AS REPLY_PRICE,
+									F.BUYER_PID,
+									IFNULL(T0.EFF_PRICE,0)+IFNULL(T1.EFF_PRICE,0) +IFNULL(T2.EFF_PRICE,0) AS NOTE_PRICE,
+									(IFNULL(T0.EFF_PRICE,0)+IFNULL(T1.EFF_PRICE,0) +IFNULL(T2.EFF_PRICE,0))*FC.BILL_RATE/100 AS NOTE_DISPRICE
+									FROM DM_FANCING_ORDER F
+									LEFT JOIN DM_FANCING_CONTRACT FC ON FC.CONTRACT_NO=F.CONTRACT_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM,DRR.FANCING_ORDER_NO,
+									SUM(CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									ACTUAL_AMOUNT ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+									SUM(
+									CASE WHEN DRR.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_RECEIPT DRR
+									GROUP BY DRR.FANCING_ORDER_NO
+									) T0
+									ON T0.FANCING_ORDER_NO=F.FANCING_ORDER_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM, DSB.BUSINESS_NO,
+									SUM(
+									CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+								 SUM(CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									BILL_AMOUNT ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DSB.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_SHIP_BILL DSB
+									GROUP BY DSB.BUSINESS_NO
+									) T1 ON T1.BUSINESS_NO=F.FANCING_ORDER_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM, DST.BUSINESS_NO,
+									SUM(CASE WHEN DST.ISEFFECTIVE = '1' THEN
+									TOTAL_PRICE ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DST.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+									SUM(
+									CASE WHEN DST.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_SHIP_TURN DST
+									GROUP BY DST.BUSINESS_NO
+									) T2 ON T2.BUSINESS_NO=F.FANCING_ORDER_NO
+									
+							WHERE 1=1 
+							<if test="contractNo !=null and contractNo !=''"> AND  F.CONTRACT_NO=#{contractNo}</if>
+					GROUP BY F.FANCING_ORDER_NO
+					)TT
+									
+	</sql>
+	
+	
+	<!-- 根据条件查找个数 (委托方为单位)-->
+	<select id="getCount" resultType="int" parameterType="com.sinoservices.xascf.businessQuery.view.BusinessBuyCondition">
+		SELECT 
+			COUNT(1)
+		FROM DM_CONTRACTBUY_REL a 
+		LEFT JOIN(
+			SELECT 
+				DAG.AGFANCING_CUSTOMER_NAME,
+				DAG.AGFANCING_CUSTOMER_PID,
+				SUM(DFB.BILL_PRICE) AS BILL_PRICE,
+				DFB.BUYER_PID,
+				DFB.FANCING_ORDER_NO
+			 FROM DM_AGFANCING_BILL DAB
+			LEFT JOIN DM_AGFANCING DAG  ON DAG.AGFANCING_ORDER_NO=DAB.AGFANCING_ORDER_NO
+			LEFT JOIN 
+				(
+				SELECT DFO.FANCING_ORDER_NO,
+				DFO.BUYER_PID,
+				DFBB.BILL_NO,
+				DFBB.BILL_PRICE
+				 FROM DM_FANCING_ORDER DFO
+				LEFT JOIN DM_FANCING_BILL DFBB ON DFO.FANCING_ORDER_NO=DFBB.FANCING_ORDER_NO
+				WHERE DFBB.BILL_TYPE='1'
+				
+				) DFB  ON DAB.BILL_NO=DFB.BILL_NO
+			GROUP BY DFB.BUYER_PID
+			) T_AG ON T_AG.BUYER_PID=a.BUY_PID
+		LEFT JOIN ( <include refid="getAllNotePrice"></include> GROUP BY TT.FANCING_ORDER_NO, TT.BUYER_PID) c ON a.BUY_PID=c.BUYER_PID
+		WHERE
+			1=1
+			AND a.CONTRACT_NO=#{contractNo}
+			<if test="buyName!=null and buyName!=''"> AND a.BUY_NAME LIKE ('%${buyName}%')</if>
+			<if test="billType!=null and billType!=''"> AND a.BILL_TYPE  =('${billType}')</if>
+	</select>
+	
+	<!-- 根据条件查询（委托方为单位） -->
+	<select id="find"  resultMap="businessBuyItemResultMap"  parameterType="com.sinoservices.xascf.businessQuery.view.BusinessBuyCondition">
+		SELECT 
+			a.BUY_PID,
+			a.BUY_NAME,
+			a.CREDIT_PERCENT,
+			a.BILL_TYPE,
+			a.DISCOUNT,
+			c.REPLY_PRICE,
+			c.NOTE_PRICE,
+			c.NOTE_DISPRICE,
+			d.USER_NAME_CN AS OPERATOR,
+			T_AG.AGFANCING_CUSTOMER_NAME,
+			T_AG.AGFANCING_CUSTOMER_PID,
+			T_AG.BILL_PRICE
+		FROM DM_CONTRACTBUY_REL a 
+		LEFT JOIN(
+			SELECT 
+				DAG.AGFANCING_CUSTOMER_NAME,
+				DAG.AGFANCING_CUSTOMER_PID,
+				SUM(DFB.BILL_PRICE) AS BILL_PRICE,
+				DFB.BUYER_PID,
+				DFB.FANCING_ORDER_NO
+			 FROM DM_AGFANCING_BILL DAB
+			LEFT JOIN DM_AGFANCING DAG  ON DAG.AGFANCING_ORDER_NO=DAB.AGFANCING_ORDER_NO
+			LEFT JOIN 
+				(
+				SELECT DFO.FANCING_ORDER_NO,
+				DFO.BUYER_PID,
+				DFBB.BILL_NO,
+				DFBB.BILL_PRICE
+				 FROM DM_FANCING_ORDER DFO
+				LEFT JOIN DM_FANCING_BILL DFBB ON DFO.FANCING_ORDER_NO=DFBB.FANCING_ORDER_NO
+				WHERE DFBB.BILL_TYPE='1'
+				
+				) DFB  ON DAB.BILL_NO=DFB.BILL_NO
+			GROUP BY DFB.BUYER_PID
+			) T_AG ON T_AG.BUYER_PID=a.BUY_PID
+		
+		LEFT JOIN ( <include refid="getAllNotePrice"></include> GROUP BY TT.BUYER_PID) c ON a.BUY_PID=c.BUYER_PID
+		LEFT JOIN (
+			SELECT
+				SU.USER_NO AS USER_NO,
+				GROUP_CONCAT(SU.USER_NAME_CN) AS USER_NAME_CN,
+				SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,
+				SU.USER_PID AS USER_PID
+			FROM
+				SS_KPICUSTOMER SSK
+			JOIN SS_USER SU ON SSK.USER_PID = SU.USER_PID
+			GROUP BY SSK.CUSTOMERSUB_PID
+		) d ON d.CUSTOMERSUB_PID = a.BUY_PID	
+		WHERE	
+			1=1
+			AND a.CONTRACT_NO=#{contractNo}
+			<if test="buyName!=null and buyName!=''"> AND a.BUY_NAME LIKE ('%${buyName}%')</if>
+			<if test="billType!=null and billType!=''"> AND a.BILL_TYPE  =('${billType}')</if>
+	</select>
+	
+	
+	<!-- 根据条件查找个数 (放款单号为单位)-->
+	<select id="getOderCount" resultType="int" parameterType="com.sinoservices.xascf.businessQuery.view.BusinessOrderCondition">
+		SELECT
+			COUNT(1)
+		FROM DM_FANCING_ORDER a
+		LEFT JOIN DM_FANCING_CONTRACT FC ON FC.CONTRACT_NO=a.CONTRACT_NO
+		LEFT JOIN (
+				SELECT 
+				DAG.AGFANCING_CUSTOMER_NAME,
+				DAG.AGFANCING_CUSTOMER_PID,
+				DFB.BILL_PRICE,
+				DFB.BUYER_PID,
+				DFB.FANCING_ORDER_NO
+				 FROM DM_AGFANCING_BILL DAB
+				LEFT JOIN DM_AGFANCING DAG  ON DAG.AGFANCING_ORDER_NO=DAB.AGFANCING_ORDER_NO
+				LEFT JOIN 
+				(
+				SELECT DFO.FANCING_ORDER_NO,
+				DFO.BUYER_PID,
+				DFBB.BILL_NO,
+				DFBB.BILL_PRICE
+				 FROM DM_FANCING_ORDER DFO
+				LEFT JOIN DM_FANCING_BILL DFBB ON DFO.FANCING_ORDER_NO=DFBB.FANCING_ORDER_NO
+				WHERE DFBB.BILL_TYPE='1' 
+				
+				) DFB  ON DAB.BILL_NO=DFB.BILL_NO
+				
+				
+				) T_AG ON T_AG.FANCING_ORDER_NO=a.FANCING_ORDER_NO
+		LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM,DRR.FANCING_ORDER_NO,
+									SUM(CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									ACTUAL_AMOUNT ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+									SUM(
+									CASE WHEN DRR.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_RECEIPT DRR GROUP BY DRR.FANCING_ORDER_NO) T0
+									ON T0.FANCING_ORDER_NO=a.FANCING_ORDER_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM, DSB.BUSINESS_NO,
+									SUM(
+									CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+								 SUM(CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									BILL_AMOUNT ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DSB.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_SHIP_BILL DSB
+									GROUP BY DSB.BUSINESS_NO
+									) T1 ON T1.BUSINESS_NO=a.FANCING_ORDER_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM, DST.BUSINESS_NO,
+									SUM(CASE WHEN DST.ISEFFECTIVE = '1' THEN
+									TOTAL_PRICE ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DST.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+									SUM(
+									CASE WHEN DST.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_SHIP_TURN DST
+									GROUP BY DST.BUSINESS_NO
+		) T2 ON T2.BUSINESS_NO=a.FANCING_ORDER_NO
+		LEFT JOIN(SELECT
+					FANCING_ORDER_NO,
+					SUM(BILL_PRICE) AS BILL_PRICE,
+					SUM(REBACK_DATE) AS REBACK_DATE,
+					LATEST_TIME
+				FROM DM_FANCING_BILL
+				GROUP BY FANCING_ORDER_NO,LATEST_TIME
+				) b ON a.FANCING_ORDER_NO=b.FANCING_ORDER_NO
+		WHERE
+			1=1
+			AND a.BUYER_PID=#{buyPid}
+			AND a.CONTRACT_NO=#{contractNo}
+			<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND a.FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%')</if>
+	</select>
+	
+	<!-- 根据条件查询（放款单号为单位） -->
+	<select id="findOrder"  resultMap="businessOrderItemResultMap"  parameterType="com.sinoservices.xascf.businessQuery.view.BusinessOrderCondition">
+		SELECT
+			a.BUYER_PID,
+			a.BUYER_NAME,
+			a.FANCING_ORDER_NO,
+			a.REPLY_PRICE,
+			IFNULL(T0.EFF_PRICE,0)+IFNULL(T1.EFF_PRICE,0) +IFNULL(T2.EFF_PRICE,0) AS NOTE_PRICE,
+			(IFNULL(T0.EFF_PRICE,0)+IFNULL(T1.EFF_PRICE,0) +IFNULL(T2.EFF_PRICE,0))*FC.BILL_RATE/100 AS NOTE_DISPRICE,
+			a.REQUEST_TIME,
+			a.PAY_TIME   AS PAY_TO_TIME,
+			a.NOTE_TYPE,
+			a.FANCING_STATUS,
+			a.TERM_DATE,
+			b.BILL_PRICE,
+			b.REBACK_DATE,
+			b.LATEST_TIME,
+			T_AG.AGFANCING_CUSTOMER_NAME,
+			T_AG.AGFANCING_CUSTOMER_PID,
+			T_AG.BILL_PRICE AS AG_BILL_PRICE
+		FROM DM_FANCING_ORDER a
+		LEFT JOIN DM_FANCING_CONTRACT FC ON FC.CONTRACT_NO=a.CONTRACT_NO
+		LEFT JOIN (
+			SELECT 
+				DAG.AGFANCING_CUSTOMER_NAME,
+				DAG.AGFANCING_CUSTOMER_PID,
+				DFB.BILL_PRICE,
+				DFB.BUYER_PID,
+				DFB.FANCING_ORDER_NO
+			 FROM DM_AGFANCING_BILL DAB
+			LEFT JOIN DM_AGFANCING DAG  ON DAG.AGFANCING_ORDER_NO=DAB.AGFANCING_ORDER_NO
+			LEFT JOIN 
+			(
+				SELECT DFO.FANCING_ORDER_NO,
+				DFO.BUYER_PID,
+				DFBB.BILL_NO,
+				DFBB.BILL_PRICE
+				 FROM DM_FANCING_ORDER DFO
+				LEFT JOIN DM_FANCING_BILL DFBB ON DFO.FANCING_ORDER_NO=DFBB.FANCING_ORDER_NO
+				WHERE DFBB.BILL_TYPE='1' 
+			
+			) DFB  ON DAB.BILL_NO=DFB.BILL_NO
+			) T_AG ON T_AG.FANCING_ORDER_NO=a.FANCING_ORDER_NO
+		LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM,DRR.FANCING_ORDER_NO,
+									SUM(CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									ACTUAL_AMOUNT ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+									SUM(
+									CASE WHEN DRR.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_RECEIPT DRR GROUP BY DRR.FANCING_ORDER_NO) T0
+									ON T0.FANCING_ORDER_NO=a.FANCING_ORDER_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM, DSB.BUSINESS_NO,
+									SUM(
+									CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+								 SUM(CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									BILL_AMOUNT ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DSB.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_SHIP_BILL DSB
+									GROUP BY DSB.BUSINESS_NO
+									) T1 ON T1.BUSINESS_NO=a.FANCING_ORDER_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM, DST.BUSINESS_NO,
+									SUM(CASE WHEN DST.ISEFFECTIVE = '1' THEN
+									TOTAL_PRICE ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DST.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+									SUM(
+									CASE WHEN DST.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_SHIP_TURN DST
+									GROUP BY DST.BUSINESS_NO
+		) T2 ON T2.BUSINESS_NO=a.FANCING_ORDER_NO
+		LEFT JOIN(
+				SELECT 
+					FB.FANCING_ORDER_NO, 
+					IFNULL(SUM(BR.REPAYMENT_PRICE),0) AS BILL_PRICE,
+					BR.BILL_NO,BR.REPAYMENT_TIME AS REBACK_DATE,
+					FB.LATEST_TIME
+              FROM DM_FANCING_BILL FB				
+			  LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO=FB.BILL_NO
+			  WHERE BILL_TYPE=1
+			  GROUP BY BR.BILL_NO) b ON a.FANCING_ORDER_NO=b.FANCING_ORDER_NO
+		WHERE	
+			1=1
+			AND a.BUYER_PID=#{buyPid}
+			AND a.CONTRACT_NO=#{contractNo}
+			<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND a.FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%')</if>
+	</select>
+	
+	
+	<!-- 获取票据总金额-->
+	<select id="getALLMsg"  resultMap="businessAllMsgItemResultMap"  parameterType="com.sinoservices.xascf.businessQuery.view.BusinessQueryCondition">
+		SELECT 
+			SUM(g.REPLY_PRICE) AS ALLREPLY_PRICE,
+			SUM(g.NOTE_PRICE) AS ALLNOTE_PRICE,
+			SUM(g.NOTE_DISPRICE) AS ALLNOTE_DISPRICE
+		FROM (SELECT 
+				c.REPLY_PRICE,
+				c.NOTE_PRICE,
+				c.NOTE_DISPRICE
+			 FROM DM_FANCING_CONTRACT a 
+			 LEFT JOIN (SELECT 
+						COUNT(*) AS BUY_TOTAL ,
+						CONTRACT_NO 
+						FROM DM_CONTRACTBUY_REL 
+						GROUP BY CONTRACT_NO 
+						) b ON a.CONTRACT_NO=b.CONTRACT_NO
+			 LEFT JOIN (
+			 <include refid="getAllNotePrice"></include> GROUP BY TT.CONTRACT_NO
+			 ) c ON a.CONTRACT_NO=c.CONTRACT_NO
+		LEFT JOIN (
+			SELECT
+				SU.USER_NO AS USER_NO,
+				GROUP_CONCAT(SU.USER_NAME_CN) AS USER_NAME_CN,
+				SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,
+				SU.USER_PID AS USER_PID
+			FROM
+				SS_KPICUSTOMER SSK
+			JOIN SS_USER SU ON SSK.USER_PID = SU.USER_PID
+			GROUP BY SSK.CUSTOMERSUB_PID
+		) d ON d.CUSTOMERSUB_PID = a.MEMBER_PID	
+		WHERE 1=1
+		<if test="memberName!=null and memberName!=''"> AND a.MEMBER_NAME LIKE ('%${memberName}%')</if>
+		<if test="operator!=null and operator!=''"> AND d.USER_NAME_CN LIKE ('%${operator}%')</if>
+		GROUP BY  a.CONTRACT_NO	 ) g
+	</select>
+	
+	<!-- 获取票据总金额（委托方为单位） -->
+	<select id="getBuyALLMsg"  resultMap="businessAllMsgItemResultMap"  parameterType="com.sinoservices.xascf.businessQuery.view.BusinessQueryCondition">	
+		SELECT 
+			SUM(g.REPLY_PRICE) AS ALLREPLY_PRICE,
+			SUM(g.NOTE_PRICE) AS ALLNOTE_PRICE,
+			SUM(g.NOTE_DISPRICE) AS ALLNOTE_DISPRICE
+		FROM (
+			SELECT 
+				c.REPLY_PRICE,
+				c.NOTE_PRICE,
+				c.NOTE_DISPRICE
+			FROM DM_CONTRACTBUY_REL a 
+			LEFT JOIN ( <include refid="getAllNotePrice"></include> GROUP BY TT.BUYER_PID) c ON a.BUY_PID=c.BUYER_PID
+			WHERE	
+				1=1
+				AND a.CONTRACT_NO=#{contractNo}
+				<if test="buyName!=null and buyName!=''"> AND a.BUY_NAME LIKE ('%${buyName}%')</if>
+				<if test="billType!=null and billType!=''"> AND a.BILL_TYPE  =('${billType}')</if>
+			) g
+	</select>
+	
+	<!-- 根据条件查询（放款单号为单位） -->
+	<select id="getFancingALLMsg"  resultMap="businessAllMsgItemResultMap"  parameterType="com.sinoservices.xascf.businessQuery.view.BusinessQueryCondition">	
+		SELECT 
+			SUM(g.REPLY_PRICE) AS ALLREPLY_PRICE,
+			SUM(g.NOTE_PRICE) AS ALLNOTE_PRICE,
+			SUM(g.NOTE_DISPRICE) AS ALLNOTE_DISPRICE
+		FROM (SELECT
+			a.REPLY_PRICE,
+				IFNULL(T0.EFF_PRICE,0)+IFNULL(T1.EFF_PRICE,0) +IFNULL(T2.EFF_PRICE,0) AS NOTE_PRICE,
+			(IFNULL(T0.EFF_PRICE,0)+IFNULL(T1.EFF_PRICE,0) +IFNULL(T2.EFF_PRICE,0))*FC.BILL_RATE/100 AS NOTE_DISPRICE
+		FROM DM_FANCING_ORDER a
+		LEFT JOIN DM_FANCING_CONTRACT FC ON FC.CONTRACT_NO=a.CONTRACT_NO
+		LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM,DRR.FANCING_ORDER_NO,
+									SUM(CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									ACTUAL_AMOUNT ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+									SUM(
+									CASE WHEN DRR.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_RECEIPT DRR GROUP BY DRR.FANCING_ORDER_NO) T0
+									ON T0.FANCING_ORDER_NO=a.FANCING_ORDER_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM, DSB.BUSINESS_NO,
+									SUM(
+									CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+								 SUM(CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									BILL_AMOUNT ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DSB.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_SHIP_BILL DSB
+									GROUP BY DSB.BUSINESS_NO
+									) T1 ON T1.BUSINESS_NO=a.FANCING_ORDER_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM, DST.BUSINESS_NO,
+									SUM(CASE WHEN DST.ISEFFECTIVE = '1' THEN
+									TOTAL_PRICE ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DST.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+									SUM(
+									CASE WHEN DST.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_SHIP_TURN DST
+									GROUP BY DST.BUSINESS_NO
+		) T2 ON T2.BUSINESS_NO=a.FANCING_ORDER_NO
+		LEFT JOIN(SELECT
+					FANCING_ORDER_NO,
+					SUM(BILL_PRICE) AS BILL_PRICE,
+					SUM(REBACK_DATE) AS REBACK_DATE,
+					LATEST_TIME
+				FROM DM_FANCING_BILL
+				GROUP BY FANCING_ORDER_NO,LATEST_TIME
+				) b ON a.FANCING_ORDER_NO=b.FANCING_ORDER_NO
+		WHERE	
+			1=1
+			AND a.BUYER_PID=#{buyPid}
+			AND a.CONTRACT_NO=#{contractNo}
+			<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND a.FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%')</if>
+			GROUP BY a.FANCING_ORDER_NO
+		) g
+	</select>
+</mapper>

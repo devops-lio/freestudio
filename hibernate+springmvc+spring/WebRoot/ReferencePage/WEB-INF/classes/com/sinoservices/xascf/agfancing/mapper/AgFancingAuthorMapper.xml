@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.agfancing.mapper.AgFancingAuthorMapper">
+	<resultMap type="com.sinoservices.xascf.agfancing.view.AgFancingAuthorEntity" id="agFancingAuthorResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="authorCode" column="AUTHOR_CODE"/>
+		<result property="authorName" column="AUTHOR_NAME"/>
+		<result property="authorType" column="AUTHOR_TYPE"/>
+		<result property="tableColumn" column="TABLE_COLUME"/>
+		<result property="patentCode" column="PARENT_CODE"/>
+		<result property="realtionPid" column="REALTION_PID"/>
+		<result property="existId" column="EXIST_ID"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<collection property="children" javaType="ArrayList" column="{patentCode=AUTHOR_CODE,realtionPid=REALTION_PID}" ofType="com.sinoservices.xascf.agfancing.view.AgFancingAuthorEntity" select="select-children"/>
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.agfancing.model.AgFancingAuthorModel" id="agFancingAuthorModelMap">
+		<result property="authorCode" column="AUTHOR_CODE"/>
+		<result property="authorName" column="AUTHOR_NAME"/>
+		<result property="authorType" column="AUTHOR_TYPE"/>
+		<result property="tableColumn" column="TABLE_COLUME"/>
+		<result property="patentCode" column="PARENT_CODE"/>
+	</resultMap>
+	
+	<select id="select-children" parameterType="HashMap" resultMap="agFancingAuthorResultMap">
+      SELECT 
+					A.ID,
+					A.PID,
+					A.AUTHOR_CODE,
+					A.AUTHOR_NAME,
+					A.AUTHOR_TYPE,
+					A.TABLE_COLUME,
+					A.PARENT_CODE,
+					A.REC_STATUS,
+					A.REC_VER,
+					A.CREATE_TIME,
+					A.CREATOR,
+					A.MODIFY_TIME,
+					A.MODIFIER,
+					B.ID AS EXIST_ID,
+					'${realtionPid}' AS  REALTION_PID
+					FROM (SELECT
+								AA.ID,
+								AA.PID,
+								AA.AUTHOR_CODE,
+								AA.AUTHOR_NAME,
+								AA.AUTHOR_TYPE,
+								AA.TABLE_COLUME,
+								AA.PARENT_CODE,
+								AA.REC_STATUS,
+								AA.REC_VER,
+								AA.CREATE_TIME,
+								AA.CREATOR,
+								AA.MODIFY_TIME,
+								AA.MODIFIER
+							FROM
+								DM_AGFANCING_AUTHOR AA
+							UNION
+								SELECT
+									MD.ID,
+									MD.PID,
+									MD. CODE AS AUTHOR_CODE,
+									MD.TYPE_NAME AS AUTHOR_NAME,
+									'2' AS AUTHOR_TYPE,
+									MD.PID AS TABLE_COLUME,
+									DAA.AUTHOR_CODE AS PARENT_CODE,
+									DAA.REC_STATUS,
+									DAA.REC_VER,
+									DAA.CREATE_TIME,
+									DAA.CREATOR,
+									DAA.MODIFY_TIME,
+									DAA.MODIFIER
+								FROM
+									DM_AGFANCING_AUTHOR DAA
+								LEFT JOIN SS_MATERIAL_DEFINE MD ON MD.PARENT_CODE = DAA.AUTHOR_CODE
+								WHERE
+									DAA.AUTHOR_CODE != '000'
+								AND DAA.PARENT_CODE = '0'
+								ORDER BY
+									PARENT_CODE,
+									AUTHOR_CODE) A
+					LEFT JOIN DM_AGFANCING_SOLUTION_AUTHOR B
+					on A.AUTHOR_CODE=B.AUTHOR_PID and B.SOLUTION_PID=#{realtionPid}
+        			WHERE A.PARENT_CODE =#{patentCode}
+    </select> 
+    
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					AUTHOR_CODE,
+					AUTHOR_NAME,
+					AUTHOR_TYPE,
+					TABLE_COLUME,
+					PARENT_CODE,
+					REC_STATUS,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER 
+		]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="pid!=null and pid!=''"> AND PID = #{pid} </if>
+		<if test="authorCode !=null and authorCode !=''"> AND AUTHOR_CODE like ('%${authorCode}%') </if>
+		<if test="authorName!=null and authorName !=''">  AND AUTHOR_NAME like ('%${authorName}%') </if>
+		<if test="authorType !=null and authorType !=''">  AND AUTHOR_TYPE like ('%${authorType}%') </if>
+		<if test="patentCode !=null and patentCode !=''">  AND PARENT_CODE=#{patentCode} </if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS =#{recStatus}</if>
+	</sql>
+	
+	<!-- 不分页 -->
+	<select id="getAuthorTree" resultMap="agFancingAuthorResultMap" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingAuthorModel">
+		 SELECT 
+					A.ID,
+					A.PID,
+					A.AUTHOR_CODE,
+					A.AUTHOR_NAME,
+					A.AUTHOR_TYPE,
+					A.TABLE_COLUME,
+					A.PARENT_CODE,
+					A.REC_STATUS,
+					A.REC_VER,
+					A.CREATE_TIME,
+					A.CREATOR,
+					A.MODIFY_TIME,
+					A.MODIFIER,
+					B.ID AS EXIST_ID,
+					'${realtionPid}' AS  REALTION_PID
+					FROM (SELECT
+								AA.ID,
+								AA.PID,
+								AA.AUTHOR_CODE,
+								AA.AUTHOR_NAME,
+								AA.AUTHOR_TYPE,
+								AA.TABLE_COLUME,
+								AA.PARENT_CODE,
+								AA.REC_STATUS,
+								AA.REC_VER,
+								AA.CREATE_TIME,
+								AA.CREATOR,
+								AA.MODIFY_TIME,
+								AA.MODIFIER
+							FROM
+								DM_AGFANCING_AUTHOR AA
+							UNION
+								SELECT
+									MD.ID,
+									MD.PID,
+									MD. CODE AS AUTHOR_CODE,
+									MD.TYPE_NAME AS AUTHOR_NAME,
+									'2' AS AUTHOR_TYPE,
+									MD.PID AS TABLE_COLUME,
+									DAA.AUTHOR_CODE AS PARENT_CODE,
+									DAA.REC_STATUS,
+									DAA.REC_VER,
+									DAA.CREATE_TIME,
+									DAA.CREATOR,
+									DAA.MODIFY_TIME,
+									DAA.MODIFIER
+								FROM
+									DM_AGFANCING_AUTHOR DAA
+								LEFT JOIN SS_MATERIAL_DEFINE MD ON MD.PARENT_CODE = DAA.AUTHOR_CODE
+								WHERE
+									DAA.AUTHOR_CODE != '000'
+								AND DAA.PARENT_CODE = '0'
+								ORDER BY
+									PARENT_CODE,
+									AUTHOR_CODE) A
+					LEFT JOIN DM_AGFANCING_SOLUTION_AUTHOR B
+					on A.AUTHOR_CODE=B.AUTHOR_PID and B.SOLUTION_PID=#{realtionPid}
+        WHERE 1=1
+		<if test="pid!=null and pid!=''"> AND A.PID = #{pid} </if>
+		<if test="authorCode !=null and authorCode !=''"> AND A.AUTHOR_CODE like ('%${authorCode}%') </if>
+		<if test="authorName!=null and authorName !=''">  AND A.AUTHOR_NAME like ('%${authorName}%') </if>
+		<if test="authorType !=null and authorType !=''">  AND A.AUTHOR_TYPE like ('%${authorType}%') </if>
+		<if test="patentCode !=null and patentCode !=''">  AND A.PARENT_CODE=#{patentCode} </if>
+		<if test="recStatus!=null and recStatus!=''"> AND A.REC_STATUS =#{recStatus}</if>
+	</select>
+	
+	<select id="findBySolutionAuthor" resultMap="agFancingAuthorModelMap" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingAuthorModel">
+		SELECT
+			A.AUTHOR_CODE,
+			A.AUTHOR_NAME,
+			A.AUTHOR_TYPE,
+			A.TABLE_COLUME,
+			A.PARENT_CODE
+		FROM
+			DM_AGFANCING_SOLUTION_AUTHOR ASA
+		LEFT JOIN DM_AGFANCING_SOLUTION ASS ON ASA.SOLUTION_PID = ASS.PID
+		LEFT JOIN (SELECT
+						AA.ID,
+						AA.PID,
+						AA.AUTHOR_CODE,
+						AA.AUTHOR_NAME,
+						AA.AUTHOR_TYPE,
+						AA.TABLE_COLUME,
+						AA.PARENT_CODE,
+						AA.REC_STATUS,
+						AA.REC_VER,
+						AA.CREATE_TIME,
+						AA.CREATOR,
+						AA.MODIFY_TIME,
+						AA.MODIFIER
+					FROM
+						DM_AGFANCING_AUTHOR AA
+					UNION
+						SELECT
+							MD.ID,
+							MD.PID,
+							MD. CODE AS AUTHOR_CODE,
+							MD.TYPE_NAME AS AUTHOR_NAME,
+							'2' AS AUTHOR_TYPE,
+							MD.PID AS TABLE_COLUME,
+							DAA.AUTHOR_CODE AS PARENT_CODE,
+							DAA.REC_STATUS,
+							DAA.REC_VER,
+							DAA.CREATE_TIME,
+							DAA.CREATOR,
+							DAA.MODIFY_TIME,
+							DAA.MODIFIER
+						FROM
+							DM_AGFANCING_AUTHOR DAA
+						LEFT JOIN SS_MATERIAL_DEFINE MD ON MD.PARENT_CODE = DAA.AUTHOR_CODE
+						WHERE
+							DAA.AUTHOR_CODE != '000'
+						AND DAA.PARENT_CODE = '0'
+						ORDER BY
+							PARENT_CODE,
+							AUTHOR_CODE) A ON ASA.AUTHOR_PID = A.AUTHOR_CODE
+		WHERE ASA.SOLUTION_PID = #{pid}
+		<if test="authorType !=null and authorType !=''">  AND A.AUTHOR_TYPE = #{authorType} </if>
+		<if test="patentCode !=null and patentCode !=''">  AND A.PARENT_CODE = #{patentCode} </if>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingAuthorModel">
+		INSERT INTO DM_AGFANCING_AUTHOR (
+					PID,
+					AUTHOR_CODE,
+					AUTHOR_NAME,
+					AUTHOR_TYPE,
+					TABLE_COLUME,
+					PARENT_CODE,
+					REC_STATUS,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER
+		) VALUES (
+			   #{pid},
+			   #{authorCode},
+			   #{authorName},
+			   #{authorType},
+			   #{tableColumn},
+			   #{parentCode},
+			   1,
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   SYSDATE(),
+			   #{modifier}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingAuthorModel">
+	UPDATE  DM_AGFANCING_AUTHOR set 
+	<if test="authorCode !=null and authorCode !=''">AUTHOR_CODE=#{authorCode}, </if>
+	<if test="authorName !=null and authorName !=''">AUTHOR_NAME=#{authorName}, </if>
+	<if test="authorType !=null and authorType !=''">AUTHOR_TYPE=#{authorType}, </if>
+	<if test="tableColumn !=null and tableColumn !=''">TABLE_COLUME=#{tableColumn}, </if>
+	<if test="parentCode !=null and parentCode !=''">PARENT_CODE=#{parentCode}, </if>
+	<if test="modifier !=null and modifier !=''">MODIFIER=#{modifier}, </if>
+	REC_VER=REC_VER+1,
+	MODIFY_TIME=SYSDATE()
+	WHERE PID=#{pid} 
+	</update>
+
+  <delete id="delete" parameterType="String">
+  		DELETE FROM DM_AGFANCING_AUTHOR WHERE PID IN
+		<foreach item="pid" collection="list" open="(" separator="," close=")">
+			#{pid}
+		</foreach>
+  </delete>
+</mapper>

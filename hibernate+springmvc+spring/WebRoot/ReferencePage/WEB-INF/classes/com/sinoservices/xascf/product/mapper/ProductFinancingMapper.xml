@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.product.mapper.ProductFinancingMapper">
+	<resultMap type="com.sinoservices.xascf.product.model.ProductFinancingModel" id="productFinancingModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="productFinancingPid" column="PRODUCT_FINANCING_PID"/>
+		<result property="relProductPid" column="REL_PRODUCT_PID"/>
+		<result property="relFancingPid" column="REL_FANCING_PID"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PRODUCT_FINANCING_PID,
+					REL_PRODUCT_PID,
+					REL_FANCING_PID,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%${id}%' )</if>
+		<if test="productFinancingPid!=null and productFinancingPid!=''"> AND PRODUCT_FINANCING_PID LIKE ('%${productFinancingPid}%' )</if>
+		<if test="relProductPid!=null and relProductPid!=''"> AND REL_PRODUCT_PID LIKE ('%${relProductPid}%' )</if>
+		<if test="relFancingPid!=null and relFancingPid!=''"> AND REL_FANCING_PID LIKE ('%${relFancingPid}%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%${recVer}%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%${createTime}%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%${modifyTime}%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.product.view.ProductQueryConditionView">
+		<include refid="count"/>
+		FROM  LM_PRODUCT_FINANCING
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="productFinancingModelResultMap" parameterType="com.sinoservices.xascf.product.view.ProductQueryConditionView">
+		<include refid="select"/>
+		FROM  LM_PRODUCT_FINANCING
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.product.model.ProductFinancingModel">
+		INSERT INTO LM_PRODUCT_FINANCING (
+				ID,
+				PRODUCT_FINANCING_PID,
+				REL_PRODUCT_PID,
+				REL_FANCING_PID,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{productFinancingPid},
+			   #{relProductPid},
+			   #{relFancingPid},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus}
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE LM_PRODUCT_FINANCING SET
+				ID = #{id},
+				PRODUCT_FINANCING_PID = #{productFinancingPid},
+				REL_PRODUCT_PID = #{relProductPid},
+				REL_FANCING_PID = #{relFancingPid},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus}
+	</update>
+	
+	<!-- 获取理财产品的融资单 -->
+	<select id="getListByProductPid" resultMap="productFinancingModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  LM_PRODUCT_FINANCING
+		WHERE 
+			1=1
+			AND REL_PRODUCT_PID=#{_parameter}
+			AND REC_STATUS='1'
+	</select>
+	
+	<!-- 根据理财产品pid删除 -->
+	<update id="deleteByRelProductPid" parameterType="String">
+		UPDATE LM_PRODUCT_FINANCING 
+		SET
+			REC_STATUS='0'
+		WHERE
+			1=1
+			AND REC_STATUS='1'
+			AND REL_PRODUCT_PID=#{_parameter}
+	</update>
+	
+	
+</mapper>

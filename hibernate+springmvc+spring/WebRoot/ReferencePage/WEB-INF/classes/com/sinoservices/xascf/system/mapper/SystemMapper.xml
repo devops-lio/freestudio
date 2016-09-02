@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.SystemMapper">
+    
+    <resultMap type="com.sinoservices.xascf.system.model.SystemModel" id="systemModelResultMap">
+        <result property="id" column="ID"/>
+        <result property="systemPid" column="SYSTEM_PID"/>
+        <result property="systemName" column="SYSTEM_NAME"/>
+        <result property="systemCode" column="SYSTEM_CODE"/>
+        <result property="systemUrl" column="SYSTEM_URL"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="creator" column="CREATOR"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="modifier" column="MODIFIER"/>
+        <result property="modifyTime" column="MODIFY_TIME"/>
+    </resultMap>
+    
+    
+    <sql id="selectAll">
+        SELECT ID,SYSTEM_PID,
+               SYSTEM_NAME,SYSTEM_CODE,SYSTEM_URL,DESCRIPTION,
+               CREATOR,
+               CREATE_TIME,
+               MODIFIER,
+               MODIFY_TIME
+          FROM `SS_SYSTEM`
+    </sql>
+    
+    <sql id="count">
+        SELECT COUNT(1) FROM `SS_SYSTEM`
+    </sql>
+    
+    <sql id="findByExampleWhere">
+        WHERE 1=1
+            <if test="systemName!=null and systemName!=''"> AND SYSTEM_NAME LIKE CONCAT('%','${systemName}','%' )</if>
+            <if test="systemCode!=null and systemCode!=''"> AND SYSTEM_CODE LIKE CONCAT('%','${systemCode}','%' )</if>
+    </sql>
+    
+    <select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.system.model.SystemModel">
+        <include refid="count"/>
+        <include refid="findByExampleWhere"/>
+    </select>
+    <select id="getPage" resultMap="systemModelResultMap" parameterType="com.sinoservices.xascf.system.model.SystemModel">
+        <include refid="selectAll"/>
+        <include refid="findByExampleWhere"/>
+        ORDER BY CREATE_TIME DESC
+    </select>
+    <select id="getList" resultMap="systemModelResultMap">
+        <include refid="selectAll"/>
+        ORDER BY CREATE_TIME DESC
+    </select>
+    
+    <select id="getByPid" resultMap="systemModelResultMap" parameterType="java.lang.String">
+        <include refid="selectAll"/>
+        WHERE SYSTEM_PID = #{_parameter}
+          LIMIT 1
+    </select>
+    
+    <select id="getBySystemCode" resultMap="systemModelResultMap" parameterType="java.lang.String">
+        <include refid="selectAll"/>
+        WHERE SYSTEM_CODE = #{_parameter}
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.sinoservices.xascf.system.model.SystemModel">
+        INSERT INTO `SS_SYSTEM`
+            (SYSTEM_PID,SYSTEM_NAME,SYSTEM_CODE, SYSTEM_URL, DESCRIPTION, CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+            )
+         VALUES
+            (#{systemPid}, #{systemName}, #{systemCode}, #{systemUrl}, #{description}, #{creator}, SYSDATE(), #{modifier}, SYSDATE()
+            )
+    </insert>   
+    
+    <delete id="delete" parameterType="java.util.List">
+        DELETE FROM `SS_SYSTEM` WHERE 
+         <choose>
+             <when test="null!=list and list.size!=0">
+                SYSTEM_PID IN
+                <foreach collection="list" item="systemPid" index="index" open="(" separator="," close=")">
+                    #{systemPid}
+                </foreach>
+            </when>
+            <otherwise>
+               1 != 1
+            </otherwise>
+        </choose>
+    </delete>
+    
+    <update id="update" parameterType="com.sinoservices.xascf.system.model.SystemModel">
+        UPDATE `SS_SYSTEM`
+        SET
+            <if test="systemName!=null and systemName!=''"> SYSTEM_NAME=#{systemName},</if>
+            <if test="systemCode!=null and systemCode!=''"> SYSTEM_CODE=#{systemCode},</if>
+            <if test="systemUrl!=null and systemUrl!=''"> SYSTEM_URL=#{systemUrl},</if>
+            <if test="description!=null and description!=''"> DESCRIPTION=#{description},</if>
+            MODIFY_TIME=SYSDATE()
+        WHERE
+            SYSTEM_PID=#{systemPid}
+    </update>
+</mapper>

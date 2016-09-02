@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.edi.mapper.EdiPlatfomAdvisMapper">
+	<resultMap type="com.sinoservices.xascf.edi.model.EdiPlatfomAdvisModel" id="EdiPlatfomAdvisModel">
+		<result property="platfomAdvisId" column="PLATFOM_ADVIS_ID"/>
+		<result property="creditApplyId" column="CREDIT_APPLY_ID"/>
+		<result property="platfomNo" column="PLATFOM_NO"/>
+		<result property="platfomName" column="PLATFOM_NAME"/>
+		<result property="creditPrice" column="CREDIT_PRICE"/>	
+		<result property="customerScore" column="CUSTOMER_SCORE"/> 
+		<result property="creditAdvis" column="CREDIT_ADVIS"/> 	
+		<result property="remark" column="REMARK"/>
+	</resultMap>  
+	
+	<sql id="select"> 
+		  SELECT 
+		  	PLATFOM_ADVIS_ID,			
+	        CREDIT_APPLY_ID, 
+	        PLATFOM_NO,
+	        PLATFOM_NAME,		
+			CREDIT_PRICE,
+			CUSTOMER_SCORE,
+			CREDIT_ADVIS,		
+			REMARK
+	</sql>
+	
+	<!-- 查询  -->
+	<select id="getEdiPlatfomAdvisByCondition" resultMap="EdiPlatfomAdvisModel" parameterType="com.sinoservices.xascf.edi.model.EdiPlatfomAdvisModel">
+		<include refid="select"/>  
+		FROM  EDI_PLATFOM_ADVIS
+		<include refid="findByExample"/> 
+	</select>
+	
+	<sql id="findByExample">
+		WHERE  1=1
+		<if test="platfomAdvisId !=null and  platfomAdvisId !=''">AND PLATFOM_ADVIS_ID LIKE ('%${platfomAdvisId}%')</if>
+		<if test="creditApplyId !=null and creditApplyId != ''">AND CREDIT_APPLY_ID LIKE ('%${creditApplyId}%')</if>
+	</sql>
+
+</mapper>

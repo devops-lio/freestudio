@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.agfancing.mapper.AgFancingDetailMapper">
+	<resultMap type="com.sinoservices.xascf.agfancing.model.AgFancingDetailModel" id="agfancingDetailModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="agfancingDetailPid" column="AGFANCING_DETAIL_PID"/>
+		<result property="agfancingPid" column="AGFANCING_PID"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="billAmount" column="BILL_AMOUNT"/>
+		<result property="evaluateReportId" column="EVALUATE_REPORT_ID"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileUrl" column="FILE_URL"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					AGFANCING_DETAIL_PID,
+					AGFANCING_PID,
+					MEMBER_PID,
+					MEMBER_NO,
+					MEMBER_NAME,
+					BILL_AMOUNT,
+					EVALUATE_REPORT_ID,
+					CREDIT_NO,
+					REC_STATUS,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="agfancingPid!=null and agfancingPid!=''"> AND AGFANCING_PID = #{agfancingPid}</if>
+		<if test="memberNo!=null and memberNo!=''"> AND MEMBER_NO LIKE ('%${memberNo}%')</if>
+		<if test="memberName!=null and memberName!=''"> AND MEMBER_NAME LIKE ('%${memberName}%')</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.agfancing.view.AgFancingCondition">
+		<include refid="count"/>
+		FROM  DM_AGFANCING_DETAIL
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="agfancingDetailModelResultMap" parameterType="com.sinoservices.xascf.agfancing.view.AgFancingCondition">
+		<include refid="select"/>
+		FROM  DM_AGFANCING_DETAIL
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getListByCondition" resultMap="agfancingDetailModelResultMap" parameterType="com.sinoservices.xascf.agfancing.view.AgFancingCondition">
+		SELECT
+			AD.AGFANCING_DETAIL_PID,
+			AD.AGFANCING_PID,
+			AD.MEMBER_PID,
+			AD.MEMBER_NO,
+			AD.MEMBER_NAME,
+			AFB.BILL_AMOUNT,
+			AD.EVALUATE_REPORT_ID,
+			ER.FILE_NAME,
+			ER.FILE_URL,
+			AD.CREDIT_NO,
+			AD.REC_STATUS,
+			AD.REC_VER
+		FROM
+			DM_AGFANCING_DETAIL AD
+		LEFT JOIN RM_EVALUATE_REPORT ER ON AD.EVALUATE_REPORT_ID = ER.REPORT_PID
+		LEFT JOIN (
+			SELECT
+				A.AGFANCING_PID,AB.MEMBER_PID,
+				SUM(IFNULL(FB.BILL_PRICE, 0)) AS BILL_AMOUNT
+			FROM
+				DM_AGFANCING_BILL AB
+			LEFT JOIN DM_AGFANCING A ON A.AGFANCING_ORDER_NO = AB.AGFANCING_ORDER_NO
+			LEFT JOIN DM_FANCING_BILL FB ON AB.BILL_NO = FB.BILL_NO
+			AND FB.BILL_STATUS != '20'
+			WHERE
+				A.AGFANCING_PID = #{agfancingPid}
+			GROUP BY
+				AGFANCING_PID,MEMBER_PID
+		) AFB ON AD.AGFANCING_PID = AFB.AGFANCING_PID AND AFB.MEMBER_PID=AD.MEMBER_PID
+		WHERE 
+			AD.AGFANCING_PID = #{agfancingPid}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_AGFANCING_DETAIL (
+				AGFANCING_DETAIL_PID,
+				AGFANCING_PID,
+				MEMBER_PID,
+				MEMBER_NO,
+				MEMBER_NAME,
+				BILL_AMOUNT,
+				EVALUATE_REPORT_ID,
+				CREDIT_NO,
+				REC_STATUS,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER
+		) VALUES (
+			   #{agfancingDetailPid},
+			   #{agfancingPid},
+			   #{memberPid},
+			   #{memberNo},
+			   #{memberName},
+			   #{billAmount},
+			   #{evaluateReportId},
+			   #{creditNo},
+			   #{recStatus},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier}
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE DM_AGFANCING_DETAIL SET
+				AGFANCING_PID = #{agfancingPid},
+				MEMBER_PID = #{memberPid},
+				MEMBER_NO = #{memberNo},
+				MEMBER_NAME = #{memberName},
+				BILL_AMOUNT = #{billAmount},
+				EVALUATE_REPORT_ID = #{evaluateReportId},
+				CREDIT_NO = #{creditNo},
+				REC_STATUS = #{recStatus},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier}
+		WHERE AGFANCING_DETAIL_PID = #{agfancingDetailPid}
+	</update>
+	
+ 	<!-- 删除 -->
+   	<delete id="deleteByAgfancingPid" parameterType="String">
+   		DELETE FROM DM_AGFANCING_DETAIL WHERE AGFANCING_PID=#{agfangcingPid}
+   	</delete>
+   	
+   	<!-- 批量新增 -->
+   	<insert id="insertList" parameterType="java.util.List">
+   		INSERT INTO DM_AGFANCING_DETAIL (
+				AGFANCING_DETAIL_PID,
+				AGFANCING_PID,
+				MEMBER_PID,
+				MEMBER_NO,
+				MEMBER_NAME,
+				BILL_AMOUNT,
+				EVALUATE_REPORT_ID,
+				CREDIT_NO,
+				REC_STATUS,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER
+			)VALUES
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (
+				#{item.agfancingDetailPid},
+				#{item.agfancingPid},
+				#{item.memberPid},
+				#{item.memberNo},
+				#{item.memberName},
+				#{item.billAmount},
+				#{item.evaluateReportId},
+				#{item.creditNo},
+				#{item.recStatus},
+				#{item.recVer},
+				#{item.createTime},
+				#{item.creator},
+				#{item.modifyTime},
+				#{item.modifier}
+		  	)
+	    </foreach>
+   	</insert>
+</mapper>

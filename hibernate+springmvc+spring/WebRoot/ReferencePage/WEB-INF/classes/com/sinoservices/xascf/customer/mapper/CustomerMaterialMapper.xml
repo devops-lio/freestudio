@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.customer.mapper.CustomerMaterialMapper"> 
+	<resultMap type="com.sinoservices.xascf.customer.model.CustomerMaterialModel" id="CustomerMatModelResultMap"> 
+		<result property="id" column="ID"/>
+		<result property="customermatPid" column="CUSTOMERMAT_PID"/> 
+		<result property="memberNo" column="MEMBER_NO"/> 
+		<result property="materialPid" column="MATERIAL_PID"/> 
+		<result property="effectiveTime" column="EFFECTIVE_TIME"/> 
+		<result property="filename" column="FILENAME"/>  
+		<result property="fileFalg" column="FILE_FALG"/>   
+		<result property="status" column="STATUS"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>  
+		
+		<result property="pid" column="PID"/>
+		<result property="code" column="CODE"/>
+		<result property="parentCode" column="PARENT_CODE"/>
+		<result property="materialType" column="MATERIAL_TYPE"/>
+		<result property="materialWeights" column="MATERIAL_WEIGHTS"/>
+		<result property="typeName" column="TYPE_NAME"/>
+		<result property="isRequired" column="IS_REQUIRED"/> 
+	</resultMap>
+
+
+	<resultMap type="com.sinoservices.xascf.customer.view.CustomerMaterialItem" id="CustomerMatItemViewMap"> 
+		<result property="id" column="ID"/>
+		<result property="customermatPid" column="CUSTOMERMAT_PID"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="materialPid" column="MATERIAL_PID"/>
+		<result property="effectiveTime" column="EFFECTIVE_TIME"/>
+		<result property="filename" column="FILENAME"/> 
+		<result property="status" column="STATUS"/>
+		
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>  
+	</resultMap> 
+	
+	
+	<sql id="select"> 
+		  SELECT 
+			 ID,
+			 CUSTOMERMAT_PID,
+			 MEMBER_NO,
+			 MATERIAL_PID,
+			 EFFECTIVE_TIME,
+			 FILENAME, 
+			 STATUS,
+			 CREATOR,
+			 CREATE_TIME,
+			 MODIFIER,
+			 MODIFY_TIME,
+			 REC_VER,
+			 REC_STATUS
+	</sql>
+	 
+	
+	<sql id="count"> 
+	    	SELECT COUNT(1)  
+	</sql> 
+	 
+	 
+ 
+	<!-- 会员 -->
+	<insert id="insert"  parameterType="com.sinoservices.xascf.customer.model.CustomerMaterialModel">
+		INSERT INTO SS_CUSTOMER_MATERIAL(  
+			 CUSTOMERMAT_PID,   		                  
+			 MEMBER_NO,   		               
+			 MATERIAL_PID,     	                
+			 EFFECTIVE_TIME,     			              
+			 FILENAME,   		        
+			 STATUS,     			
+			 CREATOR,            
+			 CREATE_TIME
+		)VALUES( 
+			 #{customermatPid},  
+			 #{memberNo},      
+			 #{materialPid},   
+			 #{effectiveTime},        
+			 #{filename},        
+			 #{status},  
+			 #{creator},
+			 #{createTime}
+		)
+	</insert>   
+	
+	
+	<!-- 批量执行插入 -->
+	<insert id="insertByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO SS_CUSTOMER_MATERIAL ( 
+				 CUSTOMERMAT_PID,   		                  
+				 MEMBER_NO,   		               
+				 MATERIAL_PID,     	                
+				 EFFECTIVE_TIME,     			              
+				 FILENAME,   		        
+				 STATUS,     			
+				 CREATOR,            
+				 CREATE_TIME,
+				 MODIFIER,
+				 MODIFY_TIME
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (  
+				 #{item.customermatPid},  
+				 #{item.memberNo},      
+				 #{item.materialPid},   
+				 #{item.effectiveTime},        
+				 #{item.filename},        
+				 #{item.status},  
+				 #{item.creator},
+				 #{item.createTime},
+				 #{item.modifier},
+				 #{item.modifyTime}
+				 )
+	    </foreach>  
+  </insert>  
+	
+	
+	
+	<!-- 企业详细信息更新 -->
+	<update id="update">
+		UPDATE SS_CUSTOMER_MATERIAL SET
+			<if test="memberNo != null and memberNo != ''" >MEMBER_NO = #{memberNo},</if> 
+			<if test="materialPid != null and materialPid != ''" >MATERIAL_PID = #{materialPid},</if>
+			<if test="effectiveTime != null and effectiveTime != ''" >EFFECTIVE_TIME = #{effectiveTime},</if> 
+			<if test="filename != null and filename != ''" >FILENAME = #{filename},</if> 
+			<if test="status != null and status != ''" >STATUS = #{status},</if>  
+			<if test="creator != null and creator != ''" >CREATOR = #{creator},</if>
+			<if test="createTime != null and createTime != ''" >CREATE_TIME = #{createTime},</if>
+			<if test="modifier != null and modifier != ''" >MODIFIER = #{modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''" >MODIFY_TIME = #{modifyTime},</if>
+			<if test="recStatus != null and recStatus != ''" >REC_STATUS = #{recStatus}</if>
+			REC_VER=REC_VER+1
+		WHERE 
+		CUSTOMERMAT_PID = #{customermatPid} 
+	</update> 
+	
+	<delete id="delete" parameterType="String">
+		DELETE 
+		FROM SS_CUSTOMER_MATERIAL
+		WHERE MEMBER_NO = #{memberNo} 
+	</delete>
+	 
+	
+</mapper>

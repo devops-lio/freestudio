@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.FancingGuaranteeMapMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.view.FancingGuaranteeMapItem" id="fancingGuaranteeMapItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="fancingGuaranteeMapPid" column="FANCING_GUARANTEE_MAP_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="resultScore" column="RESULT_SCORE"/>
+		<result property="guaranteeCompanyPid" column="GUARANTEE_COMPANY_PID"/>
+		<result property="guaranteeProtocolName" column="GUARANTEE_PROTOCOL_NAME"/>
+		<result property="guaranteeProtocolUrl" column="GUARANTEE_PROTOCOL_URL"/>
+		<result property="guaranteePid" column="GUARANTEE_PID"/>
+		<result property="guaranteeName" column="GUARANTEE_NAME"/>
+		<result property="guaranteeAddress" column="GUARANTEE_ADDRESS"/>
+		<result property="guaranteeBusinessUrl" column="GUARANTEE_BUSINESS_URL"/>
+		<result property="guaranteeCapital" column="GUARANTEE_CAPITAL"/>
+		<result property="guaranteeContacts" column="GUARANTEE_CONTACTS"/>
+		<result property="tel" column="TEL"/>
+		<result property="guaranteeRegisteredCapital" column="GUARANTEE_REGISTERED_CAPITAL"/>
+		<result property="mobile" column="MOBILE"/>
+		<result property="email" column="EMAIL"/>
+		<result property="guaranteeBusiness" column="GUARANTEE_BUSINESS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					FANCING_GUARANTEE_MAP_PID,
+					FANCING_ORDER_NO,
+					GUARANTEE_COMPANY_PID,
+					GUARANTEE_PROTOCOL_NAME,
+					GUARANTEE_PROTOCOL_URL,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="fancingGuaranteeMapPid!=null and fancingGuaranteeMapPid!=''"> AND FANCING_GUARANTEE_MAP_PID LIKE ('%'||'fancingGuaranteeMapPid'||'%' )</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO LIKE ('%'||'fancingOrderNo'||'%' )</if>
+		<if test="guaranteeCompanyPid!=null and guaranteeCompanyPid!=''"> AND GUARANTEE_COMPANY_PID LIKE ('%'||'guaranteeCompanyPid'||'%' )</if>
+		<if test="guaranteeProtocolName!=null and guaranteeProtocolName!=''"> AND GUARANTEE_PROTOCOL_NAME LIKE ('%'||'guaranteeProtocolName'||'%' )</if>
+		<if test="guaranteeProtocolUrl!=null and guaranteeProtocolUrl!=''"> AND GUARANTEE_PROTOCOL_URL LIKE ('%'||'guaranteeProtocolUrl'||'%' )</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.model.FancingGuaranteeMapModel">
+		<include refid="count"/>
+		FROM  DM_FANCING_GUARANTEE_MAP
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="fancingGuaranteeMapItemResultMap" parameterType="com.sinoservices.xascf.fancing.model.FancingGuaranteeMapModel">
+		<include refid="select"/>
+		FROM  DM_FANCING_GUARANTEE_MAP
+		<include refid="findByExample"/>
+	</select>
+	<!-- 根据融资单号获取担保信息 -->
+	<select id="getGuaranteeMapByOrderNo" parameterType="String" resultMap="fancingGuaranteeMapItemResultMap">
+			SELECT 
+				FG.FANCING_GUARANTEE_MAP_PID,
+				FG.GUARANTEE_PROTOCOL_NAME,
+				RRI.SCORE AS RESULT_SCORE,
+				FG.GUARANTEE_PROTOCOL_URL,
+		    	FGG.GUARANTEE_NAME,
+				FGG.GUARANTEE_ADDRESS,
+				FGG.GUARANTEE_BUSINESS,
+				FGG.GUARANTEE_BUSINESS_URL,
+				FGG.GUARANTEE_CAPITAL,
+				FGG.GUARANTEE_CONTACTS,
+				FG.GUARANTEE_COMPANY_PID,
+				FGG.EMAIL,
+				FGG.MOBILE,
+				FGG.TEL
+		FROM DM_FANCING_GUARANTEE_MAP FG
+		JOIN DM_FANCING_ORDER FO ON FO.FANCING_ORDER_NO=FG.FANCING_ORDER_NO
+		JOIN DM_FANCING_GUARANTEE FGG ON FGG.GUARANTEE_PID=FG.GUARANTEE_COMPANY_PID
+		LEFT JOIN RM_RESULT_ITEM RRI ON FG.FANCING_GUARANTEE_MAP_PID=RRI.FACTOR_PID
+		WHERE FO.FANCING_ORDER_NO=#{_parameter}				
+	</select>
+	<insert id="insert" parameterType="com.sinoservices.xascf.fancing.model.FancingGuaranteeMapModel">
+		INSERT INTO DM_FANCING_GUARANTEE_MAP (
+				FANCING_GUARANTEE_MAP_PID,
+				FANCING_ORDER_NO,
+				GUARANTEE_COMPANY_PID,
+				GUARANTEE_PROTOCOL_NAME,
+				GUARANTEE_PROTOCOL_URL,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{fancingGuaranteeMapPid},
+			   #{fancingOrderNo},
+			   #{guaranteeCompanyPid},
+			   #{guaranteeProtocolName},
+			   #{guaranteeProtocolUrl},
+			   #{remark},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus}
+		)
+	</insert>
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO DM_FANCING_GUARANTEE_MAP (
+				FANCING_GUARANTEE_MAP_PID,
+				FANCING_ORDER_NO,
+				GUARANTEE_COMPANY_PID,
+				GUARANTEE_PROTOCOL_NAME,
+				GUARANTEE_PROTOCOL_URL,
+				REMARK,
+				REC_VER,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( 
+			   #{item.fancingGuaranteeMapPid},
+			   #{item.fancingOrderNo},
+			   #{item.guaranteeCompanyPid},
+			   #{item.guaranteeProtocolName},
+			   #{item.guaranteeProtocolUrl},
+			   #{item.remark},
+			   1,
+			   #{item.creator},
+			   #{item.recStatus}
+			   )  
+	    </foreach>  
+  </insert>  
+  <delete id="deleteByOrderNo" parameterType="String">
+  	DELETE FROM DM_FANCING_GUARANTEE_MAP
+  	WHERE FANCING_ORDER_NO=#{orderNo}
+  </delete>
+	<update id="update" parameterType="com.sinoservices.xascf.fancing.model.FancingGuaranteeMapModel">
+		UPDATE DM_FANCING_GUARANTEE_MAP SET
+				FANCING_ORDER_NO = #{fancingOrderNo},
+				GUARANTEE_COMPANY_PID = #{guaranteeCompanyPid},
+				GUARANTEE_PROTOCOL_NAME = #{guaranteeProtocolName},
+				GUARANTEE_PROTOCOL_URL = #{guaranteeProtocolUrl},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus}
+				WHERE 	FANCING_GUARANTEE_MAP_PID = #{fancingGuaranteeMapPid}
+	</update>
+</mapper>

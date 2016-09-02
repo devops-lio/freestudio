@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.edi.mapper.EdiReceiptMapper">
+	<resultMap type="com.sinoservices.xascf.edi.model.EdiReceiptModel" id="EdiReceiptModel">
+		<result property="receiptId" column="RECEIPT_ID"/>
+		<result property="fancingOrderId" column="FANCING_ORDER_ID"/>
+		<result property="receiptType" column="RECEIPT_TYPE"/>
+		<result property="receiptKinds" column="RECEIPT_KINDS"/>
+		<result property="rpFlag" column="RP_FLAG"/>
+		<result property="cpFlag" column="CP_FLAG"/>
+		<result property="receiptNumber" column="RECEIPT_NUMBER"/>
+		<result property="issueDate" column="ISSUE_DATE"/>
+		<result property="signforDate" column="SIGNFOR_DATE"/>
+		<result property="taxPayerIdentifier" column="TAX_PAYER_IDENTIFIER"/>
+		<result property="payerName" column="PAYER_NAME"/>
+		<result property="payerPid" column="PAYER_PID"/>
+		<result property="payerBank" column="PAYER_BANK"/>
+		<result property="payerAccountNumber" column="PAYER_ACCOUNT_NUMBER"/>
+		<result property="payeeName" column="PAYEE_NAME"/>
+		<result property="taxPayeeIdentifier" column="TAX_PAYEE_IDENTIFIER"/>
+		<result property="payeeAddress" column="PAYEE_ADDRESS"/>
+		<result property="payeePhone" column="PAYEE_PHONE"/>
+		<result property="payeeBank" column="PAYEE_BANK"/>
+		<result property="payeeAccountNumber" column="PAYEE_ACCOUNT_NUMBER"/>
+		<result property="settlementName" column="SETTLEMENT_NAME"/>
+		<result property="payeeEsusUsername" column="PAYEE_ESUS_USERNAME"/>
+		<result property="drawerEsusUsername" column="DRAWER_ESUS_USERNAME"/>
+		<result property="sumAmount" column="SUM_AMOUNT"/>
+		<result property="sumNotaxAmount" column="SUM_NOTAX_AMOUNT"/>
+		<result property="sumTaxAmount" column="SUM_TAX_AMOUNT"/>
+		<result property="actualAmount" column="ACTUAL_AMOUNT"/>
+		<result property="actualTaxAmount" column="ACTUAL_TAX_AMOUNT"/>
+	</resultMap>  
+	
+	<sql id="select"> 
+		  SELECT 
+				RECEIPT_ID,
+				FANCING_ORDER_ID,
+				RECEIPT_TYPE,
+				RECEIPT_KINDS,
+				RP_FLAG,
+				CP_FLAG,
+				RECEIPT_NUMBER,
+				ISSUE_DATE,
+				SIGNFOR_DATE,
+				TAX_PAYER_IDENTIFIER,
+				PAYER_PID,
+				PAYER_NAME,
+				PAYER_BANK,
+				PAYER_ACCOUNT_NUMBER,
+				PAYEE_NAME,
+				TAX_PAYEE_IDENTIFIER,
+				PAYEE_ADDRESS,
+				PAYEE_PHONE,
+				PAYEE_BANK,
+				PAYEE_ACCOUNT_NUMBER,
+				SETTLEMENT_NAME,
+				PAYEE_ESUS_USERNAME,
+				DRAWER_ESUS_USERNAME,
+				SUM_AMOUNT,
+				SUM_NOTAX_AMOUNT,
+				SUM_TAX_AMOUNT,
+				ACTUAL_AMOUNT,
+				ACTUAL_TAX_AMOUNT
+	</sql>
+	
+	<!-- 查询  -->
+	<select id="getEdiReceiptByCondition" resultMap="EdiReceiptModel" parameterType="com.sinoservices.xascf.edi.model.EdiReceiptModel">
+		<include refid="select"/>  
+		FROM  EDI_RECEIPT
+		<include refid="findByExample"/> 
+	</select>
+	
+	<sql id="findByExample">
+		WHERE  1=1
+		<if test="receiptId !=null and  receiptId !=''">AND RECEIPT_ID = #{receiptId}</if>
+		<if test="fancingOrderId !=null and fancingOrderId != ''">AND FANCING_ORDER_ID = #{fancingOrderId}</if>
+	</sql>
+
+</mapper>

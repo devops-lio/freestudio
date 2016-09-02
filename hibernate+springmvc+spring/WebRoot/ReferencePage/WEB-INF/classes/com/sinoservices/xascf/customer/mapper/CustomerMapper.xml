@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.customer.mapper.CustomerMapper">
+	<resultMap type="com.sinoservices.xascf.customer.view.CustomerItemView" id="CustomerItemViewResultMap">
+		<result property="id" column="ID"/>
+		<result property="customerPid" column="CUSTOMER_PID"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+		
+		<result property="memberNameEn" column="MEMBER_NAME_EN"/> 
+		<result property="memberShortName" column="MEMBER_SHORT_NAME"/> 
+		
+		<result property="customerType" column="CUSTOMER_TYPE"/>
+		<result property="customerSource" column="CUSTOMER_SOURCE"/> 
+		<result property="cardNo" column="CARD_NO"/>
+		<result property="cardName" column="CARD_NAME"/>
+		<result property="tel" column="TEL"/>
+		<result property="emill" column="EMILL"/>
+		<result property="ismarry" column="ISMARRY"/> 
+		<result property="businessPeople" column="BUSINESS_PEOPLE"/>  
+		
+		<result property="loginName" column="LOGIN_NAME"/>
+		<result property="loginPwd" column="LOGIN_PWD"/>
+		<result property="userNameCn" column="USER_NAME_CN"/>
+		<result property="intvitedCode" column="INTVITED_CODE"/>
+		<result property="isenable" column="ISENABLE"/>
+		<result property="lastLogintime" column="LAST_LOGINTIME"/>
+		<result property="loginedCount" column="LOGINED_COUNT"/>  
+		<result property="remark" column="REMARK"/>   
+		<result property="contactsAddr" column="CONTACTS_ADDR"/> 
+		<result property="customerStatus" column="CUSTOMER_STATUS"/> 
+		
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/> 
+	</resultMap>  
+	
+	<resultMap type="com.sinoservices.xascf.customer.model.CustomerModel" id="CustomerModelResultMap">  
+		<result property="id" column="ID"/>
+		<result property="customerPid" column="CUSTOMER_PID"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+		
+		<result property="memberNameEn" column="MEMBER_NAME_EN"/> 
+		<result property="memberShortName" column="MEMBER_SHORT_NAME"/>  
+		<result property="customerType" column="CUSTOMER_TYPE"/> 
+		<result property="customerSource" column="CUSTOMER_SOURCE"/>
+		<result property="cardNo" column="CARD_NO"/>
+		<result property="cardName" column="CARD_NAME"/>
+		<result property="tel" column="TEL"/>
+		<result property="emill" column="EMILL"/>
+		<result property="ismarry" column="ISMARRY"/>
+		<result property="businessPeople" column="BUSINESS_PEOPLE"/>  
+		
+		<result property="loginName" column="LOGIN_NAME"/>
+		<result property="loginPwd" column="LOGIN_PWD"/>
+		<result property="userNameCn" column="USER_NAME_CN"/>
+		<result property="intvitedCode" column="INTVITED_CODE"/>
+		<result property="isenable" column="ISENABLE"/>
+		<result property="lastLogintime" column="LAST_LOGINTIME"/>
+		<result property="loginedCount" column="LOGINED_COUNT"/>  
+		<result property="remark" column="REMARK"/>  
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/> 
+		
+		<result property="contactsAddr" column="CONTACTS_ADDR"/> 
+		<result property="customerStatus" column="CUSTOMER_STATUS"/> 
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.customer.view.CustomerItem" id="CustomerItemResultMap">  
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="customerName" column="CUSTOMER_NAME"/>
+		<result property="registeredFund" column="REGISTERED_FUND"/>
+		<result property="userNameCn" column="USER_NAME_CN"/>
+		<result property="companyLevel" column="COMPANY_LEVEL"/>
+		<result property="customerType" column="CUSTOMER_TYPE"/> 
+		<result property="tel" column="TEL"/> 
+		<result property="mobile" column="MOBILE"/>  
+		<result property="businessPeople" column="BUSINESS_PEOPLE"/>  
+		<result property="customerSource" column="CUSTOMER_SOURCE"/>
+		<result property="cardNo" column="CARD_NO"/> 
+		<result property="remark" column="REMARK"/>  
+		<result property="contactsAddr" column="CONTACTS_ADDR"/> 
+		<result property="customerStatus" column="CUSTOMER_STATUS"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>  
+		<result property="userPid" column="USER_PID"/>  
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.customer.view.CustomerItem4Risk" id="CustomerRiskResultMap">
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="customerName" column="CUSTOMER_NAME"/>
+		<result property="registeredFund" column="REGISTERED_FUND"/>
+		<result property="userNameCn" column="USER_NAME_CN"/>
+		<result property="companyLevel" column="COMPANY_LEVEL"/>
+		<result property="customerType" column="CUSTOMER_TYPE"/> 
+		<result property="tel" column="TEL"/> 
+		<result property="mobile" column="MOBILE"/>  
+		<result property="businessPeople" column="BUSINESS_PEOPLE"/>  
+		<result property="customerSource" column="CUSTOMER_SOURCE"/>
+		<result property="cardNo" column="CARD_NO"/> 
+		<result property="remark" column="REMARK"/>  
+		<result property="contactsAddr" column="CONTACTS_ADDR"/> 
+		<result property="customerStatus" column="CUSTOMER_STATUS"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>  
+		<result property="userPid" column="USER_PID"/>  
+		<result property="countReport" column="COUNT_REPORT"/>
+	</resultMap> 
+	
+	
+	<sql id="select"> 
+		  SELECT 
+		  	ID,			
+	        CUSTOMER_PID, 
+	        MEMBER_PID,
+	        MEMBER_NO,		
+			MEMBER_NAME,
+			MEMBER_NAME_EN,
+			MEMBER_SHORT_NAME,		
+			CUSTOMER_TYPE,
+			CUSTOMER_SOURCE,	
+			CARD_NO,			
+			CARD_NAME,		
+			TEL,				
+			EMILL,			
+			ISMARRY,			
+			BUSINESS_PEOPLE, 
+	        LOGIN_NAME,        
+	        LOGIN_PWD,	       
+	        USER_NAME_CN,    
+	        INTVITED_CODE,  
+	        ISENABLE,	        
+	        LAST_LOGINTIME,  
+	        LOGINED_COUNT,
+	        REMARK,
+	        CONTACTS_ADDR,
+	        CUSTOMER_STATUS,   
+	        CREATOR,		         
+	        CREATE_TIME,	     
+	        MODIFIER,	        
+	        MODIFY_TIME,	     
+	        REC_VER,		         
+	        REC_STATUS
+	</sql>
+	
+	<sql id="companyPage"> 
+		SELECT DISTINCT
+			A.MEMBER_PID,
+			A.MEMBER_NO,
+			B.CUSTOMER_NAME, 
+			B.REGISTERED_FUND,
+			A.USER_NAME_CN,
+			B.COMPANY_LEVEL,
+			A.CUSTOMER_SOURCE,
+			A.CUSTOMER_STATUS,
+			B.MOBILE,
+			A.TEL,
+			A.CUSTOMER_TYPE,
+			A.BUSINESS_PEOPLE 
+			FROM SS_CUSTOMER A
+			INNER JOIN SS_CUSTOMER_SUB B ON B.CUSTOMERSUB_PID=A.MEMBER_PID
+			INNER JOIN SS_KPICUSTOMER C ON A.MEMBER_PID = C.CUSTOMERSUB_PID
+	</sql>
+	
+	<sql id="companyPageWithRisk"> 
+		SELECT DISTINCT
+			A.MEMBER_PID,
+			A.MEMBER_NO,
+			B.CUSTOMER_NAME, 
+			B.REGISTERED_FUND,
+			A.USER_NAME_CN,
+			B.COMPANY_LEVEL,
+			A.CUSTOMER_SOURCE,
+			A.CUSTOMER_STATUS,
+			B.MOBILE,
+			A.TEL,
+			A.CUSTOMER_TYPE,
+			A.BUSINESS_PEOPLE,
+			A.REC_STATUS,
+			(SELECT COUNT(R.REPORT_PID) FROM RM_EVALUATE_REPORT R WHERE R.REPORT_OBJECT_PID = A.MEMBER_PID) AS COUNT_REPORT
+			FROM SS_CUSTOMER A
+			INNER JOIN SS_CUSTOMER_SUB B ON B.CUSTOMERSUB_PID=A.MEMBER_PID
+			INNER JOIN SS_KPICUSTOMER C ON A.MEMBER_PID = C.CUSTOMERSUB_PID
+	</sql>
+	
+	<sql id="companyCount"> 
+	    	SELECT DISTINCT A.MEMBER_PID
+			FROM SS_CUSTOMER A
+			INNER JOIN SS_CUSTOMER_SUB B ON B.CUSTOMERSUB_PID=A.MEMBER_PID 
+			INNER JOIN SS_KPICUSTOMER C ON A.MEMBER_PID = C.CUSTOMERSUB_PID
+	</sql>
+	<!-- 企业会员查询列表（条件） -->
+	<sql id="findcompanyPage">
+		WHERE  A.REC_STATUS ='2'  AND B.REC_STATUS = '2'
+		<if test="memberNo !=null and  memberNo!=''">AND A.MEMBER_NO LIKE ('%${memberNo}%')</if>
+		<if test="customerName !=null and customerName != ''">AND B.CUSTOMER_NAME LIKE ('%${customerName}%')</if>
+		<if test="customerSource !=null and  customerSource != ''">AND A.CUSTOMER_SOURCE = #{customerSource}</if>
+		<if test="businessPeople !=null and  businessPeople != ''">AND A.BUSINESS_PEOPLE = #{businessPeople}</if>
+		<if test="customerStatus !=null and  customerStatus != ''">AND A.CUSTOMER_STATUS = #{customerStatus}</if>
+		<if test="userPid !=null and  userPid != ''">AND C.USER_PID = #{userPid}</if>
+		<if test="companyLevel !=null and companyLevel != ''">AND B.COMPANY_LEVEL = #{companyLevel}</if>
+	</sql>
+	
+	<sql id="count">
+		SELECT COUNT(1)
+	</sql> 
+	
+	<!-- 个人会员查询列表(条件) -->
+	<sql id="findPersonPage">
+		WHERE 1=1
+		<if test="memberNo !=null and  memberNo!=''">AND MEMBER_NO LIKE ('%${memberNo}%')</if>
+		<if test="userNameCn !=null and userNameCn != ''">AND USER_NAME_CN LIKE ('%${userNameCn}%')</if>
+		<if test="customerSource !=null and  customerSource != ''">AND CUSTOMER_SOURCE = #{customerSource}</if>  
+	</sql>
+	 <!-- 企业会员查询 Count -->
+	<select id="getCountByCompany" resultType="int" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		<include refid="count"/>
+		FROM (
+		<include refid="companyCount"/> 
+		<include refid="findcompanyPage"/>
+		AND A.CUSTOMER_TYPE = '1'
+		) R
+	</select>
+	
+	
+	 <!-- 企业会员查询(综合查询) Count -->
+	<select id="getAllCountByCompany" resultType="int" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		<include refid="count"/>
+		FROM (
+		<include refid="companyCount"/> 
+		WHERE  (B.REC_STATUS = '2' OR B.REC_STATUS = '1')
+		<if test="memberNo !=null and  memberNo!=''">AND A.MEMBER_NO LIKE ('%${memberNo}%')</if>
+		<if test="customerName !=null and customerName != ''">AND B.CUSTOMER_NAME LIKE ('%${customerName}%')</if>
+		<if test="customerSource !=null and  customerSource != ''">AND A.CUSTOMER_SOURCE = #{customerSource}</if>
+		<if test="companyLevel !=null and  companyLevel != ''">AND B.COMPANY_LEVEL = #{companyLevel}</if>
+		<if test="businessPeople !=null and  businessPeople != ''">AND A.BUSINESS_PEOPLE = #{businessPeople}</if>
+		<if test="customerStatus !=null and  customerStatus != ''">AND A.CUSTOMER_STATUS = #{customerStatus}</if>
+		<if test="userPid !=null and  userPid != ''">AND C.USER_PID = #{userPid}</if>
+		<if test="recStatus !=null and  recStatus != ''">AND A.REC_STATUS = #{recStatus}</if>
+		AND A.CUSTOMER_TYPE = '1'
+		AND (A.REC_STATUS = '2' OR  A.REC_STATUS = '1')
+		) R
+	</select>
+	<!-- 企业会员查询 LIST 包括评估报告信息(综合查询)-->
+	<select id="getAllPageByCompanyWithReport" resultMap="CustomerRiskResultMap" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		<include refid="companyPageWithRisk"/>  
+		WHERE  (B.REC_STATUS = '2' OR B.REC_STATUS = '1')
+		<if test="memberNo !=null and  memberNo!=''">AND A.MEMBER_NO LIKE ('%${memberNo}%')</if>
+		<if test="customerName !=null and customerName != ''">AND B.CUSTOMER_NAME LIKE ('%${customerName}%')</if>
+		<if test="customerSource !=null and  customerSource != ''">AND A.CUSTOMER_SOURCE = #{customerSource}</if>
+		<if test="companyLevel !=null and  companyLevel != ''">AND B.COMPANY_LEVEL = #{companyLevel}</if>
+		<if test="businessPeople !=null and  businessPeople != ''">AND A.BUSINESS_PEOPLE = #{businessPeople}</if>
+		<if test="customerStatus !=null and  customerStatus != ''">AND A.CUSTOMER_STATUS = #{customerStatus}</if>
+		<if test="userPid !=null and  userPid != ''">AND C.USER_PID = #{userPid}</if>
+		<if test="recStatus !=null and  recStatus != ''">AND A.REC_STATUS = #{recStatus}</if>
+		AND A.CUSTOMER_TYPE = '1'
+		AND (A.REC_STATUS = '2' OR  A.REC_STATUS = '1') 
+		AND A.CUSTOMER_TYPE = '1'
+		AND (A.REC_STATUS = '2' OR  A.REC_STATUS = '1')
+		ORDER BY A.CREATE_TIME DESC
+	</select>
+	
+	<!-- 企业会员查询 LIST -->
+	<select id="getPageByCompany" resultMap="CustomerItemResultMap" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		<include refid="companyPage"/>  
+		<include refid="findcompanyPage"/> 
+		AND A.CUSTOMER_TYPE = '1'
+	</select>
+	
+	<!-- 企业会员查询 LIST 包括评估报告信息-->
+	<select id="getPageByCompanyWithReport" resultMap="CustomerRiskResultMap" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		<include refid="companyPageWithRisk"/>  
+		<include refid="findcompanyPage"/> 
+		AND A.CUSTOMER_TYPE = '1'
+		ORDER BY A.CREATE_TIME DESC
+	</select>
+	
+	
+	
+	<!-- 校验唯一性查找 -->
+	<select id="findListForCheck" resultMap="CustomerItemViewResultMap" parameterType="com.sinoservices.xascf.customer.view.CustomerConditionView">
+		<include refid="select"/> 
+		FROM SS_CUSTOMER
+			WHERE 1=1 AND REC_STATUS !='0'  
+		AND ( 1=2 
+			<if test="loginName !=null and loginName != ''">OR LOGIN_NAME =#{loginName}</if>
+			<if test="tel !=null and tel != ''">OR TEL =#{tel}</if>
+			<if test="emill !=null and emill != ''">OR EMILL =#{emill}</if>
+		)
+	</select>
+	<!-- 新建会员类表LIST -->
+	<select id="getPageByNewCompany" resultMap="CustomerItemResultMap" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		SELECT 
+			A.MEMBER_PID,
+			A.MEMBER_NO,
+			B.CUSTOMER_NAME, 
+			B.REGISTERED_FUND,
+			A.USER_NAME_CN,
+			B.COMPANY_LEVEL,
+			A.CUSTOMER_SOURCE,
+			A.CUSTOMER_STATUS,
+			B.MOBILE,
+			A.TEL,
+			A.CUSTOMER_TYPE,
+			A.BUSINESS_PEOPLE 
+			FROM SS_CUSTOMER A
+			INNER JOIN SS_CUSTOMER_SUB B ON B.CUSTOMERSUB_PID=A.MEMBER_PID 
+			WHERE
+			A.MEMBER_PID NOT IN(
+			SELECT 
+				CUSTOMERSUB_PID 
+				FROM SS_KPICUSTOMER 
+			WHERE REC_STATUS = '1' 
+		)
+		<if test="memberNo !=null and  memberNo!=''">AND A.MEMBER_NO LIKE ('%${memberNo}%')</if>
+		<if test="customerName !=null and customerName != ''">AND B.CUSTOMER_NAME LIKE ('%${customerName}%')</if>
+		<if test="customerSource !=null and  customerSource != ''">AND A.CUSTOMER_SOURCE = #{customerSource}</if>
+		AND A.REC_STATUS = '2'
+		AND A.CUSTOMER_TYPE = '1' 
+		ORDER BY A.CREATE_TIME DESC
+	</select>
+	<!-- 新建企业会员查询 Count -->
+	<select id="getCountByNewCompany" resultType="int" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		SELECT 
+			 COUNT(1)
+			FROM SS_CUSTOMER A
+			INNER JOIN SS_CUSTOMER_SUB B ON B.CUSTOMERSUB_PID=A.MEMBER_PID  
+			WHERE
+			A.MEMBER_PID NOT IN(
+			SELECT 
+				CUSTOMERSUB_PID 
+				FROM SS_KPICUSTOMER 
+			WHERE REC_STATUS = '1' 
+		) 
+		<if test="memberNo !=null and  memberNo!=''">AND A.MEMBER_NO LIKE ('%${memberNo}%')</if>
+		<if test="customerName !=null and customerName != ''">AND B.CUSTOMER_NAME LIKE ('%${customerName}%')</if>
+		<if test="customerSource !=null and  customerSource != ''">AND A.CUSTOMER_SOURCE = #{customerSource}</if>
+		AND A.REC_STATUS = '2'
+		AND A.CUSTOMER_TYPE = '1'
+		ORDER BY A.CREATE_TIME DESC
+	</select>
+	
+	
+	<!-- 个人会员查询 LIST -->
+	<select id="getPageByPerson" resultMap="CustomerItemResultMap" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		<include refid="select"/> 
+		FROM SS_CUSTOMER
+		<include refid="findPersonPage"/> 
+		AND REC_STATUS ='2'  AND CUSTOMER_TYPE = '2'
+	</select>
+	
+	<!-- 个人会员查询 Count -->
+	<select id="getCountByPerson" resultType="int" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		<include refid="count"/> 
+		FROM SS_CUSTOMER
+		<include refid="findPersonPage"/> 
+		AND REC_STATUS ='2' AND CUSTOMER_TYPE = '2'
+	</select>
+	
+	 
+	<!-- 根据pid查找  编辑 -->
+	<select id="findByPid" resultMap="CustomerModelResultMap" parameterType="String">
+		SELECT 
+		  	A.ID,			
+	        A.CUSTOMER_PID, 
+	        A.MEMBER_PID,
+	        A.MEMBER_NO,		
+			A.MEMBER_NAME,
+			A.MEMBER_NAME_EN,
+			A.MEMBER_SHORT_NAME,		
+			A.CUSTOMER_TYPE,
+			A.CUSTOMER_SOURCE,	
+			A.CARD_NO,			
+			A.CARD_NAME,		
+			A.TEL,				
+			A.EMILL,			
+			A.ISMARRY,
+	        GROUP_CONCAT(D.USER_NAME_CN) AS BUSINESS_PEOPLE, 
+	        A.LOGIN_NAME,        
+	        A.LOGIN_PWD,	       
+	        A.USER_NAME_CN,    
+	        A.INTVITED_CODE,  
+	        A.ISENABLE,	        
+	        A.LAST_LOGINTIME,  
+	        A.LOGINED_COUNT,
+	        A.REMARK,
+	        A.CONTACTS_ADDR,
+	        A.CUSTOMER_STATUS,   
+	        A.CREATOR,		         
+	        A.CREATE_TIME,	     
+	        A.MODIFIER,	        
+	        A.MODIFY_TIME,	     
+	        A.REC_VER,		         
+	        A.REC_STATUS
+		FROM  SS_CUSTOMER A
+		LEFT JOIN SS_KPICUSTOMER C ON C.CUSTOMERSUB_PID=A.MEMBER_PID
+		LEFT JOIN SS_USER D ON D.USER_PID=C.USER_PID
+		WHERE
+			1=1
+			AND A.MEMBER_PID = #{_parameter}  AND (A.REC_STATUS = 2 OR  A.REC_STATUS = 1) 
+	</select>
+	
+	<!-- 根据pid查找tony -->
+	<select id="getItemByPid" resultMap="CustomerModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  SS_CUSTOMER
+		WHERE
+			1=1	
+			AND CUSTOMER_PID = #{_parameter}  
+			AND REC_STATUS =2
+	</select>
+	
+	
+	<!-- 融资查询获取属于登录者的企业会员信息 -->
+	<select id="getCustomerCountByUserId" resultType="int" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		SELECT 
+			 COUNT(1) 	  				
+			FROM SS_CUSTOMER SC 
+			LEFT JOIN SS_CUSTOMER_SUB SCB ON SC.MEMBER_PID=SCB.CUSTOMERSUB_PID
+			JOIN SS_KPICUSTOMER SK ON SK.CUSTOMERSUB_PID=SC.MEMBER_PID
+			WHERE 1=1 AND SC.REC_STATUS ='2'
+		<if test="memberName !=null and memberName !=''">AND SCB.CUSTOMER_NAME LIKE ('%${memberName}%')</if> 
+		<if test="memberNo !=null and memberNo !=''">AND MEMBER_NO LIKE ('%${memberNo}%')</if> 
+		<if test="businessPeople !=null and businessPeople !=''">AND SK.USER_PID=#{businessPeople}</if> 
+		<if test="customerType !=null and customerType !=''">AND SC.CUSTOMER_TYPE=#{customerType}
+			<if test="customerType =='1'">AND ISPURCHASE = '0'</if>
+		</if> 
+		<if test="customerStatus !=null and customerStatus !=''">AND SC.CUSTOMER_STATUS=#{customerStatus}</if>
+		ORDER BY SC.CREATE_TIME DESC
+	</select>
+	<select id="getCustomerByUserId" resultMap="CustomerModelResultMap" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		SELECT 
+			SCB.CUSTOMER_NAME AS MEMBER_NAME,
+		 	 SC.MEMBER_PID,		              
+			 SC.CONTACTS_ADDR,  		              
+			 SC.TEL,      			
+			 SC.USER_NAME_CN,
+			 SC.EMILL,SC.MEMBER_NO  	  				
+			FROM SS_CUSTOMER SC 
+			LEFT JOIN SS_CUSTOMER_SUB SCB ON SC.MEMBER_PID=SCB.CUSTOMERSUB_PID
+			JOIN SS_KPICUSTOMER SK ON SK.CUSTOMERSUB_PID=SC.MEMBER_PID
+			WHERE 1=1 AND SC.REC_STATUS ='2' AND SCB.REC_STATUS = '2'
+		<if test="memberName !=null and memberName !=''">AND SCB.CUSTOMER_NAME LIKE ('%${memberName}%')</if> 
+		<if test="memberNo !=null and memberNo !=''">AND MEMBER_NO LIKE ('%${memberNo}%')</if> 
+		<if test="businessPeople !=null and businessPeople !=''">AND SK.USER_PID=#{businessPeople}</if> 
+		<if test="customerType !=null and customerType !=''">AND SC.CUSTOMER_TYPE=#{customerType}
+			<if test="customerType =='1'">AND ISPURCHASE = '0'</if>
+		</if> 
+		<if test="customerStatus !=null and customerStatus !=''">AND SC.CUSTOMER_STATUS=#{customerStatus}</if> 
+		ORDER BY SC.CREATE_TIME DESC
+	</select>
+	
+	<!-- 会员分配列表 -->
+	<select id="getPageByCustomerEmpower" resultMap="CustomerItemResultMap" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		SELECT
+			R.MEMBER_PID,
+			R.MEMBER_NO,
+			R.CUSTOMER_NAME,
+			R.CUSTOMER_SOURCE,
+			R.COMPANY_LEVEL,
+			R.CUSTOMER_TYPE,
+			R.BUSINESS_PEOPLE
+		FROM
+			(
+			SELECT 
+				A.MEMBER_PID,
+				A.MEMBER_NO,
+				B.CUSTOMER_NAME,
+				A.CUSTOMER_SOURCE,
+				B.COMPANY_LEVEL,
+				CASE WHEN B.ISPURCHASE = '1' THEN '3' ELSE A.CUSTOMER_TYPE END AS CUSTOMER_TYPE,
+				GROUP_CONCAT(D.USER_NAME_CN) AS BUSINESS_PEOPLE
+			FROM SS_CUSTOMER A
+			INNER JOIN SS_CUSTOMER_SUB B ON B.CUSTOMERSUB_PID=A.MEMBER_PID
+			LEFT JOIN SS_KPICUSTOMER C ON C.CUSTOMERSUB_PID=A.MEMBER_PID
+			LEFT JOIN SS_USER D ON D.USER_PID=C.USER_PID
+			WHERE A.REC_STATUS = '2'
+			<if test="memberNo !=null and  memberNo!=''">AND A.MEMBER_NO LIKE ('%${memberNo}%')</if>
+			<if test="customerName !=null and customerName != ''">AND B.CUSTOMER_NAME LIKE ('%${customerName}%')</if>
+			<if test="customerType !=null and customerType !='' and customerType != '3'.toString()">AND A.CUSTOMER_TYPE=#{customerType}</if>
+			<if test="customerType == '3'.toString()">AND B.ISPURCHASE = '1'</if>
+			<if test="companyLevel !=null and companyLevel != ''">AND B.COMPANY_LEVEL = #{companyLevel}</if>
+			GROUP BY A.MEMBER_PID
+			ORDER BY A.CREATE_TIME DESC
+		)R
+		WHERE 1=1
+		<if test="businessPeople !=null and businessPeople != ''">AND R.BUSINESS_PEOPLE LIKE ('%${businessPeople}%')</if>
+	</select>
+	<!-- 会员分配列表 Count -->
+	<select id="getCountByCustomerEmpower" resultType="int" parameterType="com.sinoservices.xascf.customer.view.CustomerCondition">
+		SELECT COUNT(1) FROM (
+			SELECT
+				R.MEMBER_PID,
+				R.MEMBER_NO,
+				R.CUSTOMER_NAME,
+				R.CUSTOMER_SOURCE,
+				R.COMPANY_LEVEL,
+				R.CUSTOMER_TYPE,
+				R.BUSINESS_PEOPLE
+			FROM
+				(
+				SELECT 
+					A.MEMBER_PID,
+					A.MEMBER_NO,
+					B.CUSTOMER_NAME,
+					A.CUSTOMER_SOURCE,
+					B.COMPANY_LEVEL,
+					CASE WHEN B.ISPURCHASE = '1' THEN '3' ELSE A.CUSTOMER_TYPE END AS CUSTOMER_TYPE,
+					GROUP_CONCAT(D.USER_NAME_CN) AS BUSINESS_PEOPLE
+				FROM SS_CUSTOMER A
+				INNER JOIN SS_CUSTOMER_SUB B ON B.CUSTOMERSUB_PID=A.MEMBER_PID
+				LEFT JOIN SS_KPICUSTOMER C ON C.CUSTOMERSUB_PID=A.MEMBER_PID
+				LEFT JOIN SS_USER D ON D.USER_PID=C.USER_PID
+				WHERE A.REC_STATUS = '2'
+				<if test="memberNo !=null and  memberNo!=''">AND A.MEMBER_NO LIKE ('%${memberNo}%')</if>
+				<if test="customerName !=null and customerName != ''">AND B.CUSTOMER_NAME LIKE ('%${customerName}%')</if>
+				<if test="customerType !=null and customerType !='' and customerType != '3'.toString()">AND A.CUSTOMER_TYPE=#{customerType}</if>
+				<if test="customerType == '3'.toString()">AND B.ISPURCHASE = '1'</if>
+				<if test="companyLevel !=null and companyLevel != ''">AND B.COMPANY_LEVEL = #{companyLevel}</if>
+				GROUP BY A.MEMBER_PID
+				ORDER BY A.CREATE_TIME DESC
+			)R
+			WHERE 1=1
+			<if test="businessPeople !=null and businessPeople != ''">AND R.BUSINESS_PEOPLE LIKE ('%${businessPeople}%')</if>
+		)T
+	</select>
+	
+	<insert id="insert"  parameterType="com.sinoservices.xascf.customer.model.CustomerModel">
+		INSERT INTO SS_CUSTOMER( 
+			ID,			
+	        CUSTOMER_PID, 
+	        LOGIN_NAME,        
+	        LOGIN_PWD,	       
+	        USER_NAME_CN,    
+	        INTVITED_CODE,  
+	        ISENABLE,	        
+	        LAST_LOGINTIME,  
+	        LOGINED_COUNT,   
+	        CREATOR,		         
+	        MEMBER_PID,
+	        MEMBER_NO,
+	        MEMBER_NAME,
+	        MEMBER_NAME_EN,
+	        MEMBER_SHORT_NAME, 
+	        CUSTOMER_TYPE,
+	        CARD_NO,
+	        CARD_NAME,
+	        TEL, 
+	        EMILL,
+	        ISMARRY,
+	        BUSINESS_PEOPLE,
+	        CUSTOMER_SOURCE,
+	        CONTACTS_ADDR,
+	        CUSTOMER_STATUS,
+	        REMARK,REC_VER,CREATE_TIME,
+			 REC_STATUS
+		)VALUES( 
+			#{id},
+			#{customerPid}, 
+			#{loginName},
+			#{loginPwd},
+			#{userNameCn},
+			#{intvitedCode},
+			#{isenable},
+			#{lastLogintime},
+			#{loginedCount},
+			#{creator},
+			#{memberPid},
+			#{memberNo},
+			#{memberName},
+			#{memberNameEn},
+			#{memberShortName},
+			#{customerType},
+			#{cardNo},
+			#{cardName},
+			#{tel},
+			#{emill},
+			#{ismarry},
+			#{businessPeople},
+			#{customerSource},
+			#{contactsAddr},
+			#{customerStatus},
+			#{remark},
+			1,SYSDATE(),2
+		); 
+	</insert>  
+	
+	<update id="deleteByMemberPid" parameterType="com.sinoservices.xascf.customer.model.CustomerModel">
+		UPDATE SS_CUSTOMER 
+		SET 
+			REC_STATUS=#{recStatus} 
+			WHERE 1=1 
+			AND MEMBER_PID=#{memberPid}
+	</update>
+	
+	<update id="logicDeleteByMemberPid" parameterType="com.sinoservices.xascf.customer.model.CustomerModel">
+		UPDATE SS_CUSTOMER 
+		SET 
+			REC_STATUS=#{recStatus} 
+			WHERE 1=1 
+			AND MEMBER_PID=#{memberPid}
+	</update>
+	
+	<!-- 会员一级删除恢复 -->
+	<update id="recovery" parameterType="String">
+		UPDATE SS_CUSTOMER 
+		SET 
+			REC_STATUS='2'
+		WHERE 1=1 
+			AND MEMBER_PID=#{_parameter}
+	</update>
+	
+	
+	
+	<update id="updateByCompany" parameterType="com.sinoservices.xascf.customer.model.CustomerModel">
+		UPDATE SS_CUSTOMER
+		<set>   
+			<if test="id != null and id != '' ">ID = #{id},</if> 
+			<if test="customerPid != null and customerPid != ''">CUSTOMER_PID = #{customerPid},</if>
+			<if test="memberPid != null and memberPid != ''">MEMBER_PID = #{memberPid},</if>
+			<if test="memberNo != null and memberNo != ''">MEMBER_NO = #{memberNo},</if>
+			<if test="memberName != null and memberName != ''">MEMBER_NAME = #{memberName},</if>
+			<if test="memberNameEn != null and memberNameEn != ''">MEMBER_NAME_EN = #{memberNameEn},</if>
+			<if test="memberShortName != null and memberShortName != ''">MEMBER_SHORT_NAME = #{memberShortName},</if> 
+			<if test="customerType != null and customerType != ''">CUSTOMER_TYPE = #{customerType},</if>
+			<if test="cardNo != null and cardNo != ''">CARD_NO = #{cardNo},</if>
+			<if test="cardName != null and cardName != ''">CARD_NAME = #{cardName},</if>
+			<if test="tel != null and tel != ''">TEL = #{tel},</if>
+			<if test="emill != null and emill != ''">EMILL = #{emill},</if>
+			<if test="ismarry != null and ismarry != ''">ISMARRY = #{ismarry},</if>
+			<if test="businessPeople != null and businessPeople != ''">BUSINESS_PEOPLE = #{businessPeople},</if>
+			<if test="customerSource != null and customerSource != ''">CUSTOMER_SOURCE = #{customerSource},</if>  
+			<if test="loginName != null and loginName != ''">LOGIN_NAME = #{loginName},</if>
+			<if test="loginPwd != null and loginPwd != ''">LOGIN_PWD = #{loginPwd},</if>
+			<if test="userNameCn != null and userNameCn != ''">USER_NAME_CN = #{userNameCn},</if>
+			<if test="intvitedCode != null and intvitedCode != ''">INTVITED_CODE = #{intvitedCode},</if>
+			<if test="isenable != null and isenable != ''">ISENABLE = #{isenable},</if>
+			<if test="lastLogintime != null and lastLogintime != ''">LAST_LOGINTIME = #{lastLogintime},</if>
+			<if test="loginedCount != null and loginedCount != ''">LOGINED_COUNT = #{loginedCount},</if>  
+			
+			<if test="remark != null and remark != ''">REMARK = #{remark},</if>  
+			<if test="contactsAddr != null and contactsAddr != ''">CONTACTS_ADDR = #{contactsAddr},</if>   
+			<if test="customerStatus != null and customerStatus != ''">CUSTOMER_STATUS = #{customerStatus},</if>  
+			
+			<if test="creator != null and creator != ''">CREATOR = #{creator},</if>
+			<if test="createTime != null and createTime != ''">CREATE_TIME = #{createTime},</if>
+			<if test="modifier != null and modifier != ''">MODIFIER = #{modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''">MODIFY_TIME = #{modifyTime},</if>
+			<if test="recVer != null and recVer != ''">REC_VER = #{recVer},</if>
+			<if test="recStatus != null and recStatus != ''">REC_STATUS = #{recStatus}</if> 
+		</set>
+		WHERE 1=1 AND
+		MEMBER_PID = #{memberPid}
+	</update> 
+	
+	<update id="update" parameterType="com.sinoservices.xascf.customer.model.CustomerModel">
+		UPDATE SS_CUSTOMER  
+		<set>   
+			<if test="memberNo != null and memberNo != ''">MEMBER_NO = #{memberNo},</if>
+			<if test="memberName != null and memberName != ''">MEMBER_NAME = #{memberName},</if>
+			<if test="memberNameEn != null and memberNameEn != ''">MEMBER_NAME_EN = #{memberNameEn},</if>
+			<if test="memberShortName != null and memberShortName != ''">MEMBER_SHORT_NAME = #{memberShortName},</if> 
+			<if test="customerType != null and customerType != ''">CUSTOMER_TYPE = #{customerType},</if>
+			<if test="cardNo != null and cardNo != ''">CARD_NO = #{cardNo},</if>
+			<if test="cardName != null and cardName != ''">CARD_NAME = #{cardName},</if>
+			<if test="tel != null and tel != ''">TEL = #{tel},</if>
+			<if test="emill != null and emill != ''">EMILL = #{emill},</if>
+			<if test="ismarry != null and ismarry != ''">ISMARRY = #{ismarry},</if>
+			<if test="businessPeople != null and businessPeople != ''">BUSINESS_PEOPLE = #{businessPeople},</if>
+			<if test="customerSource != null and customerSource != ''">CUSTOMER_SOURCE = #{customerSource},</if>  
+			<if test="loginName != null and loginName != ''">LOGIN_NAME = #{loginName},</if>
+			<if test="loginPwd != null and loginPwd != ''">LOGIN_PWD = #{loginPwd},</if>
+			<if test="userNameCn != null and userNameCn != ''">USER_NAME_CN = #{userNameCn},</if>
+			<if test="intvitedCode != null and intvitedCode != ''">INTVITED_CODE = #{intvitedCode},</if>
+			<if test="isenable != null and isenable != ''">ISENABLE = #{isenable},</if>
+			<if test="lastLogintime != null and lastLogintime != ''">LAST_LOGINTIME = #{lastLogintime},</if>
+			<if test="loginedCount != null and loginedCount != ''">LOGINED_COUNT = #{loginedCount},</if>  
+			
+			<if test="remark != null and remark != ''">REMARK = #{remark},</if>  
+			<if test="contactsAddr != null and contactsAddr != ''">CONTACTS_ADDR = #{contactsAddr},</if>   
+			<if test="customerStatus != null and customerStatus != ''">CUSTOMER_STATUS = #{customerStatus},</if>  
+ 
+			<if test="creator != null and creator != ''">CREATOR = #{creator},</if>
+			<if test="createTime != null and createTime != ''">CREATE_TIME = #{createTime},</if>
+			<if test="modifier != null and modifier != ''">MODIFIER = #{modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''">MODIFY_TIME = #{modifyTime},</if>
+			<if test="recVer != null and recVer != ''">REC_VER = #{recVer},</if>
+			<if test="recStatus != null and recStatus != ''">REC_STATUS = #{recStatus}</if> 
+		</set>
+			WHERE 
+			CUSTOMER_PID = #{customerPid} 
+	</update>
+	
+	<delete id="delete" parameterType="String">
+  		DELETE FROM SS_CUSTOMER WHERE CUSTOMER_PID IN
+		<foreach item="pid" collection="list" open="(" separator="," close=")">
+			#{pid}
+		</foreach>
+ 	 </delete>
+	
+</mapper>

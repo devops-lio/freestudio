@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.agfancing.mapper.AgFancingMaterialMapper">
+	<resultMap type="com.sinoservices.xascf.agfancing.model.AgFancingCustomerMaterialModel" id="agFancingMaterialResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="agFancingCustomerPid" column="AGFANCING_CUSTOMER_PID"/>
+		<result property="materialNo" column="MATERIAL_NO"/>
+		<result property="materialName" column="MATERIAL_NAME"/>
+		<result property="materialDesc" column="MATERIAL_DESC"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					AGFANCING_CUSTOMER_PID,
+					MATERIAL_NO,
+					MATERIAL_NAME,
+					MATERIAL_DESC,
+					REC_STATUS,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER
+		]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="pid!=null and pid!=''"> AND PID = #{pid} </if>
+		<if test="agFancingCustomerPid!=null and agFancingCustomerPid !=''"> AND AGFANCING_CUSTOMER_PID = #{agFancingCustomerPid} </if>
+		<if test="materialNo !=null and materialNo !=''"> AND MATERIAL_NO like ('%${materialNo}%') </if>
+		<if test="materialName !=null and materialName !=''">  AND MATERIAL_NAME like ('%${materialName}%') </if>
+		<if test="materialDesc !=null and materialDesc !=''">  AND MATERIAL_DESC like ('%${materialDesc}%') </if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS =#{recStatus}</if>
+	</sql>
+	
+	<!-- 不分页 -->
+	<select id="getAgFancingMaterialList" resultMap="agFancingMaterialResultMap" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingCustomerMaterialModel">
+		<include refid="select"/>
+		FROM DM_AGFANCING_CUSTOMER_MATERIAL
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingCustomerMaterialModel">
+		INSERT INTO DM_AGFANCING_CUSTOMER_MATERIAL (
+					PID,
+					AGFANCING_CUSTOMER_PID,
+					MATERIAL_NO,
+					MATERIAL_NAME,
+					MATERIAL_DESC,
+					REC_STATUS,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER
+		) VALUES (
+			   #{pid},
+			   #{agFancingCustomerPid},
+			   #{materialNo},
+			   #{materialName},
+			   #{materialDesc},
+			   1,
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   SYSDATE(),
+			   #{modifier}
+		)
+	</insert>
+	
+  	<delete id="delete" parameterType="String">
+  		DELETE FROM DM_AGFANCING_CUSTOMER_MATERIAL WHERE AGFANCING_CUSTOMER_PID=#{pid}
+ 	 </delete>
+</mapper>

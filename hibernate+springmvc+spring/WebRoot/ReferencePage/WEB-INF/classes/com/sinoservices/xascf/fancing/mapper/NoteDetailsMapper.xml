@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.NoteDetailsMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.model.NoteDetailsModel" id="NoteDetailsModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="notePid" column="NOTE_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="notePoolPid" column="NOTE_POOL_PID"/>
+		<result property="noteType" column="NOTE_TYPE"/>
+		<result property="noteNo" column="NOTE_NO"/>
+		<result property="noteObjectPid" column="NOTE_OBJECT_PID"/>
+		<result property="noteObjectName" column="NOTE_OBJECT_NAME"/>
+		<result property="notePrice" column="NOTE_PRICE"/>
+		<result property="noteDate" column="NOTE_DATE"/>
+		<result property="noteDiscount" column="NOTE_DISCOUNT"/>
+		<result property="noteEffectiveDate" column="NOTE_EFFECTIVE_DATE"/>
+		<result property="noteOwerPid" column="NOTE_OWER_PID"/>
+		<result property="noteCheckTime" column="NOTE_CHECK_TIME"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					NOTE_PID,
+					FANCING_ORDER_NO,
+					NOTE_POOL_PID,
+					NOTE_TYPE,
+					NOTE_NO,
+					NOTE_OBJECT_PID,
+					NOTE_OBJECT_NAME,
+					NOTE_PRICE,
+					NOTE_DATE,
+					NOTE_DISCOUNT,
+					NOTE_EFFECTIVE_DATE,
+					NOTE_OWER_PID,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%')</if>
+		<if test="noteType!=null and noteType!=''"> AND NOTE_TYPE LIKE ('%${noteType}%')</if>
+	</sql>
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.model.NoteDetailsModel">
+		<include refid="count"/>
+		FROM  DM_NOTE_DETAILS
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="NoteDetailsModelResultMap" parameterType="com.sinoservices.xascf.fancing.model.NoteDetailsModel">
+		<include refid="select"/>
+		FROM  DM_NOTE_DETAILS
+		<include refid="findByExample"/>
+	</select>
+	<!-- 根据融资单号获取列表 -->
+	<select id="getPageByOrderNo" resultMap="NoteDetailsModelResultMap" parameterType="com.sinoservices.xascf.fancing.model.NoteDetailsModel">
+		<include refid="select"/>
+		FROM  DM_NOTE_DETAILS
+		<include refid="findByExample"/>
+		<if test="isAudit==null or isAudit==''">AND NOTE_CHECK_TIME IS NULL</if>
+		<if test="isAudit!=null and isAudit!=''">AND NOTE_CHECK_TIME IS NOT NULL</if>		
+	</select>	
+	<update id="updateCheckTimeByOrderNo" parameterType="String">
+		UPDATE DM_NOTE_DETAILS SET
+			    NOTE_CHECK_TIME = SYSDATE(),
+				REC_VER = REC_VER+1,
+				MODIFY_TIME = SYSDATE()
+			WHERE 	FANCING_ORDER_NO=#{_parameter} AND NOTE_CHECK_TIME IS NULL
+	</update>
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO DM_NOTE_DETAILS (
+				NOTE_PID,
+				FANCING_ORDER_NO,
+				NOTE_POOL_PID,
+				NOTE_TYPE,
+				NOTE_NO,
+				NOTE_OBJECT_PID,
+				NOTE_OBJECT_NAME,
+				NOTE_PRICE,
+				NOTE_DATE,
+				NOTE_DISCOUNT,
+				NOTE_EFFECTIVE_DATE,
+				NOTE_OWER_PID,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( #{item.notePid},
+			   #{item.fancingOrderNo},
+			   #{item.notePoolPid},
+			   #{item.noteType},
+			   #{item.noteNo},
+			   #{item.noteObjectPid},
+			   #{item.noteObjectName},
+			   #{item.notePrice},
+			   #{item.noteDate},
+			   #{item.noteDiscount},
+			   #{item.noteEffectiveDate},
+			   #{item.noteOwerPid},
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   1)  
+	    </foreach>  
+  </insert> 
+	<insert id="insert">
+		INSERT INTO DM_NOTE_DETAILS (
+				ID,
+				NOTE_PID,
+				FANCING_ORDER_NO,
+				NOTE_POOL_PID,
+				NOTE_TYPE,
+				NOTE_NO,
+				NOTE_OBJECT_PID,
+				NOTE_OBJECT_NAME,
+				NOTE_PRICE,
+				NOTE_DATE,
+				NOTE_DISCOUNT,
+				NOTE_EFFECTIVE_DATE,
+				NOTE_OWER_PID,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{notePid},
+			   #{fancingOrderNo},
+			   #{notePoolPid},
+			   #{noteType},
+			   #{noteNo},
+			   #{noteObjectPid},
+			   #{noteObjectName},
+			   #{notePrice},
+			   #{noteDate},
+			   #{noteDiscount},
+			   #{noteEffectiveDate},
+			   #{noteOwerPid},
+			   #{remark},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus}
+		);
+	</insert>
+	<delete id="deleteByOrderNo" parameterType="String">
+		DELETE FROM DM_NOTE_DETAILS
+			WHERE FANCING_ORDER_NO=#{_parameter}
+	
+	</delete>
+	<update id="updateByPid"  parameterType="com.sinoservices.xascf.fancing.model.NoteDetailsModel">
+		UPDATE DM_NOTE_DETAILS SET
+			<if test="remark!=null and remark!=''">	REMARK = #{remark},</if>
+				REC_VER = REC_VER+1,
+				MODIFY_TIME = #{modifyTime}
+			WHERE 	NOTE_PID=  #{notePid}
+	</update>
+</mapper>

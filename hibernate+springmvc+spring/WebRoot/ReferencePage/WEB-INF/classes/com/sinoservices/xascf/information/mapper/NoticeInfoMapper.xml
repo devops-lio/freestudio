@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.information.mapper.NoticeInfoMapper">
+	
+	<resultMap type="com.sinoservices.xascf.information.model.NoticeInfoModel" id="noticeInfoModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="noticePid" column="NOTICE_PID"/>
+		<result property="noticeType" column="NOTICE_TYPE"/>
+		<result property="noticeTitle" column="NOTICE_TITLE"/>
+		<result property="noticeContent" column="NOTICE_CONTENT"/>
+		<result property="showingSystem" column="SHOWING_SYSTEM"/> 
+		<result property="picUrl" column="PIC_URL"/>
+		<result property="picName" column="PIC_NAME"/> 
+		<result property="publishTime" column="PUBLISH_TIME"/>
+		<result property="publishTimeStr" column="PUBLISH_TIME"/>
+		<result property="sequence" column="SEQUENCE"/>
+		<result property="isPicture" column="IS_PICTURE"/> 
+		<result property="status" column="STATUS"/>
+		<result property="isTop" column="IS_TOP"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="friendLink" column="FRIEND_LINK"/>		
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+		  SELECT 
+			ID,
+			NOTICE_PID,
+			NOTICE_TYPE,
+			NOTICE_TITLE,
+			NOTICE_CONTENT,
+			SHOWING_SYSTEM,
+			PIC_URL,
+			PIC_NAME,
+			date_format(PUBLISH_TIME, '%Y-%m-%d %H:%i:%s') as PUBLISH_TIME,
+			STATUS,
+			IS_PICTURE,
+			SEQUENCE,
+			IS_TOP,
+			CREATOR,
+			CREATE_TIME,
+			MODIFIER,
+			MODIFY_TIME,
+			REC_VER,
+			REC_STATUS,
+			FRIEND_LINK
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="noticePid!=null and noticePid!=''"> AND NOTICE_PID LIKE ('%${noticePid}%')</if>
+		<if test="noticeType!=null and noticeType!=''"> AND NOTICE_TYPE LIKE ('%${noticeType}%')</if>
+		<if test="noticeTitle!=null and noticeTitle!=''"> AND NOTICE_TITLE LIKE ('%${noticeTitle}%' )</if>
+		<if test="noticeContent!=null and noticeContent!=''"> AND NOTICE_CONTENT LIKE ('%${noticeContent}%')</if>
+		<if test="showingSystem!=null and showingSystem!=''"> AND SHOWING_SYSTEM LIKE ('%${showingSystem}%')</if>
+		<if test="publishTime!=null and publishTime!=''"> AND PUBLISH_TIME LIKE ('%${publishTime}%')</if>
+		<if test="status!=null and status!=''"> AND STATUS LIKE ('%${status}%')</if> 
+		<if test="sequence !=null and sequence !=''"> AND SEQUENCE= #{sequence}</if>
+		<if test="isPicture !=null and isPicture !=''"> AND IS_PICTURE = #{isPicture}</if> 
+		<if test="isTop!=null and isTop!=''"> AND IS_TOP LIKE ('%${isTop}%')</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%')</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%${createTime}%')</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%')</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%${modifyTime}%')</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%${recVer}%')</if> 
+	</sql> 
+
+	<select id="findByCondition" resultMap="noticeInfoModelResultMap" parameterType="com.sinoservices.xascf.information.model.NoticeInfoModel">
+		<include refid="select"/>
+		FROM  IM_NOTICE_INFO NO 
+		<include refid="findByExample"/>
+		AND REC_STATUS = '1' 
+	</select>  
+	
+	<select id="getNoticeInfoByPid" resultMap="noticeInfoModelResultMap" parameterType="java.lang.String">
+		<include refid="select"/>
+		FROM  IM_NOTICE_INFO NO 
+			WHERE NO.NOTICE_PID=#{noticePid}
+    </select>
+	
+	
+	<!-- count-->
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.information.model.NoticeInfoModel">
+		<include refid="count"/>
+		FROM  IM_NOTICE_INFO NO 
+		<include refid="findByExample"/>
+		AND REC_STATUS = '1'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO IM_NOTICE_INFO (
+				ID,
+				NOTICE_PID,
+				NOTICE_TYPE,
+				NOTICE_TITLE,
+				NOTICE_CONTENT,
+				PIC_URL,
+				PIC_NAME,
+				SHOWING_SYSTEM,
+				PUBLISH_TIME,
+				STATUS,
+				IS_PICTURE,
+				SEQUENCE,
+				IS_TOP,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS,
+				FRIEND_LINK
+		) VALUES (
+			   #{id},
+			   #{noticePid},
+			   #{noticeType},
+			   #{noticeTitle},
+			   #{noticeContent},
+			   #{picUrl},
+			   #{picName}, 
+			   #{showingSystem},
+			   #{publishTime},
+			   #{status},
+			   #{isPicture},
+			   #{sequence}, 
+			   #{isTop},
+			   #{creator},
+			   #{createTime},
+			   #{modifier},
+			   #{modifyTime},
+			   #{recVer},
+			   #{recStatus},
+			   #{friendLink}
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE IM_NOTICE_INFO SET
+			<if test="noticeType !=null and noticeType !=''"> NOTICE_TYPE = #{noticeType},</if>
+			<if test="noticeTitle !=null and noticeTitle !=''">	NOTICE_TITLE = #{noticeTitle},</if>
+			<if test="noticeContent !=null and noticeContent !=''">	NOTICE_CONTENT = #{noticeContent},</if>
+			<if test="showingSystem !=null and showingSystem !=''">	SHOWING_SYSTEM = #{showingSystem},</if> 
+			<if test="picUrl !=null and picUrl !=''"> PIC_URL = #{picUrl},</if>
+			<if test="picName !=null and picName !=''">	PIC_NAME = #{picName},</if>  
+			<if test="publishTime !=null and publishTime !=''">	PUBLISH_TIME = #{publishTime},</if>
+			<if test="sequence !=null and sequence !=''">SEQUENCE = #{sequence},</if>
+			<if test="status !=null and status !=''">	STATUS = #{status},</if>
+			<if test="isTop !=null and isTop !=''">	IS_TOP = #{isTop},</if>
+			<if test="friendLink !=null and friendLink !=''">	FRIEND_LINK = #{friendLink},</if>
+			<if test="recStatus !=null and recStatus !=''">	REC_STATUS = #{recStatus},</if>
+				Rec_Ver = Rec_Ver+1,
+		  		MODIFY_TIME=SYSDATE(),
+		  		MODIFIER=#{modifier} 		
+		WHERE NOTICE_PID=#{noticePid}	
+	</update>
+	<update id="updateByNoticeType" parameterType="com.sinoservices.xascf.information.model.NoticeInfoModel">
+		UPDATE IM_NOTICE_INFO SET STATUS=#{status}
+		WHERE NOTICE_TYPE=#{noticeType}
+	</update>
+	<delete id="deleteByPids" parameterType="java.util.List">
+        UPDATE IM_NOTICE_INFO  SET
+        	REC_STATUS = '0',
+		  	MODIFY_TIME=SYSDATE()
+        WHERE 
+        <choose>
+             <when test="null!=list and list.size!=0">
+                NOTICE_PID IN
+                <foreach collection="list" item="noticePid" index="index" open="(" separator="," close=")">
+                    #{noticePid}
+                </foreach>
+            </when>
+            <otherwise>
+               1 != 1
+            </otherwise>
+        </choose>
+    </delete>
+</mapper>

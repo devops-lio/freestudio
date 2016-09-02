@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.customer.mapper.CustomerMaterialDetailMapper"> 
+	<resultMap type="com.sinoservices.xascf.customer.model.CustomerMaterialDetailModel" id="CustomerMaterialDetailModelResultMap">
+		<result property="id" column="ID"/> 
+		<result property="materialdetailPid" column="MATERIALDETAIL_PID"/>
+		<result property="materialPid" column="MATERIAL_PID"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileRename" column="FILE_RENAME"/>
+		<result property="filename" column="FILENAME"/> 
+		<result property="fileUrl" column="FILE_URL"/>
+		<result property="fileFalg" column="FILE_FALG"/> 
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/> 
+	</resultMap>
+
+
+	<resultMap type="com.sinoservices.xascf.customer.view.CustomerMaterialDetailItem" id="CustomerMaterialDetailItemViewMap"> 
+		<result property="id" column="ID"/> 
+		<result property="materialdetailPid" column="MATERIALDETAIL_PID"/>
+		<result property="materialPid" column="MATERIAL_PID"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileRename" column="FILE_RENAME"/>
+		<result property="filename" column="FILENAME"/> 
+		<result property="fileUrl" column="FILE_URL"/>
+		<result property="fileFalg" column="FILE_FALG"/>  
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>  
+	</resultMap> 
+	
+	
+	<sql id="select"> 
+		  SELECT 
+			 ID,
+			 MATERIALDETAIL_PID,
+			 MATERIAL_PID,
+			 FILE_NAME,
+			 FILE_RENAME,
+			 FILE_URL,
+			 FILE_FALG
+	</sql>
+	 
+	
+	<sql id="count"> 
+	    	SELECT COUNT(1)  
+	</sql>   
+ 
+ 
+ 	<!-- 批量执行插入 -->
+	<insert id="insertByDetailList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO SS_CUSTOMER_MATERIAL_DETAIL ( 
+				 MATERIALDETAIL_PID,                
+				 MATERIAL_PID,   		               
+				 FILE_NAME,     	                
+				 FILE_RENAME,     			              
+				 FILE_URL,   
+				 FILE_FALG,  			
+				 CREATOR,            
+				 CREATE_TIME,
+				 MODIFIER,
+				 MODIFY_TIME
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (  
+				 #{item.materialdetailPid},  
+				 #{item.materialPid},      
+				 #{item.fileName},   
+				 #{item.fileRename},        
+				 #{item.fileUrl},       
+				 #{item.fileFalg}, 
+				 #{item.creator},
+				 #{item.createTime},
+				 #{item.modifier},
+				 #{item.modifyTime} 
+				 )
+	    </foreach>  
+  </insert>  
+  
+  <delete id="delete" parameterType="String">
+		DELETE 
+		FROM SS_CUSTOMER_MATERIAL_DETAIL
+		WHERE MATERIAL_PID IN (
+		SELECT 
+			CUSTOMERMAT_PID 
+		FROM SS_CUSTOMER_MATERIAL
+		WHERE  MEMBER_NO = #{_parameter}
+		)
+	</delete>
+ 	
+	 
+	
+</mapper>

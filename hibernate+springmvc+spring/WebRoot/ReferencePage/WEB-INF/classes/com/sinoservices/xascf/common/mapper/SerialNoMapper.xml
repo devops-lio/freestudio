@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.common.mapper.SerialNoMapper" >  
+
+ <resultMap type="com.sinoservices.xascf.common.model.SerialNoModel" id="SerialNoModelResultMap">
+	<id property="serialNoId"  column="SERIAL_NO_ID"/>     <!-- 主键 -->
+	<result property="serialCode"  column="SERIAL_CODE"/>     <!-- 流水号编码，如：运单流水号 SHIPMENT_ORDER_NO -->
+	<result property="serialFormat"  column="SERIAL_FORMAT"/>     <!-- 流水号格式，如：{PARAMS(SO)}{DATE(yyyyMMDD)}{NO(4)} -->
+	<result property="prefix"  column="PREFIX"/>     <!-- 前缀，如运单：SO -->
+	<result property="dateFormat"  column="DATE_FORMAT"/>     <!-- 日期格式 -->
+	<result property="serialNoLength"  column="SERIAL_NO_LENGTH"/>     <!-- 流水号长度 -->
+	<result property="curNo"  column="CUR_NO"/>     <!-- 当前流水号 -->
+	<result property="creator"  column="CREATOR"/>     <!-- 创建者 -->
+	<result property="createTime"  column="CREATE_TIME"/>     <!-- 创建时间 -->
+	<result property="modifier"  column="MODIFIER"/>     <!-- 修改者 -->
+	<result property="modifyTime"  column="MODIFY_TIME"/>     <!-- 修改时间 -->
+	<result property="enterpriseCode"  column="ENTERPRISE_CODE"/>     <!-- 企业 -->
+	<result property="departmentCode"  column="DEPARTMENT_CODE"/>     <!-- 部门 -->
+</resultMap>
+
+	<sql id="query">
+		<![CDATA[
+   			SELECT * FROM SS_SERIAL_NO 
+  		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(*) FROM SS_SERIAL_NO 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExampleWhere">
+		WHERE 1=1
+		<if test="serialNoId!=null and serialNoId!=''"> AND SERIAL_NO_ID =  ${serialNoId}</if>     <!-- 主键 -->
+		<if test="serialCode!=null and serialCode!=''"> AND SERIAL_CODE LIKE CONCAT('%','${serialCode}','%' )</if>     <!-- 流水号编码，如：运单流水号 SHIPMENT_ORDER_NO -->
+		<if test="serialFormat!=null and serialFormat!=''"> AND SERIAL_FORMAT LIKE CONCAT('%','${serialFormat}','%' )</if>     <!-- 流水号格式，如：{PARAMS(SO)}{DATE(yyyyMMDD)}{NO(4)} -->
+		<if test="prefix!=null and prefix!=''"> AND PREFIX LIKE CONCAT('%','${prefix}','%' )</if>     <!-- 前缀，如运单：SO -->
+		<if test="dateFormat!=null and dateFormat!=''"> AND DATE_FORMAT LIKE CONCAT('%','${dateFormat}','%' )</if>     <!-- 日期格式 -->
+		<if test="serialNoLength!=null and serialNoLength!=''"> AND SERIAL_NO_LENGTH LIKE CONCAT('%','${serialNoLength}','%' )</if>     <!-- 流水号长度 -->
+		<if test="curNo!=null and curNo!=''"> AND CUR_NO LIKE CONCAT('%','${curNo}','%' )</if>     <!-- 当前流水号 -->
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE CONCAT('%','${creator}','%' )</if>     <!-- 创建者 -->
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE CONCAT('%','${createTime}','%' )</if>     <!-- 创建时间 -->
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE CONCAT('%','${modifier}','%' )</if>     <!-- 修改者 -->
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE CONCAT('%','${modifyTime}','%' )</if>     <!-- 修改时间 -->
+		<if test="enterpriseCode!=null and enterpriseCode!=''"> AND ENTERPRISE_CODE LIKE CONCAT('%','${enterpriseCode}','%' )</if>     <!-- 企业 -->
+		<if test="departmentCode!=null and departmentCode!=''"> AND DEPARTMENT_CODE LIKE CONCAT('%','${departmentCode}','%' )</if>     <!-- 部门 -->
+	</sql>
+	
+	<select id="getAll" parameterType="com.sinoservices.xascf.common.model.SerialNoModel" resultMap="SerialNoModelResultMap">
+		<include refid="query" />
+		<include refid="findByExampleWhere"/>	
+	</select>
+	
+	<select id="count" parameterType="com.sinoservices.xascf.common.model.SerialNoModel" resultType="Long">
+		<include refid="count" />
+		<include refid="findByExampleWhere"/>	
+	</select>
+	
+	<select id="deleteById" parameterType="Long">
+		DELETE FROM SS_SERIAL_NO WHERE SERIAL_NO_ID= ${serialNoId}
+	</select>
+	
+	<select id="getById" resultMap="SerialNoModelResultMap" parameterType="Long">
+		<include refid="query" />
+		WHERE SERIAL_NO_ID = #{serialNoId}
+	</select>
+	
+	<select id="getByCode" parameterType="com.sinoservices.xascf.common.model.SerialNoModel" resultMap="SerialNoModelResultMap">
+		<include refid="query" />
+		WHERE SERIAL_CODE = #{serialCode}
+		<if test="enterpriseCode!=null and enterpriseCode!=''">AND ENTERPRISE_CODE = #{enterpriseCode}</if>
+		<if test="departmentCode!=null and departmentCode!=''">AND DEPARTMENT_CODE = #{departmentCode}</if>
+	</select>
+	
+	<update id="update" parameterType="com.sinoservices.xascf.common.model.SerialNoModel">
+		UPDATE SS_SERIAL_NO 
+		SET
+		SERIAL_NO_ID = #{serialNoId},     <!-- 主键 -->
+		SERIAL_CODE = #{serialCode},     <!-- 流水号编码，如：运单流水号 SHIPMENT_ORDER_NO -->
+		SERIAL_FORMAT = #{serialFormat},     <!-- 流水号格式，如：{PARAMS(SO)}{DATE(yyyyMMDD)}{NO(4)} -->
+		PREFIX = #{prefix},     <!-- 前缀，如运单：SO -->
+		DATE_FORMAT = #{dateFormat},     <!-- 日期格式 -->
+		SERIAL_NO_LENGTH = #{serialNoLength},     <!-- 流水号长度 -->
+		CUR_NO = #{curNo},     <!-- 当前流水号 -->
+		MODIFIER = #{modifier},     <!-- 修改者 -->
+		MODIFY_TIME = #{modifyTime},     <!-- 修改时间 -->
+		ENTERPRISE_CODE = #{enterpriseCode},     <!-- 企业 -->
+		DEPARTMENT_CODE = #{departmentCode}     <!-- 部门 -->
+		WHERE 
+		SERIAL_NO_ID = #{serialNoId}	
+	</update>
+	<!-- 流水号归零 -->
+	<update id="updateNoToZero" >
+		UPDATE SS_SERIAL_NO 
+		SET
+		CUR_NO = '0',     <!-- 当前流水号 -->
+		MODIFIER = 'SYS',     <!-- 修改者 -->
+		MODIFY_TIME = SYSDATE()     <!-- 修改时间 -->
+		WHERE 
+		1=1	
+	</update>
+
+	<insert id="insert" parameterType="com.sinoservices.xascf.common.model.SerialNoModel">
+		INSERT INTO 
+		SS_SERIAL_NO(
+			SERIAL_NO_ID,     <!-- 主键 -->
+			SERIAL_CODE,     <!-- 流水号编码，如：运单流水号 SHIPMENT_ORDER_NO -->
+			SERIAL_FORMAT,     <!-- 流水号格式，如：{PARAMS(SO)}{DATE(yyyyMMDD)}{NO(4)} -->
+			PREFIX,     <!-- 前缀，如运单：SO -->
+			DATE_FORMAT,     <!-- 日期格式 -->
+			SERIAL_NO_LENGTH,     <!-- 流水号长度 -->
+			CUR_NO,     <!-- 当前流水号 -->
+			CREATOR,     <!-- 创建者 -->
+			CREATE_TIME,     <!-- 创建时间 -->
+			MODIFIER,     <!-- 修改者 -->
+			MODIFY_TIME,     <!-- 修改时间 -->
+			ENTERPRISE_CODE,     <!-- 企业 -->
+			DEPARTMENT_CODE     <!-- 部门 -->
+		) VALUES (
+			#{serialNoId},     <!-- 主键 -->		
+			#{serialCode},     <!-- 流水号编码，如：运单流水号 SHIPMENT_ORDER_NO -->		
+			#{serialFormat},     <!-- 流水号格式，如：{PARAMS(SO)}{DATE(yyyyMMDD)}{NO(4)} -->		
+			#{prefix},     <!-- 前缀，如运单：SO -->		
+			#{dateFormat},     <!-- 日期格式 -->		
+			#{serialNoLength},     <!-- 流水号长度 -->		
+			#{curNo},     <!-- 当前流水号 -->		
+			#{creator},     <!-- 创建者 -->		
+			#{createTime},     <!-- 创建时间 -->		
+			#{modifier},     <!-- 修改者 -->		
+			#{modifyTime},     <!-- 修改时间 -->		
+			#{enterpriseCode},     <!-- 企业 -->		
+			#{departmentCode}     <!-- 部门 -->		
+		)
+	</insert>	
+</mapper>

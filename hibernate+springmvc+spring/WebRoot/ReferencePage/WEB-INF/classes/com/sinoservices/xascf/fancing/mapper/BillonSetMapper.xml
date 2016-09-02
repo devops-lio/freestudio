@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.BillonSetMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.view.BillonSetItem" id="billonSetItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="dmBillonPid" column="DM_BILLON_PID"/>
+		<result property="billonOwerPid" column="BILLON_OWER_PID"/>
+		<result property="billonOwerName" column="COMPANY_NAME_CN"/>
+		<result property="billonDate" column="BILLON_DATE"/>
+		<result property="billRebackDate" column="BILLREBACK_DATE"/>
+		<result property="billonDateEn" column="BILLON_DATE"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/> 
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.fancing.model.BillonSetModel" id="billonSetItemViewResultMap">
+		<result property="id" column="ID"/>
+		<result property="dmBillonPid" column="DM_BILLON_PID"/>
+		<result property="billonOwerPid" column="BILLON_OWER_PID"/> 
+		<result property="billonDate" column="BILLON_DATE"/>
+		<result property="billRebackDate" column="BILLREBACK_DATE"/> 
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/> 
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+				
+					DM_BILLON_PID,
+					BILLON_OWER_PID,
+					BILLON_DATE,
+					BILLREBACK_DATE,
+          			SC.COMPANY_NAME_CN
+		]]>
+	</sql>
+	
+	
+	<sql id="selectToDate">
+		<![CDATA[
+			SELECT 
+				
+					DM_BILLON_PID,
+					BILLON_OWER_PID,
+					BILLON_DATE,
+					BILLREBACK_DATE
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="billonOwerName!=null and billonOwerName!=''"> AND SC.COMPANY_NAME_CN LIKE ('%${billonOwerName}%' )</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.BillonSetCondition">
+		<include refid="count"/>
+		FROM  DM_BILLON_SET BS
+		JOIN SS_COMPANY SC ON SC.COMPANY_PID=BS.BILLON_OWER_PID
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="billonSetItemResultMap" parameterType="com.sinoservices.xascf.fancing.view.BillonSetCondition">
+		<include refid="select"/>
+		FROM  DM_BILLON_SET BS
+		JOIN SS_COMPANY SC ON SC.COMPANY_PID=BS.BILLON_OWER_PID
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByDate" resultMap="billonSetItemViewResultMap" parameterType="com.sinoservices.xascf.fancing.view.BillonSetCondition">
+		<include refid="selectToDate"/>
+		FROM DM_BILLON_SET 
+		WHERE 1=1 AND BILLON_OWER_PID = #{_parameter}
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.fancing.model.BillonSetModel">
+		INSERT INTO DM_BILLON_SET (
+				DM_BILLON_PID,
+				BILLON_OWER_PID,
+				BILLON_DATE,
+				BILLREBACK_DATE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{dmBillonPid},
+			   #{billonOwerPid},
+			   #{billonDate},
+			   #{billRebackDate},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   #{recStatus}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.sinoservices.xascf.fancing.model.BillonSetModel">
+		UPDATE DM_BILLON_SET SET
+			<if test="billonOwerPid!=null and billonOwerPid!=''">	BILLON_OWER_PID = #{billonOwerPid},</if>
+			<if test="billonDate!=null and billonDate!=''">	BILLON_DATE = #{billonDate},</if>
+			<if test="billRebackDate!=null and billRebackDate!=''">	BILLREBACK_DATE = #{billRebackDate},</if>
+			<if test="remark!=null and remark!=''">	REMARK = #{remark},</if>
+			<if test="modifier!=null and modifier!=''">	MODIFIER = #{modifier},</if>
+			<if test="recStatus!=null and recStatus!=''">	REC_STATUS = #{recStatus}</if>
+			MODIFY_TIME = SYSDATE(),
+			REC_VER = REC_VER+1
+		WHERE DM_BILLON_PID = #{dmBillonPid}		
+	</update>
+</mapper>

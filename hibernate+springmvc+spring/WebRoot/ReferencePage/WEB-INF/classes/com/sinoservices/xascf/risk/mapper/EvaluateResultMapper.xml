@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinoservices.xascf.risk.mapper.EvaluateResultMapper">
+	<resultMap type="com.sinoservices.xascf.risk.model.EvaluateResultModel" id="evaluateResultResultMap">
+		<result property="id" column="ID"/>
+		<result property="evaluateResultPid" column="EVALUATE_RESULT_PID"/>
+		<result property="evaluateObjectPid" column="EVALUATE_OBJECT_PID"/>
+		<result property="evaluateObjectName" column="EVALUATE_OBJECT_NAME"/>
+		<result property="evaluateObjectNo" column="EVALUATE_OBJECT_NO"/>
+		<result property="score" column="SCORE"/>
+		<result property="evaluateConclusion" column="EVALUATE_CONCLUSION"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,EVALUATE_RESULT_PID,EVALUATE_OBJECT_PID,EVALUATE_OBJECT_NAME,EVALUATE_OBJECT_NO,SCORE,EVALUATE_CONCLUSION,
+					REC_VER,CREATE_TIME,CREATOR,MODIFY_TIME,MODIFIER,REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="evaluateResultPid!=null and evaluateResultPid!=''"> AND EVALUATE_RESULT_PID =#{evaluateResultPid}</if>
+		<if test="evaluateObjectPid!=null and evaluateObjectPid!=''"> AND EVALUATE_OBJECT_PID =#{evaluateObjectPid}</if>
+		<if test="score!=null and score!=''"> AND SCORE =${score}</if>
+		 AND REC_STATUS=0
+		 ORDER BY CREATE_TIME DESC
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.risk.view.EvaluateResultQueryConditionView">
+		<include refid="count"/>
+		FROM  RM_EVALUATE_RESULT
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="evaluateResultResultMap" parameterType="com.sinoservices.xascf.risk.view.EvaluateResultQueryConditionView">
+		<include refid="select"/>
+		FROM  RM_EVALUATE_RESULT
+		<include refid="findByExample"/>
+	</select>
+	
+	
+	<!-- 新增 -->
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.sinoservices.xascf.risk.model.EvaluateResultModel">
+		INSERT INTO RM_EVALUATE_RESULT(
+			EVALUATE_RESULT_PID,
+			EVALUATE_OBJECT_PID,
+			EVALUATE_OBJECT_NAME,
+			EVALUATE_OBJECT_NO,
+			SCORE,
+			EVALUATE_CONCLUSION,
+			CREATE_TIME,
+			CREATOR,
+			MODIFY_TIME,
+			MODIFIER,
+			REC_VER,
+			REC_STATUS
+		) VALUES(
+			#{evaluateResultPid},
+			#{evaluateObjectPid},
+			#{evaluateObjectName},
+			#{evaluateObjectNo},
+			#{score},
+			#{evaluateConclusion},
+			SYSDATE(),
+			#{modifier},
+			SYSDATE(),
+			#{creator},1,0
+		)
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="deleteByPids" parameterType="java.util.List"> 
+		DELETE FROM RM_EVALUATE_RESULT WHERE EVALUATE_RESULT_PID in
+		<foreach item="pid" collection="list" index="index" open="(" separator="," close=")">
+				#{pid}
+			</foreach>
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="updateByModel" parameterType="com.sinoservices.xascf.risk.model.EvaluateResultModel">
+		UPDATE RM_EVALUATE_RESULT SET
+		<if test="evaluateObjectPid!=null and evaluateObjectPid!=''">	EVALUATE_OBJECT_PID = #{evaluateObjectPid},</if>
+		<if test="evaluateObjectName!=null and evaluateObjectName!=''">	EVALUATE_OBJECT_NAME = #{evaluateObjectName},</if>
+		<if test="evaluateObjectNo!=null and evaluateObjectNo!=''">	EVALUATE_OBJECT_NO = #{evaluateObjectNo},</if>
+		<if test="score!=null and score!=''">	SCORE = #{score},</if>
+		<if test="evaluateConclusion!=null and evaluateConclusion!=''">	EVALUATE_CONCLUSION = #{evaluateConclusion},</if>
+		<if test="recStatus!=null and recStatus!=''">	REC_STATUS = #{recStatus},</if>
+				Modify_Time = SYSDATE(),
+				Modifier =#{modifier},
+				Rec_Ver=Rec_Ver+1 
+		WHERE EVALUATE_RESULT_PID=#{evaluateResultPid}	
+	</update>
+	
+	<!-- 通过PID获取对象 -->
+	<select id="getByPid" resultMap="evaluateResultResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  RM_EVALUATE_RESULT
+		WHERE EVALUATE_RESULT_PID=#{evaluateResultPid}	
+	</select>
+	
+	<!-- 通过PID获取对象 -->
+	<select id="getByEvaluateObjectPid" resultMap="evaluateResultResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  RM_EVALUATE_RESULT
+		WHERE EVALUATE_OBJECT_PID=#{evaluateObjectPid}	LIMIT 1
+	</select>
+	
+	<!-- 通过creditNo获取对象 -->
+	<select id="getByEvaluateObjectNo" resultMap="evaluateResultResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  RM_EVALUATE_RESULT
+		WHERE EVALUATE_OBJECT_NO=#{_parameter}	LIMIT 1
+	</select>
+</mapper>

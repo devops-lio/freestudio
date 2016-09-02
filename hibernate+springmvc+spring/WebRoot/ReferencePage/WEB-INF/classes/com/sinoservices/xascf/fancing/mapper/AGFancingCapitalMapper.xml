@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.AGFancingCapitalMapper">
+	
+	<!-- tony -->
+	<resultMap type="com.sinoservices.xascf.fancing.view.AGFancingBillItem" id="aGFancingBillItemResultMap"> 
+		<result property="id" column="ID"/>  
+		<result property="fancingBillPid" column="AGFANCING_BILL_PID"/>  
+		<result property="agfancingOrderNo" column="AGFANCING_ORDER_NO"/>  
+		<result property="billNo" column="BILL_NO"/>   
+		<result property="menberName" column="CUSTOMER_NAME"/>
+		<result property="menberPid" column="CUSTOMERSUB_PID"/>
+		<result property="billPrice" column="BILL_PRICE"/>  
+		<result property="rebackDate" column="REBACK_DATE"/>  
+	</resultMap> 
+	
+	<sql id="count">
+		SELECT 
+			COUNT(1) 
+	</sql>
+	
+	<!-- 融资账单列表tony -->
+	<select id="getCaptialByOrderItem" resultMap="aGFancingBillItemResultMap" parameterType="com.sinoservices.xascf.fancing.view.AGFancingBillCondition">
+		SELECT
+			A.ID,
+			A.AGFANCING_BILL_PID,
+			A.AGFANCING_ORDER_NO,
+			A.BILL_NO,
+			C.CUSTOMER_NAME,C.CUSTOMERSUB_PID,
+			B.BILL_PRICE,
+			B.REBACK_DATE
+		FROM
+			DM_AGFANCING_BILL A
+		LEFT JOIN DM_FANCING_BILL B ON  A.BILL_NO = B.BILL_NO
+		LEFT JOIN SS_CUSTOMER_SUB C ON  B.MENBER_PID = C.CUSTOMERSUB_PID
+		WHERE
+			1 = 1
+		AND B.BILL_TYPE = '1'
+			<if test="agfancingOrderNo != null and agfancingOrderNo != ''">AND A.AGFANCING_ORDER_NO LIKE ('%${agfancingOrderNo}%')</if>    
+	</select>   
+	
+	<!-- 融资账单列表计数tony -->
+	<select id="getCountByCaptal" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.AGFancingBillCondition">
+		<include refid="count"/>
+			FROM
+				DM_AGFANCING_BILL A
+			LEFT JOIN DM_FANCING_BILL B ON  A.BILL_NO = B.BILL_NO
+			LEFT JOIN SS_CUSTOMER_SUB C ON  B.MENBER_PID = C.CUSTOMERSUB_PID
+			WHERE
+				1 = 1
+			AND B.BILL_TYPE = '1'
+			<if test="agfancingOrderNo != null and agfancingOrderNo != ''">AND A.AGFANCING_ORDER_NO LIKE ('%${agfancingOrderNo}%')</if>  
+	</select>
+	
+	<!-- 账单列表批量插入tony -->
+	<insert id="addByCapitalList" parameterType="java.util.List">  
+    	INSERT INTO DM_AGFANCING_BILL(
+			AGFANCING_BILL_PID,
+			AGFANCING_ORDER_NO,
+			BILL_NO,
+			CREATOR,
+			CREATE_TIME, 
+			MODIFIER,
+			MODIFY_TIME,
+			REC_VER,
+			REC_STATUS
+		)VALUES
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+        ( 	 
+        	 #{item.fancingBillPid},
+			 #{item.agfancingOrderNo}, 
+			 #{item.billNo}, 
+			 #{item.creator}, 
+			 #{item.createTime}, 
+			 #{item.modifier}, 
+			 #{item.modifyTime}, 
+			 #{item.recVer}, 
+			 #{item.recStatus}
+		)
+	    </foreach>  
+  	</insert>   
+	
+	<!-- 根据再融资编号删除账单tony -->
+	<delete id= "delete" parameterType="String">
+		DELETE 
+		FROM DM_AGFANCING_BILL 
+		WHERE AGFANCING_ORDER_NO = #{_parameter}  
+	</delete>
+		
+</mapper>

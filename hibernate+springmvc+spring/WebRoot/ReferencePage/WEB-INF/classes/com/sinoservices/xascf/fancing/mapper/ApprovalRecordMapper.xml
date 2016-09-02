@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.ApprovalRecordMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.model.ApprovalRecordModel" id="approvalRecordModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="approvalPid" column="APPROVAL_PID"/>
+		<result property="approvalType" column="APPROVAL_TYPE"/>
+		<result property="approvalBussnessNo" column="APPROVAL_BUSSNESS_NO"/>
+		<result property="approvalerNo" column="APPROVALER_NO"/>
+		<result property="approvalerName" column="APPROVALER_NAME"/>
+		<result property="approvalerRolePid" column="APPROVALER_ROLE_PID"/>
+		<result property="approvalerRoleName" column="ROLE_NAME"/>
+		<result property="approvaledStatus" column="APPROVALED_STATUS"/>
+		<result property="approvaledName" column="APPROVALED_NAME"/>
+		<result property="approvalIspassed" column="APPROVAL_ISPASSED"/>
+		<result property="approvalStatus" column="APPROVAL_STATUS"/>
+		<result property="approvalRemark" column="APPROVAL_REMARK"/>
+		<result property="approvalDate" column="APPROVAL_DATE"/>
+		<result property="approvalNext" column="APPROVAL_NEXT"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					APPROVAL_PID,
+					APPROVAL_TYPE,
+					APPROVAL_BUSSNESS_NO,
+					APPROVALER_NO,
+					APPROVALER_NAME,
+					SR.ROLE_NAME,
+					APPROVALED_NAME,
+					APPROVAL_NEXT,
+					APPROVALED_STATUS,
+					APPROVAL_ISPASSED,
+					APPROVAL_STATUS,
+					APPROVAL_REMARK,
+					APPROVAL_DATE
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="approvalType!=null and approvalType!=''"> AND APPROVAL_TYPE =#{approvalType}</if>
+		<if test="approvalBussnessNo!=null and approvalBussnessNo!=''"> AND APPROVAL_BUSSNESS_NO=#{approvalBussnessNo}</if>
+		<if test="approvalerNo!=null and approvalerNo!=''"> AND APPROVALER_NO LIKE ('%${approvalerNo}%' )</if>
+		<if test="approvalerName!=null and approvalerName!=''"> AND APPROVALER_NAME LIKE ('%${approvalerName}%' )</if>
+		<if test="approvalerRolePid!=null and approvalerRolePid!=''"> AND APPROVALER_ROLE_PID LIKE ('%${approvalerRolePid}%' )</if>
+		<if test="approvalIspassed!=null and approvalIspassed!=''"> AND APPROVAL_ISPASSED LIKE ('%${approvalIspassed}%' )</if>
+		<if test="approvalStatus!=null and approvalStatus!=''"> AND APPROVAL_STATUS LIKE ('%${approvalStatus}%' )</if>
+		ORDER BY AR.CREATE_TIME
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.model.ApprovalRecordModel">
+		<include refid="count"/>
+		FROM  DM_APPROVAL_RECORD AR
+		LEFT JOIN SS_ROLE SR ON AR.APPROVALER_ROLE_PID=SR.ROLE_PID
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="approvalRecordModelResultMap" parameterType="com.sinoservices.xascf.fancing.model.ApprovalRecordModel">
+		<include refid="select"/>
+		FROM  DM_APPROVAL_RECORD AR
+		LEFT JOIN SS_ROLE SR ON AR.APPROVALER_ROLE_PID=SR.ROLE_PID
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.fancing.model.ApprovalRecordModel">
+		INSERT INTO DM_APPROVAL_RECORD (
+				APPROVAL_PID,
+				APPROVAL_TYPE,
+				APPROVAL_BUSSNESS_NO,
+				APPROVALER_NO,
+				APPROVALER_NAME,
+				APPROVALER_ROLE_PID,
+				APPROVALED_NAME,
+				APPROVALED_STATUS,
+				APPROVAL_ISPASSED,
+				APPROVAL_STATUS,
+				APPROVAL_REMARK,
+				APPROVAL_DATE,
+				APPROVAL_NEXT,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{approvalPid},
+			   #{approvalType},
+			   #{approvalBussnessNo},
+			   #{approvalerNo},
+			   #{approvalerName},
+			   #{approvalerRolePid},
+			   #{approvaledName},
+			   #{approvaledStatus},
+			   #{approvalIspassed},
+			   #{approvalStatus},
+			   #{approvalRemark},
+			   #{approvalDate},
+			   #{approvalNext},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   1
+		)
+	</insert>
+	
+		<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+		INSERT INTO DM_APPROVAL_RECORD (
+				APPROVAL_PID,
+				APPROVAL_TYPE,
+				APPROVAL_BUSSNESS_NO,
+				APPROVALER_NO,
+				APPROVALER_NAME,
+				APPROVALER_ROLE_PID,
+				APPROVALED_NAME,
+				APPROVALED_STATUS,
+				APPROVAL_ISPASSED,
+				APPROVAL_STATUS,
+				APPROVAL_REMARK,
+				APPROVAL_DATE,
+				APPROVAL_NEXT,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES
+  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (  
+	           #{item.approvalPid},
+			   #{item.approvalType},
+			   #{item.approvalBussnessNo},
+			   #{item.approvalerNo},
+			   #{item.approvalerName},
+			   #{item.approvalerRolePid},
+			   #{item.approvaledName},
+			   #{item.approvaledStatus},
+			   #{item.approvalIspassed},
+			   #{item.approvalStatus},
+			   #{item.approvalRemark},
+			   #{item.approvalDate},
+			   #{item.approvalNext},
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   1
+			 )  
+	    </foreach>  
+  </insert>  
+	
+	<update id="update" parameterType="com.sinoservices.xascf.fancing.model.ApprovalRecordModel">
+		UPDATE DM_APPROVAL_RECORD SET
+				APPROVAL_TYPE = #{approvalType},
+				APPROVAL_BUSSNESS_NO = #{approvalBussnessNo},
+				APPROVALER_NO = #{approvalerNo},
+				APPROVALER_NAME = #{approvalerName},
+				APPROVALER_ROLE_PID = #{approvalerRolePid},
+				APPROVAL_ISPASSED = #{approvalIspassed},
+				APPROVAL_STATUS = #{approvalStatus},
+				APPROVAL_REMARK = #{approvalRemark},
+				APPROVAL_DATE = #{approvalDate},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus}
+			WHERE	APPROVAL_PID = #{approvalPid}
+	</update>
+</mapper>

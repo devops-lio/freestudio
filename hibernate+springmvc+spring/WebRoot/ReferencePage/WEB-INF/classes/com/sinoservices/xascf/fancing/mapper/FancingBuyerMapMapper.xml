@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.FancingBuyerMapMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.model.FancingBuyerMapModel" id="fancingBuyerMapModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="buyOrderPid" column="BUY_ORDER_PID"/>
+		<result property="buyerPid" column="BUYER_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.customer.view.CustomerSubItemView" id="CustomerItemViewResultMap">
+		<result property="id" column="ID"/> 
+		<result property="customersubPid" column="CUSTOMERSUB_PID"/>
+		<result property="buyerRate" column="BUYER_RATE"/>
+		<result property="customerName" column="CUSTOMER_NAME"/>  
+		<result property="companyType" column="COMPANY_TYPE"/>
+		<result property="companyLevel" column="COMPANY_LEVEL"/> 
+		<result property="addressCn" column="ADDRESS_CN"/>
+		<result property="postalCode" column="POSTAL_CODE"/>
+		<result property="corporate" column="CORPORATE"/>
+		<result property="registeredTime" column="REGISTERED_TIME"/>
+		<result property="fax" column="FAX"/>
+		<result property="url" column="URL"/>
+		<result property="mobile" column="MOBILE"/>
+		<result property="tel" column="TEL"/>
+		<result property="businessNo" column="BUSINESS_NO"/>
+		<result property="email" column="EMAIL"/> 
+		<result property="taxNo" column="TAX_NO"/>
+		<result property="financeCode" column="FINANCE_CODE"/>
+		<result property="ismarry" column="ISMARRY"/>
+		<result property="status" column="STATUS"/>
+		<result property="ispurchase" column="ISPURCHASE"/>
+		<result property="registeredFund" column="REGISTERED_FUND"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="industry" column="INDUSTRY"/>
+		<result property="mainbusiness" column="MAINBUSINESS"/>
+		<result property="organizationCode" column="ORGANIZATION_CODE"/>
+		<result property="loansNo" column="LOANS_NO"/>
+		<result property="loansPwd" column="LOANS_PWD"/> 
+		<result property="businessScope" column="BUSINESS_SCOPE"/>
+		<result property="area" column="AREA"/>
+		<result property="property" column="PROPERTY"/>
+		<result property="businessPeople" column="BUSINESS_PEOPLE"/>
+		<result property="remark" column="REMARK"/>   
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="currencyType" column="CURRENCY_TYPE"/> 
+		<result property="scribedMoney" column="SCRIBED_MONEY"/>
+		<result property="roadmanagementNo" column="ROADMANAGEMENT_NO"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					BUY_ORDER_PID,
+					BUYER_RATE,
+					BUYER_PID,
+					FANCING_ORDER_NO,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="buyerPid!=null and buyerPid!=''"> AND BUYER_PID =#{buyerPid}</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO =#{fancingOrderNo}</if>
+	</sql>
+	
+	
+	<select id="findByCondition" resultMap="CustomerItemViewResultMap" parameterType="com.sinoservices.xascf.fancing.model.FancingBuyerMapModel">
+		SELECT 
+			 CUSTOMERSUB_PID,                      
+			 CUSTOMER_NAME,   		               
+			 COMPANY_TYPE,     	                
+			 COMPANY_LEVEL,   			              
+			 ADDRESS_CN,  		              
+			 POSTAL_CODE,   		        
+			 CORPORATE,        	                  
+			 DATE_FORMAT(REGISTERED_TIME, '%Y-%m-%d') AS REGISTERED_TIME,                 
+			 FAX,    				   
+			 URL,  				        
+			SCS. MOBILE,  				
+			 SCS.TEL,      			
+			 BUSINESS_NO,  
+			 EMAIL,   	  				
+			 TAX_NO,             
+			 FINANCE_CODE,  		
+			 ISPURCHASE,      		
+			 REGISTERED_FUND,    
+			 CURRENCY,       		
+			 INDUSTRY,    
+			 MAINBUSINESS,
+			 ORGANIZATION_CODE,
+			 LOANS_NO,
+			 LOANS_PWD, 		
+			 BUSINESS_SCOPE,    
+			 AREA,          		
+			 PROPERTY,     	
+			 CURRENCY_TYPE,
+			 SCRIBED_MONEY,
+			 ROADMANAGEMENT_NO,
+			 FBM.BUYER_RATE,
+       		SC.MEMBER_NO
+			FROM DM_FANCING_BUYER_MAP FBM
+			JOIN SS_CUSTOMER_SUB SCS ON SCS.CUSTOMERSUB_PID=FBM.BUYER_PID
+			JOIN SS_CUSTOMER SC ON SC.MEMBER_PID=SCS.CUSTOMERSUB_PID
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.fancing.model.FancingBuyerMapModel">
+		INSERT INTO DM_FANCING_BUYER_MAP (
+				BUY_ORDER_PID,
+				BUYER_RATE,
+				BUYER_PID,
+				FANCING_ORDER_NO,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{buyOrderPid},
+			   #{buyRate},
+			   #{buyerPid},
+			   #{fancingOrderNo},
+			   #{remark},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus}
+		)
+	</insert>
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO DM_FANCING_BUYER_MAP (
+				BUY_ORDER_PID,
+				BUYER_RATE,
+				BUYER_PID,
+				FANCING_ORDER_NO,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( #{item.buyOrderPid},
+			   #{item.buyerRate},
+			   #{item.buyerPid},
+			   #{item.fancingOrderNo},
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			  1
+			   )  
+	    </foreach>  
+  </insert>  
+	<delete id="deleteByOrderNo" parameterType="String">
+		DELETE FROM DM_FANCING_BUYER_MAP 
+			WHERE	FANCING_ORDER_NO = #{_parameter}
+	</delete>
+	
+	<!-- 批量执行更新 -->
+	<update id="updateByList" parameterType="java.util.List">
+			UPDATE DM_FANCING_BUYER_MAP 
+			<trim prefix="set" suffixOverrides=","> 
+	          <!-- 更新的字段集合 --> 
+	          <trim prefix="BUYER_RATE =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.buyerRate!=null">  
+	                      when (BUYER_PID=#{i.buyerPid} AND FANCING_ORDER_NO=#{i.fancingOrderNo})  then #{i.buyerRate}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	           <trim prefix="Modifier =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                     <if test="i.modifier!=null">  
+	                      when (BUYER_PID=#{i.buyerPid} AND FANCING_ORDER_NO=#{i.fancingOrderNo})  then #{i.modifier}  
+	                     </if>  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Modify_Time =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (BUYER_PID=#{i.buyerPid} AND FANCING_ORDER_NO=#{i.fancingOrderNo})  then SYSDATE()  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Rec_Ver =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (BUYER_PID=#{i.buyerPid} AND FANCING_ORDER_NO=#{i.fancingOrderNo})  then Rec_Ver+1  
+	              </foreach>  
+	           </trim>
+         </trim>   
+         where   
+         <foreach collection="list" separator="or" item="i" index="index" > 
+         <if test="i.buyerPid!=null">  
+          (BUYER_PID=#{i.buyerPid} AND FANCING_ORDER_NO=#{i.fancingOrderNo}) 
+           </if>   
+      	</foreach>  
+	
+	</update>
+</mapper>

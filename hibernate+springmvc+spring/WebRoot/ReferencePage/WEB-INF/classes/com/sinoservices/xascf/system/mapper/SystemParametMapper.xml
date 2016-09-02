@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.SystemParametMapper">
+	<resultMap type="com.sinoservices.xascf.system.model.SystemParameterModel" id="systemParameterModelResultMap">
+					<result property="id" column="ID"/>
+					<result property="parameterPid" column="PARAMETER_PID"/>
+					<result property="parameterType" column="PARAMETER_TYPE"/>
+					<result property="parameterCode" column="PARAMETER_CODE"/>
+					<result property="parameterDesc" column="PARAMETER_DESC"/>
+					<result property="parameterValue" column="PARAMETER_VALUE"/>
+					<result property="remark" column="REMARK"/>
+					 
+					<result property="recStatus" column="REC_STATUS"/>
+					<result property="creator" column="CREATOR"/>
+					<result property="createTime" column="CREATE_TIME"/>
+					<result property="modifier" column="MODIFIER"/>
+					<result property="modifyTime" column="MODIFY_TIME"/>
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.system.view.SystemParameterItem" id="systemParameterItemResultMap">
+					<result property="id" column="ID"/>
+					<result property="parameterPid" column="PARAMETER_PID"/>
+					<result property="parameterType" column="PARAMETER_TYPE"/>
+					<result property="parameterCode" column="PARAMETER_CODE"/>
+					<result property="parameterDesc" column="PARAMETER_DESC"/>
+					<result property="parameterValue" column="PARAMETER_VALUE"/>
+					<result property="remark" column="REMARK"/>
+					 
+					<result property="recStatus" column="REC_STATUS"/>
+					<result property="creator" column="CREATOR"/>
+					<result property="createTime" column="CREATE_TIME"/>
+					<result property="modifier" column="MODIFIER"/>
+					<result property="modifyTime" column="MODIFY_TIME"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+			  ID,
+			  PARAMETER_PID,
+			  PARAMETER_TYPE,
+			  PARAMETER_CODE,
+			  PARAMETER_DESC,
+			  PARAMETER_VALUE,
+			  REMARK, 
+			  CREATE_TIME,
+			  CREATOR,
+			  MODIFY_TIME,
+			  MODIFIER,
+			  REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count"> 
+	    	SELECT COUNT(1)  
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+				<if test="parameterPid !=null and parameterPid !=''"> AND PARAMETER_PID LIKE ('%${parameterPid}%')</if>
+				<if test="parameterType !=null and parameterType !=''"> AND PARAMETER_TYPE  =#{parameterType}</if>
+				<if test="parameterCode !=null and parameterCode !=''"> AND PARAMETER_CODE LIKE ('%${parameterCode}%')</if> 
+				<if test="parameterDesc !=null and parameterDesc !=''"> AND PARAMETER_DESC  LIKE ('%${parameterDesc}%')</if>
+				<if test="parameterValue !=null and parameterValue !=''"> AND PARAMETER_VALUE  =#{parameterValue}</if> 
+				<if test="remark !=null and remark !=''"> AND REMARK LIKE ('%${remark}%')</if>  
+				 
+				<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%' )</if>
+				<if test="createTime!=null and createTime!=''"> AND CREATE_TIME &gt;= #{createTime}</if>
+				<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%' )</if>
+				<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME &gt;= #{modifyTime}</if>
+				<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%' )</if>
+	</sql>
+	 
+	
+	<select id="getParametersByPage" resultMap="systemParameterItemResultMap" parameterType="com.sinoservices.xascf.system.view.SystemParameterCondition">
+		<include refid="select"/>
+		FROM  SS_SYSTEM_PARAMETER
+		<include refid="findByExample"/>  
+	</select>
+	
+	<select id="getParametersByCount" resultType="int" parameterType="com.sinoservices.xascf.system.view.SystemParameterCondition">
+		<include refid="count"/>
+		FROM  SS_SYSTEM_PARAMETER
+		<include refid="findByExample"/>
+	</select> 
+	
+	<select id="getByParameter" resultMap="systemParameterModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  SS_SYSTEM_PARAMETER
+		WHERE PARAMETER_CODE = #{parameterCode}
+	</select>
+	 
+     
+    
+    <!-- 更新基础数据 -->
+    <update id="update" parameterType="com.sinoservices.xascf.system.model.SystemParameterModel">
+    	UPDATE SS_SYSTEM_PARAMETER
+    	<set>  
+			<if test="parameterType != null and parameterType != '' "> PARAMETER_TYPE=#{parameterType}, </if> 
+			<if test="parameterCode != null and parameterCode != '' "> PARAMETER_CODE=#{parameterCode}, </if> 
+			<if test="parameterDesc != null and parameterDesc != '' "> PARAMETER_DESC=#{parameterDesc}, </if> 
+			<if test="parameterValue != null and parameterValue != '' "> PARAMETER_VALUE=#{parameterValue}, </if> 
+			<if test="remark != null and remark != '' "> REMARK=#{remark} </if>  
+      		<if test="modifyTime != null and modifyTime != '' "> MODIFY_TIME=#{modifyTime}, </if> 
+      		<if test="modifier != null and modifier != '' "> MODIFIER=#{modifier} </if> 
+		</set> 
+    	WHERE 1=1
+    	  AND PARAMETER_PID=#{parameterPid}
+    </update> 
+	 
+    
+</mapper>

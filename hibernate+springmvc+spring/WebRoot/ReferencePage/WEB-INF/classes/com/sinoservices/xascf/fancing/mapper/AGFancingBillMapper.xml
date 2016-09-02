@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.AGFancingBillMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.view.AGFancingBillItemView" id="agfancingBillSetItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="agfancingBillPid" column="AGFANCING_BILL_PID"/> 
+		<result property="agfancingPid" column="AGFANCING_PID"/> 
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>  
+		<result property="billBeforePrice" column="BILL_BEFORE_PRICE"/> 
+		<result property="billPrice" column="BILL_PRICE"/> 
+		<result property="endDate" column="END_DATE"/> 
+		<result property="actualDate" column="ACTUAL_DATE"/> 
+		<result property="rebackDate" column="REBACK_DATE"/> 
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>  
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/> 
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.fancing.model.AGFancingBillModel" id="agfancingBillSetItemViewResultMap">
+		<result property="id" column="ID"/>
+		<result property="agfancingBillPid" column="AGFANCING_BILL_PID"/> 
+		<result property="agfancingPid" column="AGFANCING_PID"/> 
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>  
+		<result property="billBeforePrice" column="BILL_BEFORE_PRICE"/> 
+		<result property="billPrice" column="BILL_PRICE"/> 
+		<result property="endDate" column="END_DATE"/> 
+		<result property="actualDate" column="ACTUAL_DATE"/> 
+		<result property="rebackDate" column="REBACK_DATE"/> 
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>  
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+				
+					DM_BILLON_PID,
+					BILLON_OWER_PID,
+					BILLON_DATE,
+					BILLREBACK_DATE,
+          			SC.COMPANY_NAME_CN
+		]]>
+	</sql>
+	
+	 
+</mapper>

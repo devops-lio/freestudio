@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.ContractbuyRelMapper">
+	<resultMap type="com.sinoservices.xascf.credit.model.ContractbuyRelModel" id="contractbuyRelModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="contractNo" column="CONTRACT_NO"/>
+		<result property="buyPid" column="BUY_PID"/>
+		<result property="buyName" column="BUY_NAME"/>
+		<result property="billType" column="BILL_TYPE"/>
+		<result property="preBillType" column="PRE_BILL_TYPE"/>
+		<result property="isPrePay" column="IS_PREPAY"/>
+		<result property="billCycle" column="BILL_CYCLE"/>
+		<result property="businessPercent" column="BUSINESS_PERCENT"/>
+		<result property="disCount" column="DISCOUNT"/>
+		<result property="creditPercent" column="CREDIT_PERCENT"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.credit.view.ContractbuyRelItem" id="contractbuyRelItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="contractNo" column="CONTRACT_NO"/>
+		<result property="buyPid" column="BUY_PID"/>
+		<result property="buyName" column="BUY_NAME"/>
+		<result property="billCycle" column="BILL_CYCLE"/>
+		<result property="businessPercent" column="BUSINESS_PERCENT"/>
+		<result property="billType" column="BILL_TYPE"/>
+		<result property="preBillType" column="PRE_BILL_TYPE"/>
+		<result property="isPrePay" column="IS_PREPAY"/>
+		<result property="disCount" column="DISCOUNT"/>
+		<result property="creditPercent" column="CREDIT_PERCENT"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					CONTRACT_NO,
+					BUY_PID,
+					BUY_NAME,
+					BILL_TYPE,
+					PRE_BILL_TYPE,BILL_CYCLE,BUSINESS_PERCENT,
+					IS_PREPAY,
+					DISCOUNT,
+					CREDIT_PERCENT,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="pid!=null and pid!=''"> AND PID LIKE ('%'||'pid'||'%' )</if>
+		<if test="contractNo!=null and contractNo!=''"> AND CONTRACT_NO LIKE ('%${contractNo}%' )</if>
+		<if test="buyPid!=null and buyPid!=''"> AND BUY_PID LIKE ('%'||'buyPid'||'%' )</if>
+		<if test="rate!=null and rate!=''"> AND DISCOUNT LIKE ('%'||'rate'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.model.ContractbuyRelModel">
+		<include refid="count"/>
+		FROM  DM_CONTRACTBUY_REL
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="contractbuyRelModelResultMap" parameterType="com.sinoservices.xascf.credit.model.ContractbuyRelModel">
+		<include refid="select"/>
+		FROM  DM_CONTRACTBUY_REL
+		<include refid="findByExample"/>
+	</select>
+	
+		<!-- 根据合同编号查询出是否预付的委托方信息 -->
+	<select id="getPageBuyByContractNo" resultMap="contractbuyRelModelResultMap" parameterType="com.sinoservices.xascf.credit.model.ContractbuyRelModel">
+	<include refid="select"/>
+		FROM  DM_CONTRACTBUY_REL
+		WHERE 1=1
+		AND CONTRACT_NO=#{contractNo}
+		<if test="isPrePay!=null and isPrePay!=''">
+		AND IS_PREPAY=#{isPrePay} </if>
+	</select>
+	
+	<!-- 根据合同编号获取list-->
+	<select id="getList" resultMap="contractbuyRelModelResultMap" parameterType="String">
+	<include refid="select"/>
+		FROM  DM_CONTRACTBUY_REL
+		WHERE 1=1
+		AND CONTRACT_NO=#{_parameter}
+		AND REC_STATUS='1'
+	</select>
+	
+	<select id="getModelByContractAndBuyPid" resultMap="contractbuyRelModelResultMap" parameterType="com.sinoservices.xascf.credit.view.ContractbuyRelCondition">
+		<include refid="select"/>
+		FROM  DM_CONTRACTBUY_REL
+		WHERE BUY_PID =#{buyPid} AND CONTRACT_NO = #{contractNo};
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_CONTRACTBUY_REL (
+				ID,
+				PID,
+				CONTRACT_NO,
+				BUY_PID,
+				BUY_NAME,
+				BILL_TYPE,
+				CREDIT_PERCENT,
+				PRE_BILL_TYPE,
+				BILL_CYCLE,
+				BUSINESS_PERCENT,
+				IS_PREPAY,
+				DISCOUNT,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS,
+		) VALUES (
+			   #{id},
+			   #{pid},
+			   #{contractNo},
+			   #{buyPid},
+			   #{buyName},
+			   #{billType},
+			   #{creditPercent},
+			   #{preBillType},
+			    #{billCycle},
+			   #{businessPercent},
+			   #{isPrePay},
+			   #{disCount},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus},
+		);
+	</insert>
+	
+	
+	<!-- 根据授信编号查找所有的rel -->
+	<select id="findByNo" resultMap="contractbuyRelItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM DM_CONTRACTBUY_REL
+		WHERE
+			1=1
+			AND REC_STATUS='1'
+			AND CONTRACT_NO=#{_parameter}
+	</select>
+	
+	<!-- 新增list-->
+	<insert id="insertList" parameterType="java.util.List">
+		INSERT INTO DM_CONTRACTBUY_REL (
+				PID,
+				CONTRACT_NO,
+				BUY_PID,
+				BUY_NAME,
+				BILL_TYPE,
+				CREDIT_PERCENT,
+				PRE_BILL_TYPE,
+				IS_PREPAY,
+				DISCOUNT,
+				BILL_CYCLE,
+				BUSINESS_PERCENT,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+			) VALUES 
+			<foreach collection="list" item="item" index="index" separator=",">
+				( #{item.pid},
+				  #{item.contractNo},
+				  #{item.buyPid},
+				  #{item.buyName},
+				  #{item.billType},
+				  #{item.creditPercent},
+			   	  #{item.preBillType},
+			   	  #{item.isPrePay},
+				  #{item.disCount},
+				  #{item.billCycle},
+				  #{item.businessPercent},
+				  1,
+				  #{item.createTime},
+				  #{item.creator},
+				  #{item.modifyTime},
+				  #{item.modifier},
+				  1)
+			</foreach>
+			
+			
+			
+	</insert>
+	
+	<!-- 有效或者无效 -->
+	<update id="update" parameterType="com.sinoservices.xascf.credit.model.CreditbuyRelModel">
+		UPDATE DM_CONTRACTBUY_REL 
+		SET	
+			DISCOUNT    = #{disCount},
+		WHERE
+			1=1
+			AND REC_STATUS='1'
+			AND PID=#{pid}
+	</update>
+	
+	<!-- 根据授信编号查找合同委托方 -->
+	<select id="findByCreditResultNo" resultMap="contractbuyRelModelResultMap" parameterType="String">
+		SELECT 
+			a.ID,
+			a.PID,
+			a.CONTRACT_NO,
+			a.BUY_PID,
+			a.BUY_NAME,
+			a.BILL_TYPE,
+			a.CREDIT_PERCENT,
+			a.PRE_BILL_TYPE,
+			a.BILL_CYCLE,
+			a.BUSINESS_PERCENT,
+			a.IS_PREPAY,
+			a.DISCOUNT,
+			a.REC_VER,
+			a.CREATE_TIME,
+			a.CREATOR,
+			a.MODIFY_TIME,
+			a.MODIFIER,
+			a.REC_STATUS
+		FROM DM_CONTRACTBUY_REL a,DM_FANCING_CONTRACT b
+		WHERE
+			1=1
+			AND a.REC_STATUS='1'
+			AND a.CONTRACT_NO=b.CONTRACT_NO
+			AND b.CREDIT_RESULT_NO=#{_parameter}
+			AND b.REC_STATUS='1'
+	</select>
+	
+	
+	<!--  已经签订合同的委托方并且此合同编号过滤 -->
+	<select id="findByCreditNoAndContractNo" resultMap="contractbuyRelModelResultMap" parameterType="com.sinoservices.xascf.credit.view.FancingContractCondition">
+		SELECT 
+			a.ID,
+			a.PID,
+			a.CONTRACT_NO,
+			a.BUY_PID,
+			a.BUY_NAME,
+			a.CREDIT_PERCENT,
+			a.BILL_TYPE,
+			a.PRE_BILL_TYPE,
+			a.BILL_CYCLE,
+			a.BUSINESS_PERCENT,
+			a.IS_PREPAY,
+			a.DISCOUNT,
+			a.REC_VER,
+			a.CREATE_TIME,
+			a.CREATOR,
+			a.MODIFY_TIME,
+			a.MODIFIER,
+			a.REC_STATUS
+		FROM DM_CONTRACTBUY_REL a,DM_FANCING_CONTRACT b
+		WHERE
+			1=1
+			AND a.REC_STATUS='1'
+			AND a.CONTRACT_NO=b.CONTRACT_NO
+			AND b.`STATUS` !='30'
+			AND b.CREDIT_RESULT_NO=#{creditResultNo}
+			AND a.CONTRACT_NO!=#{contractNo}
+			AND b.REC_STATUS='1'
+	</select>
+	
+	
+	<!-- 根据contractNo删除 -->
+	<delete id="deleteByContractNo" parameterType="String">
+		DELETE FROM  DM_CONTRACTBUY_REL
+		WHERE
+			1=1
+			AND CONTRACT_NO=#{_parameter}
+			AND REC_STATUS='1'
+	</delete>
+	
+	<!-- 批量修改折扣率-->
+	<update id="updateListDiscountByPid" parameterType="java.util.List">
+		UPDATE DM_CREDITBUY_REL 
+		<trim prefix="set" suffixOverrides=","> 
+	          <!-- 更新的字段集合 --> 
+	          <trim prefix="DISCOUNT =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.disCount!=null">  
+	                      when (PID=#{i.pid}) then #{i.disCount}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	           <trim prefix="Modifier =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                     <if test="i.modifier!=null">  
+	                      when (PID=#{i.pid}) then #{i.modifier}  
+	                     </if>  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Modify_Time =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (PID=#{i.pid}) then SYSDATE()  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Rec_Ver =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (PID=#{i.pid}) then Rec_Ver+1  
+	              </foreach>  
+	           </trim>
+         </trim>   
+         where   
+         <foreach collection="list" separator="or" item="i" index="index" > 
+         <if test="i.pid!=null">  
+          (PID=#{i.pid}) 
+           </if>   
+      	</foreach> 
+	</update>
+</mapper>

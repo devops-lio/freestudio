@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.MaterialCreditMapper">
+	<resultMap type="com.sinoservices.xascf.credit.view.MaterialCreditItem" id="materialCreditItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="materialDefinePid" column="MATERIAL_DEFINE_PID"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="isEffective" column="IS_EFFECTIVE"/>
+		<result property="isRequired" column="IS_REQUIRED"/>
+		<result property="effectiveTimeEnd" column="EFFECTIVE_TIME_END"/>
+		<result property="status" column="STATUS"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="typeName" column="TYPE_NAME"/>
+		<result property="allFileName" column="ALL_FILE_NAME"/>
+		<result property="allFileUrl" column="ALL_FILE_URL"/>
+		<result property="allFileReName" column="ALL_FILE_RENAME"/>
+		
+		
+		
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					MATERIAL_PID,
+					CREDIT_NO,
+					IS_EFFECTIVE,
+					EFFECTIVE_TIME_START,
+					EFFECTIVE_TIME_END,
+					URL,
+					STATUS,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="pid!=null and pid!=''"> AND PID LIKE ('%'||'pid'||'%' )</if>
+		<if test="materialPid!=null and materialPid!=''"> AND MATERIAL_PID LIKE ('%'||'materialPid'||'%' )</if>
+		<if test="creditNo!=null and creditNo!=''"> AND CREDIT_NO LIKE ('%'||'creditNo'||'%' )</if>
+		<if test="isEffective!=null and isEffective!=''"> AND IS_EFFECTIVE LIKE ('%'||'isEffective'||'%' )</if>
+		<if test="effectiveTimeStart!=null and effectiveTimeStart!=''"> AND EFFECTIVE_TIME_START LIKE ('%'||'effectiveTimeStart'||'%' )</if>
+		<if test="effectiveTimeEnd!=null and effectiveTimeEnd!=''"> AND EFFECTIVE_TIME_END LIKE ('%'||'effectiveTimeEnd'||'%' )</if>
+		<if test="url!=null and url!=''"> AND URL LIKE ('%'||'url'||'%' )</if>
+		<if test="status!=null and status!=''"> AND STATUS LIKE ('%'||'status'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.model.MaterialCreditModel">
+		<include refid="count"/>
+		FROM  DM_MATERIAL_CREDIT
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="materialCreditItemResultMap" parameterType="com.sinoservices.xascf.credit.model.MaterialCreditModel">
+		<include refid="select"/>
+		FROM  DM_MATERIAL_CREDIT
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_MATERIAL_CREDIT (
+				PID,
+				MATERIAL_DEFINE_PID,
+				CREDIT_NO,
+				IS_EFFECTIVE,
+				EFFECTIVE_TIME_END,
+				STATUS,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{materialDefinePid},
+			   #{creditNo},
+			   #{isEffective},
+			   #{effectiveTimeEnd},
+			   #{status},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   1
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE DM_MATERIAL_CREDIT SET
+			<if test=" materialDefinePid !=null and materialDefinePid !=''"> MATERIAL_DEFINE_PID = #{materialDefinePid},</if>
+			<if test=" creditNo !=null and creditNo !=''">	CREDIT_NO = #{creditNo},</if>
+			<if test=" isEffective !=null and isEffective !=''">	IS_EFFECTIVE = #{isEffective},</if>
+			<if test=" effectiveTimeEnd !=null and effectiveTimeEnd !=''"> EFFECTIVE_TIME_END = #{effectiveTimeEnd},</if>
+			<if test=" status !=null and status !=''"> STATUS = #{status},</if>
+			<if test=" modifyTime !=null and modifyTime !=''">MODIFY_TIME = #{modifyTime},</if>
+			<if test=" modifier !=null and modifier !=''"> MODIFIER = #{modifier},</if>
+			REC_VER=REC_VER+1
+		WHERE PID = #{pid}
+	</update>
+	
+	<!-- 插入list -->
+	<insert id="insertList" parameterType="java.util.List">
+		INSERT INTO DM_MATERIAL_CREDIT (
+				PID,
+				MATERIAL_DEFINE_PID,
+				CREDIT_NO,
+				IS_EFFECTIVE,
+				EFFECTIVE_TIME_END,
+				STATUS,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES 
+			<foreach collection="list" item="item" index="index" separator=",">
+			  ( #{item.pid},
+			   #{item.materialDefinePid},
+			   #{item.creditNo},
+			   #{item.isEffective},
+			   #{item.effectiveTimeEnd},
+			   #{item.status},
+			   1,
+			   #{item.createTime},
+			   #{item.creator},
+			   #{item.modifyTime},
+			   #{item.modifier},
+			   1)
+			</foreach>
+	</insert>
+	
+	<!-- 根据授信编号查找材料 -->
+	<select id="findByNo"  resultMap="materialCreditItemResultMap" parameterType="String">
+		SELECT 
+			a.ID,
+			a.PID,
+			b.PID AS MATERIAL_DEFINE_PID,
+			a.CREDIT_NO,
+			a.IS_EFFECTIVE,
+			a.EFFECTIVE_TIME_END,
+			a.STATUS,
+			a.REC_VER,
+			a.CREATE_TIME,
+			a.CREATOR,
+			a.MODIFY_TIME,
+			a.MODIFIER,
+			a.REC_STATUS,
+			b.TYPE_NAME,
+			b.IS_REQUIRED,
+			e.ALL_FILE_NAME,
+			e.ALL_FILE_URL,
+			e.ALL_FILE_RENAME
+			
+		FROM SS_MATERIAL_DEFINE b 
+		LEFT JOIN DM_MATERIAL_CREDIT a ON a.MATERIAL_DEFINE_PID=b.PID AND a.CREDIT_NO=#{_parameter} AND a.REC_STATUS='1'
+		LEFT JOIN 
+		 (SELECT   d.PID,GROUP_CONCAT(c.FILE_NAME ,'') ALL_FILE_NAME, GROUP_CONCAT(c.FILE_URL ,'') ALL_FILE_URL,GROUP_CONCAT(c.FILE_RENAME ,'') ALL_FILE_RENAME 
+			FROM     DM_MATERIAL_CREDIT d, DM_MATERIAL_CREDIT_DETAIL c
+			WHERE     
+				1=1
+				AND d.PID=c.CREDIT_MATERIAL_PID
+				AND d.CREDIT_NO=#{_parameter}
+				AND d.REC_STATUS='1'
+				AND c.REC_STATUS='1'
+				GROUP BY c.CREDIT_MATERIAL_PID
+			) e ON e.PID=a.PID
+
+		WHERE
+			1=1
+			AND b.PARENT_CODE = '002'
+			AND b.REC_STATUS='1'
+	</select>
+	
+	<!-- 根据授信编号查找授信材料表 -->
+	<select id="findOldList" resultMap="materialCreditItemResultMap" parameterType="String">
+		SELECT 
+			ID,
+			PID,
+			MATERIAL_DEFINE_PID,
+			CREDIT_NO,
+			IS_EFFECTIVE,
+			EFFECTIVE_TIME_END,
+			STATUS,
+			REC_VER,
+			CREATE_TIME,
+			CREATOR,
+			MODIFY_TIME,
+			MODIFIER,
+			REC_STATUS
+		FROM DM_MATERIAL_CREDIT
+		WHERE
+			1=1
+			AND CREDIT_NO=#{_parameter}
+			AND REC_STATUS='1'
+	</select>
+	
+	<!-- 更新list -->
+	<update id="updateList" parameterType="java.util.List">
+         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+				UPDATE DM_MATERIAL_CREDIT SET
+					REC_VER=REC_VER+1,
+					MODIFY_TIME=SYSDATE(),
+					EFFECTIVE_TIME_END=#{item.effectiveTimeEnd}
+				WHERE PID = #{item.pid}
+         </foreach>
+	</update>
+	<update id="updateByList" parameterType="java.util.List">
+			UPDATE DM_MATERIAL_CREDIT 
+			<trim prefix="set" suffixOverrides=","> 
+	          <!-- 更新的字段集合 --> 
+	          <trim prefix="EFFECTIVE_TIME_END =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                      when (PID=#{i.pid}) then #{i.effectiveTimeEnd}  
+	              </foreach>  
+	           </trim>  
+	           <trim prefix="MODIFY_TIME =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (PID=#{i.pid}) then SYSDATE()  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="REC_VER =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (PID=#{i.pid}) then REC_VER+1  
+	              </foreach>  
+	           </trim>
+         </trim>   
+         where   
+         <foreach collection="list" separator="or" item="i" index="index" > 
+         <if test="i.pid!=null">  
+          (PID=#{i.pid}) 
+           </if>   
+      	</foreach>  
+	
+	</update>
+	
+	<!-- 根据 pid删除-->
+	<delete id="deleteMaterialDetail" parameterType="String">
+	DELETE FROM DM_MATERIAL_CREDIT_DETAIL
+	WHERE
+		1=1
+		AND CREDIT_MATERIAL_PID=#{_parameter}
+	</delete>
+	
+	<!-- 根据reName删除-->
+	<delete id="deleteMaterialByReName" parameterType="String">
+	DELETE FROM DM_MATERIAL_HISTORY
+	WHERE
+		1=1
+		AND FILE_RENAME=#{_parameter}
+	</delete>
+	
+	
+	<!-- 根据reName删除-->
+	<delete id="deleteMaterial" parameterType="String">
+	DELETE FROM DM_MATERIAL_CREDIT_DETAIL
+	WHERE
+		1=1
+		AND FILE_RENAME=#{_parameter}
+	</delete>
+	
+</mapper>

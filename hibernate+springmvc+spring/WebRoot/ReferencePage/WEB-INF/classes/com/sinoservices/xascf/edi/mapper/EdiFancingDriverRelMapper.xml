@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.edi.mapper.EdiFancingDriverRelMapper">
+	<resultMap type="com.sinoservices.xascf.edi.model.EdiFancingDriverRelModel" id="EdiFancingDriverRelModel">
+		<result property="fancingDriverRelId" column="FANCING_DRIVER_REL_ID"/>
+		<result property="fancingOrderId" column="FANCING_ORDER_ID"/>
+		<result property="drivername" column="DRIVERNAME"/>
+		<result property="driveridno" column="DRIVERIDNO"/>
+		<result property="loanprice" column="LOANPRICE"/>	
+	</resultMap>  
+	
+	<sql id="select"> 
+		  SELECT 
+		  	FANCING_DRIVER_REL_ID,			
+	        FANCING_ORDER_ID, 
+	        DRIVERNAME,
+	        DRIVERIDNO,		
+			LOANPRICE
+	</sql>
+	
+	<!-- 查询  -->
+	<select id="getEdiFancingDriverRelByCondition" resultMap="EdiFancingDriverRelModel" parameterType="com.sinoservices.xascf.edi.model.EdiFancingDriverRelModel">
+		<include refid="select"/>  
+		FROM  EDI_FANCING_DRIVER_REL
+		<include refid="findByExample"/> 
+	</select>
+	
+	<sql id="findByExample">
+		WHERE  1=1
+		<if test="fancingDriverRelId !=null and  fancingDriverRelId !=''">AND FANCING_DRIVER_REL_ID LIKE ('%${fancingDriverRelId}%')</if>
+		<if test="fancingOrderId !=null and fancingOrderId != ''">AND FANCING_ORDER_ID LIKE ('%${fancingOrderId}%')</if>
+	</sql>
+
+</mapper>

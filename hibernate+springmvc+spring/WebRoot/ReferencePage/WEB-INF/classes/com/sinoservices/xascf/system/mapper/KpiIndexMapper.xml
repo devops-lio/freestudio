@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.KpiIndexMapper">     
+    <resultMap type="com.sinoservices.xascf.system.model.KpiIndexModel" id="kpiIndexModelViewMap">
+        <result property="id" column="ID"/>
+        <result property="kpiindexPid" column="KPIINDEX_PID"/>
+        <result property="userPid" column="USER_PID"/>
+        <result property="entCount" column="ENT_COUNT"/>
+        <result property="perCount" column="PER_COUNT"/>
+        <result property="customerCount" column="CUSTOMER_COUNT"/>
+        <result property="newfancingCount" column="NEWFANCING_COUNT"/>
+        <result property="fancingCount" column="FANCING_COUNT"/>
+        <result property="newfancingMoney" column="NEWFANCING_MONEY"/>
+        <result property="fancingdifference" column="FANCINGDIFFERENCE"/>
+        <result property="totalFancingdifference" column="TOTAL_FANCINGDIFFERENCE"/>
+        <result property="fancingMoney" column="FANCING_MONEY"/>
+        <result property="singularbBacksection" column="SINGULAR_BACKSECTION"/>
+        <result property="totalBacksectionmoney" column="TOTAL_BACKSECTIONMONEY"/>
+        <result property="singularRepayment" column="SINGULAR_REPAYMENT"/>
+        <result property="totalRepayment" column="TOTAL_REPAYMENT"/>
+        <result property="totalEarnings" column="TOTAL_EARNINGS"/>
+        <result property="singularBadbill" column="SINGULAR_BADBILL"/>
+        <result property="totalBadbill" column="TOTAL_BADBILL"/>
+        <result property="kpidetalScores" column="KPIDETAL_SCORES"/>
+        <result property="kpidetalStyle" column="KPIDETAL_STYLE"/>
+        <result property="kpidetalQuarter" column="KPIDETAL_QUARTER"/> 
+        <result property="kpidetalDate" column="KPIDETAL_DATE"/>
+        <result property="kpidetalType" column="KPIDETAL_TYPE"/>
+        <result property="workstatus" column="WORKSTATUS"/>
+        <result property="remark" column="REMARK"/>  
+        
+        <result property="loginName" column="LOGIN_NAME"/>
+        <result property="userNameCn" column="USER_NAME_CN"/>
+        <result property="userNo" column="USER_NO"/>
+        
+        
+        <result property="startTime" column="START_TIME"/>
+        <result property="endTime" column="END_TIME"/>
+        
+          
+ 		<result property="creator" column="CREATOR"/>
+ 		<result property="createTime" column="CREATE_TIME"/>
+ 		<result property="modifier" column="MODIFIER"/>
+ 		<result property="modifyTime" column="MODIFY_TIME"/>
+ 		<result property="recver" column="REC_VER"/>
+ 		<result property="recStatus" column="REC_STATUS"/>  
+    </resultMap>
+    
+    <resultMap type="com.sinoservices.xascf.system.view.KpiIndexItem" id="kpiIndexItemViewMap">
+    	<result property="id" column="ID"/>
+        <result property="kpiindexPid" column="KPIINDEX_PID"/>
+        <result property="userPid" column="USER_PID"/>
+        <result property="entCount" column="ENT_COUNT"/>
+        <result property="perCount" column="PER_COUNT"/>
+        <result property="customerCount" column="CUSTOMER_COUNT"/>
+        <result property="newfancingCount" column="NEWFANCING_COUNT"/>
+        <result property="fancingCount" column="FANCING_COUNT"/>
+        <result property="newfancingMoney" column="NEWFANCING_MONEY"/>
+        <result property="fancingdifference" column="FANCINGDIFFERENCE"/>
+        <result property="totalFancingdifference" column="TOTAL_FANCINGDIFFERENCE"/>
+        <result property="fancingMoney" column="FANCING_MONEY"/>
+        <result property="singularbBacksection" column="SINGULAR_BACKSECTION"/>
+        <result property="totalBacksectionmoney" column="TOTAL_BACKSECTIONMONEY"/>
+        <result property="singularRepayment" column="SINGULAR_REPAYMENT"/>
+        <result property="totalRepayment" column="TOTAL_REPAYMENT"/>
+        <result property="totalEarnings" column="TOTAL_EARNINGS"/>
+        <result property="singularBadbill" column="SINGULAR_BADBILL"/>
+        <result property="totalBadbill" column="TOTAL_BADBILL"/>
+        <result property="kpidetalScores" column="KPIDETAL_SCORES"/>
+        <result property="kpidetalStyle" column="KPIDETAL_STYLE"/>
+        <result property="kpidetalQuarter" column="KPIDETAL_QUARTER"/> 
+        <result property="kpidetalDate" column="KPIDETAL_DATE"/> 
+        <result property="kpidetalType" column="KPIDETAL_TYPE"/>
+        <result property="workstatus" column="WORKSTATUS"/>
+        <result property="remark" column="REMARK"/> 
+        
+ 		<result property="userNameCn" column="USER_NAME_CN"/>  
+ 		<result property="userNo" column="USER_NO"/>  
+          
+ 		<result property="creator" column="CREATOR"/>
+ 		<result property="createTime" column="CREATE_TIME"/>
+ 		<result property="modifier" column="MODIFIER"/>
+ 		<result property="modifyTime" column="MODIFY_TIME"/>
+ 		<result property="recver" column="REC_VER"/>
+ 		<result property="recStatus" column="REC_STATUS"/>
+    </resultMap>
+    
+    <resultMap type="com.sinoservices.xascf.system.view.KpiUserItem"  id="kpiUserItemViewMap">
+    	<result property="kpiindexPid" column="KPIINDEX_PID"/>
+    	<result property="userPid" column="USER_PID"/>
+    	<result property="creator" column="CREATOR"/>
+    	<result property="createTime" column="CREATE_TIME"/> 
+    </resultMap>
+     
+    
+	    <!-- 查询 -->
+	    <sql id="select">
+			SELECT 
+				ID,							
+				KPIINDEX_PID,				
+				USER_PID,					
+				ENT_COUNT,					
+				PER_COUNT,					
+				CUSTOMER_COUNT,				
+				NEWFANCING_COUNT,			
+				FANCING_COUNT,				
+				NEWFANCING_MONEY,			
+				FANCINGDIFFERENCE,			
+				TOTAL_FANCINGDIFFERENCE,		
+				FANCING_MONEY,		    	
+				SINGULAR_BACKSECTION,		
+				TOTAL_BACKSECTIONMONEY,		
+				SINGULAR_REPAYMENT,          
+				TOTAL_REPAYMENT,				
+				TOTAL_EARNINGS,				
+				SINGULAR_BADBILL,			
+				TOTAL_BADBILL,				
+				KPIDETAL_SCORES,			
+				KPIDETAL_STYLE,				
+				KPIDETAL_QUARTER,			
+				KPIDETAL_DATE,	
+				KPIDETAL_TYPE,			
+				WORKSTATUS,					
+				REMARK,						
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS 
+	    </sql>  
+    
+	    <!-- KPI员工考核查询列表 -->
+	    <sql id="Page">  
+				SELECT 
+					A.ID,
+					A.KPIINDEX_PID,
+					S.USER_PID,
+					S.USER_NO,
+					S.USER_NAME_CN,
+					A.KPIDETAL_SCORES,
+					A.KPIDETAL_STYLE,
+					A.KPIDETAL_DATE,
+					A.KPIDETAL_QUARTER,
+					A.KPIDETAL_TYPE
+				FROM SS_KPIINDEX A
+				INNER JOIN SS_USER S ON A.USER_PID=S.USER_PID
+				WHERE A.REC_STATUS !='0'
+	    </sql>
+	    
+	    <sql id="selectUser">
+	    	SELECT 
+	    		B.KPIINDEX_PID,
+	    		A.USER_PID,
+	    		A.USER_NO,
+	    		A.USER_NAME_CN,
+	    		B.KPIDETAL_QUARTER,
+	    		B.KPIDETAL_SCORES,
+	    		B.REMARK,
+	    		B.WORKSTATUS,
+	    		DATE_ADD(curdate(),interval -day(curdate())+1 day) AS START_TIME,
+				last_day(curdate()) AS END_TIME
+	    		FROM SS_USER A
+	    		INNER JOIN SS_KPIINDEX B ON A.USER_PID=B.USER_PID 
+	    </sql>
+    
+	    <!-- KPI员工考核查询计数 -->
+	    <sql id="Count">
+			SELECT 
+				COUNT(1) 
+			FROM SS_KPIINDEX A
+			INNER JOIN SS_USER S ON A.USER_PID=S.USER_PID
+			WHERE A.REC_STATUS !='0'
+	    </sql>
+    
+	    <!-- KPI员工考核查询条件-->
+	    <sql id="findByKpiListWhere">
+	    	<if test="userNo != null and userNo != '' "> AND S.USER_NO = #{userNo} </if>   
+	    	<if test="kpidetalType != null and kpidetalType != ''"> AND A.KPIDETAL_TYPE = #{kpidetalType} </if>
+	    	<if test="(startTime!=null and startTime!='') and (endTime==null or endTime == '') "> AND A.CREATE_TIME &gt;= #{startTime}</if>
+			<if test="(startTime ==null or startTime=='') and (endTime != null and endTime != '')"> AND A.CREATE_TIME &lt;  DATE_ADD( #{endTime},INTERVAL 1 DAY)</if>
+			<if test="(startTime!=null and startTime!='') and (endTime != null and endTime != '')"> AND A.CREATE_TIME BETWEEN	 #{startTime} and DATE_ADD( #{endTime},INTERVAL 1 DAY)</if>
+			<if test="(startTime == null or startTime == '') and (endTime == null or endTime == '')"> 
+				AND DATE_FORMAT(A.CREATE_TIME,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
+			</if> 
+	    </sql> 
+	    
+	    <select id="selectPage" resultMap="kpiIndexItemViewMap" parameterType="com.sinoservices.xascf.system.view.KpiIndexCondition">
+	    	<include refid="Page"/> 
+	    	<include refid="findByKpiListWhere"/>
+	    </select>
+	    
+	   	<select id="selectPageCount" resultType="int" parameterType="com.sinoservices.xascf.system.view.KpiIndexCondition">
+	    	<include refid="Count"/> 
+	    	<include refid="findByKpiListWhere"/>
+	    </select>
+	
+		<!-- 新增"业务专员"KPI考核员工PID写入 -->
+		<insert id="insert"  parameterType="com.sinoservices.xascf.system.model.KpiIndexModel">
+			INSERT INTO SS_KPIINDEX( 
+				KPIINDEX_PID,
+				USER_PID,
+				KPIDETAL_TYPE,
+				CREATOR,
+				CREATE_TIME 
+			)SELECT 
+				#{kpiindexPid}, 
+				USER_PID, 
+				#{kpidetalType},
+				(SELECT USER_PID FROM SS_USER WHERE LOGIN_NAME = 'admin') AS CREATOR,
+				DATE_FORMAT(NOW(), '%Y-%m-%d')
+				FROM SS_USER
+				WHERE USER_PID = #{userPid}
+		</insert>
+	
+		<!-- "业务专员"KPI考核角色权限批量写入 -->
+		<insert id="insertallList" parameterType="java.util.List">  
+		    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+		        SELECT CURRENT_TIMESTAMP()  
+		    </selectKey>  
+		    	INSERT INTO SS_KPIINDEX (
+					 KPIINDEX_PID,
+					 USER_PID,
+					 CREATOR,
+					 CREATE_TIME 
+					)VALUES
+		    <foreach collection="list" item="item" index="index"  separator=",">  
+		        ( 	  #{item.kpiindexPid}, 
+					  #{item.userPid}, 
+					  #{item.creator}, 
+					  #{item.createTime}
+			  	)
+		    </foreach>  
+	  </insert>  
+    
+    <!-- "业务专员"参与考核状态更新   -->
+    <!-- REC_STATUS='1' 参与考核； REC_STATUS='0' 不参与考核 -->
+    <update id="updateById" parameterType="com.sinoservices.xascf.system.model.KpiIndexModel">
+		UPDATE SS_KPIINDEX 
+		SET 
+			REC_STATUS=#{recStatus}
+			WHERE 1=1 
+			AND USERP_ID=#{userPid}
+	</update> 
+	
+	<!-- 查询业务员是否存在于KPI列表中 -->
+	<select id="isKpiUser"  parameterType="String" resultMap="kpiIndexModelViewMap" >
+		SELECT 
+			COUNT(1)
+		FROM SS_KPIINDEX 
+		WHERE USER_PID = #{userPid}
+	</select>
+	
+   	<!-- “业务专员”角色权限查询 --> 
+    <select id="getKpiUser" resultMap="kpiUserItemViewMap" parameterType="com.sinoservices.xascf.system.view.KpiUserCondition"> 
+    	SELECT 
+		USER_PID, 
+		(SELECT USER_PID FROM SS_USER WHERE LOGIN_NAME = 'admin') AS CREATOR,
+		DATE_FORMAT(NOW(), '%Y-%m-%d')
+		FROM SS_USER
+		WHERE USER_PID IN (
+		SELECT  
+		USER_PID
+		FROM SS_USER_ROLE 
+		WHERE ROLE_PID = 'RO20140829031642-613017BC9402453' 
+		)
+    </select> 
+    
+    
+   	<!-- 员工信息查询 -->
+	<select id="findByUser" resultMap="kpiIndexModelViewMap" parameterType="String">
+		<include refid="selectUser"/> 
+		WHERE
+			1=1
+			AND A.USER_PID = #{userPid}
+		    AND DATE_FORMAT(B.CREATE_TIME,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
+	</select> 
+	
+    
+    <!-- 当月会员数量查询 -->
+    <select id="finMemberByCount" resultMap="kpiIndexModelViewMap" parameterType="String">
+    	SELECT 
+			COUNT(CASE WHEN B.CUSTOMER_TYPE= '2' THEN 1 END ) AS PER_COUNT,  
+			COUNT(CASE WHEN B.CUSTOMER_TYPE= '1' THEN 1 END ) AS ENT_COUNT
+			FROM 
+			SS_KPIINDEX A
+			INNER JOIN SS_KPICUSTOMER B ON A.USER_PID=B.USER_PID 
+			WHERE 
+			A.USER_PID = #{userPid}
+			AND DATE_FORMAT(A.CREATE_TIME,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') 
+    </select>
+    
+    <!-- 员工操作下会员总数 -->
+    <select id="findCountByMember" resultMap="kpiIndexModelViewMap" parameterType="String">
+    	SELECT 
+    		COUNT(1) AS CUSTOMER_COUNT
+    	FROM SS_CUSTOMER 
+    	WHERE CREATOR = #{userPid} 
+    	AND REC_STATUS !='0'
+    </select>
+    
+    
+    <!-- 本月新建融资单数 -->
+    <select id="findCountByNewFancing" resultMap="kpiIndexModelViewMap" parameterType="String">
+    	SELECT 
+		COUNT(C.FANCING_ORDER_NO) AS NEWFANCING_COUNT,
+		SUM(C.FANCING_REPLY_PRICE) AS NEWFANCING_MONEY,
+		COUNT(CASE WHEN C.FANCING_STATUS= '45' THEN 1 END ) AS SINGULAR_BACKSECTION,
+		COUNT(CASE WHEN C.FANCING_STATUS= '53' THEN 1 END ) AS SINGULAR_REPAYMENT,
+		SUM(CASE WHEN C.FANCING_STATUS= '53' THEN C.FANCING_REPLY_PRICE END ) AS SINGULAR_REPAYMENT
+		FROM SS_KPIINDEX A
+		INNER JOIN SS_KPIFANCING B ON A.USER_PID = B.USER_PID
+		INNER JOIN DM_FANCING_ORDER C ON B.FANCING_ORDER_NO = C.FANCING_ORDER_NO 
+		WHERE DATE_FORMAT(C.CREATE_TIME,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') 
+		AND A.USER_PID = #{userPid} 
+		AND C.REC_STATUS !='0'
+    </select>
+    
+    <!-- 融资单总数 -->
+    <select id="findCountByFancing" resultMap="kpiIndexModelViewMap" parameterType="String">
+    	SELECT 
+    		COUNT(1) AS FANCING_COUNT,
+    		SUM(FANCING_REPLY_PRICE) AS FANCING_MONEY,
+    		SUM(CASE WHEN FANCING_STATUS= '45' THEN FANCING_REPLY_PRICE END) AS TOTAL_BACKSECTIONMONEY
+    	FROM DM_FANCING_ORDER 
+    	WHERE CREATOR = #{userPid} 
+    	AND REC_STATUS !='0'
+    </select>
+    
+    <!-- 本月产生收益总额 -->
+    <select id="findSumByBill" resultMap="kpiIndexModelViewMap" parameterType="String">
+    	SELECT   
+			SUM(CASE WHEN C.BILL_TYPE != '1' THEN C.BILL_PRICE END) AS TOTAL_EARNINGS
+		FROM SS_KPIINDEX A
+		INNER JOIN SS_KPIFANCING B ON A.USER_PID = B.USER_PID
+		INNER JOIN DM_FANCING_BILL C ON B.FANCING_ORDER_NO = C.FANCING_ORDER_NO 
+		WHERE DATE_FORMAT(C.CREATE_TIME,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') 
+		AND A.USER_PID = #{userPid}
+		AND C.REC_STATUS !='0'
+    </select>
+    
+    <!-- kpi考核信息保存 -->
+    <update id="update" parameterType="com.sinoservices.xascf.system.model.KpiIndexModel">
+    	UPDATE SS_KPIINDEX
+    	<set>
+			<if test="entCount != null and entCount != '' ">ENT_COUNT = #{entCount},</if> 
+			<if test="perCount != null and perCount != '' ">PER_COUNT = #{perCount},</if> 
+			<if test="customerCount != null and customerCount != '' ">CUSTOMER_COUNT = #{customerCount},</if> 
+			<if test="newfancingCount != null and newfancingCount != '' ">NEWFANCING_COUNT = #{newfancingCount},</if> 
+			<if test="fancingCount != null and fancingCount != '' ">FANCING_COUNT = #{fancingCount},</if> 
+			<if test="newfancingMoney != null and newfancingMoney != '' ">NEWFANCING_MONEY = #{newfancingMoney},</if> 
+			<if test="fancingdifference != null and fancingdifference != '' ">FANCINGDIFFERENCE = #{fancingdifference},</if> 
+			<if test="totalFancingdifference != null and totalFancingdifference != '' ">TOTAL_FANCINGDIFFERENCE = #{totalFancingdifference},</if> 
+			<if test="fancingMoney != null and fancingMoney != '' ">FANCING_MONEY = #{fancingMoney},</if> 
+			<if test="singularbBacksection != null and singularbBacksection != '' ">SINGULAR_BACKSECTION = #{singularbBacksection},</if> 
+			<if test="totalBacksectionmoney != null and totalBacksectionmoney != '' ">TOTAL_BACKSECTIONMONEY = #{totalBacksectionmoney},</if> 
+			<if test="singularRepayment != null and singularRepayment != '' ">SINGULAR_REPAYMENT = #{singularRepayment},</if> 
+			<if test="totalRepayment != null and totalRepayment != '' ">TOTAL_REPAYMENT = #{totalRepayment},</if> 
+			<if test="totalEarnings != null and totalEarnings != '' ">TOTAL_EARNINGS = #{totalEarnings},</if> 
+			<if test="singularBadbill != null and singularBadbill != '' ">SINGULAR_BADBILL = #{singularBadbill},</if> 
+			<if test="totalBadbill != null and totalBadbill != '' ">TOTAL_BADBILL = #{totalBadbill},</if> 
+			<if test="kpidetalScores != null and kpidetalScores != '' ">KPIDETAL_SCORES = #{kpidetalScores},</if> 
+			<if test="kpidetalStyle != null and kpidetalStyle != '' ">KPIDETAL_STYLE = #{kpidetalStyle},</if> 
+			<if test="kpidetalQuarter != null and kpidetalQuarter != '' ">KPIDETAL_QUARTER = #{kpidetalQuarter},</if> 
+			<if test="kpidetalDate != null and kpidetalDate != '' ">KPIDETAL_DATE = #{kpidetalDate},</if> 
+			<if test="kpidetalType != null and kpidetalType != '' ">KPIDETAL_TYPE = #{kpidetalType},</if> 
+			<if test="workstatus != null and workstatus != '' ">WORKSTATUS = #{workstatus},</if> 
+			<if test="remark != null and remark != '' ">REMARK = #{remark},</if> 
+			<if test="creator != null and creator != '' ">CREATOR = #{creator},</if> 
+			<if test="createTime != null and createTime != '' ">CREATE_TIME = #{createTime},</if> 
+			<if test="modifier != null and modifier != '' ">MODIFIER = #{modifier},</if> 
+			<if test="modifyTime != null and modifyTime != '' ">MODIFY_TIME = #{modifyTime},</if> 
+			<if test="recver != null and recver != '' ">REC_VER = #{recver},</if> 
+			<if test="recStatus != null and recStatus != '' ">REC_STATUS = #{recStatus}</if> 
+    	</set>
+    	WHERE USER_PID = #{userPid} AND KPIINDEX_PID = #{kpiindexPid}
+    </update>
+    
+    
+	  
+</mapper>

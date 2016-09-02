@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.RoleFunctionMapper">
+
+    <resultMap type="com.sinoservices.xascf.system.model.RoleFunctionModel" id="RoleFunctionResultMap">
+        <id property="id" column="ID"/>
+        <result property="roleFunctionPid" column="ROLE_FUNCTION_PID"/>
+        <result property="rolePid" column="ROLE_PID"/>
+        <result property="functionPid" column="FUNCTION_PID"/>
+        <result property="creator" column="CREATOR"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="modifier" column="MODIFIER"/>
+        <result property="modifyTime" column="MODIFY_TIME"/>
+    </resultMap>
+    
+    <!-- 
+    <sql id="selectAll">
+        SELECT ID, ROLE_ID, FUNCTION_ID, CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+          FROM ROLE_FUNCTION
+    </sql>
+
+    <sql id="findByExampleWhere">
+        WHERE 1=1
+        <if test="roleId!=null and roleId!=''"> AND ROLE_ID=#{roleId}</if>
+    </sql>
+
+    <select id="getPage" parameterType="com.sinoservices.upm.model.RoleFunctionModel" resultMap="RoleFunctionResultMap">
+        <include refid="selectAll" />
+        <include refid="findByExampleWhere" />
+    </select>
+    
+    <select id="countByCondtion" parameterType="com.sinoservices.upm.model.RoleFunctionModel" resultType="int">
+        SELECT COUNT(1) FROM ROLE_FUNCTION
+        <include refid="findByExampleWhere" />
+    </select>
+    
+    <insert id="insert" parameterType="com.sinoservices.upm.model.RoleFunctionModel">
+        <selectKey resultType="long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID();        
+        </selectKey>
+        INSERT INTO ROLE_FUNCTION (ID, ROLE_ID, FUNCTION_ID,
+            CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME)    
+        VALUES (#{id}, #{roleId}, #{functionId},
+            #{creator}, #{createTime, jdbcType=TIMESTAMP}, #{modifier}, #{modifyTime, jdbcType=TIMESTAMP})
+    </insert>
+     -->
+     <!-- 批量执行插入 -->
+	<insert id="addByList"  parameterType="java.util.List">  
+	    	 INSERT INTO SS_ROLE_FUNCTION ( ROLE_FUNCTION_PID,ROLE_PID, FUNCTION_PID,
+            CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+			) values  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( #{item.roleFunctionPid},#{item.rolePid}, #{item.functionPid},
+	         #{item.creator},SYSDATE(), #{item.modifier},SYSDATE())  
+	    </foreach>  
+  </insert>
+    <!-- 
+    <update id="update" parameterType="com.sinoservices.upm.model.RoleFunctionModel">
+        UPDATE ROLE_FUNCTION SET ROLE_ID = #{roleId}, FUNCTION_ID = #{functionId},
+            CREATOR = #{creator}, CREATE_TIME = #{createTime}, MODIFIER = #{modifier}, MODIFY_TIME = #{modifyTime}
+         WHERE ID = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM ROLE_FUNCTION WHERE ID = #{id}
+    </delete>
+    -->
+    <delete id="deleteByRolePid" parameterType="String">
+        DELETE FROM SS_ROLE_FUNCTION WHERE   ROLE_PID=#{rolePid} 
+    </delete>
+    <!-- 
+     <delete id="deleteByList" parameterType="java.util.List">
+        DELETE FROM `ROLE_FUNCTION` WHERE 
+        <choose>
+            <when test="null!=list and list.size!=0">
+                ID IN
+	            <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
+	                #{id}
+	            </foreach>
+	        </when>
+	        <otherwise>
+	           1 != 1
+	        </otherwise>
+        </choose>
+        
+    </delete>
+    
+    <select id="getRoleFunctionIdsByModel" resultMap="RoleFunctionResultMap" parameterType="java.util.Map">
+		SELECT RF.ID,RF.FUNCTION_ID
+		  FROM `FUNCTION` F 
+		 INNER JOIN ROLE_FUNCTION RF
+		    ON F.ID = RF.FUNCTION_ID
+		 WHERE RF.ROLE_ID = #{roleId}
+		   AND F.SYSTEM_ID = #{systemId}
+		   AND
+		    <choose>
+            <when test="null!=resourceIdList and resourceIdList.length!=0">
+                 F.RESOURCE_ID IN
+	            <foreach collection="resourceIdList" item="item" index="index" open="(" separator="," close=")">
+	                #{item}
+	            </foreach>
+	        </when>
+	        <otherwise>
+	           1 != 1
+	        </otherwise>
+        </choose>
+	</select>
+ 
+	
+	<delete id="deleteByRoleFunctionList">
+        DELETE FROM `ROLE_FUNCTION` WHERE 1 = 1
+        <choose>
+            <when test="null!=list and list.size!=0">
+	            <foreach collection="list" item="item" index="index" open="AND (" separator="OR" close=")">
+	               (ROLE_ID = #{item.roleId} AND FUNCTION_ID = #{item.functionId})
+	            </foreach>
+	        </when>
+	        <otherwise>
+	           1 != 1
+	        </otherwise>
+        </choose>
+        
+    </delete>
+     -->
+</mapper>

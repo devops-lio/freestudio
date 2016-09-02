@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.LoanbankMapper">
+	<resultMap type="com.sinoservices.xascf.credit.view.LoanbankItem" id="loanbankItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="loansNo" column="LOANS_NO"/>
+		<result property="loansPwd" column="LOANS_PWD"/>
+		<result property="loansBank" column="LOANS_BANK"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					LOANBANK_PID,
+					MEMBER_PID,
+					LOANS_NO,
+					LOANS_PWD,
+					LOANS_BANK,
+					CREATOR,
+					CREATE_TIME,
+					MODIFIER,
+					MODIFY_TIME,
+					REC_VER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="loanbankPid!=null and loanbankPid!=''"> AND LOANBANK_PID LIKE ('%'||'loanbankPid'||'%' )</if>
+		<if test="memberPid!=null and memberPid!=''"> AND MEMBER_PID LIKE ('%'||'memberPid'||'%' )</if>
+		<if test="loansNo!=null and loansNo!=''"> AND LOANS_NO LIKE ('%'||'loansNo'||'%' )</if>
+		<if test="loansPwd!=null and loansPwd!=''"> AND LOANS_PWD LIKE ('%'||'loansPwd'||'%' )</if>
+		<if test="loansBank!=null and loansBank!=''"> AND LOANS_BANK LIKE ('%'||'loansBank'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.model.LoanbankModel">
+		<include refid="count"/>
+		FROM  SS_LOANBANK
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="loanbankItemResultMap" parameterType="com.sinoservices.xascf.credit.model.LoanbankModel">
+		<include refid="select"/>
+		FROM  SS_LOANBANK
+		<include refid="findByExample"/>
+	</select>
+	
+	<!-- 新增 -->
+	<insert id="insert">
+		INSERT INTO SS_LOANBANK (
+				PID,
+				CREDIT_NO,
+				MEMBER_PID,
+				LOANS_NO,
+				LOANS_PWD,
+				LOANS_BANK,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{creditNo},
+			   #{memberPid},
+			   #{loansNo},
+			   #{loansPwd},
+			   #{loansBank},
+			   #{creator},
+			   #{createTime},
+			   #{modifier},
+			   #{modifyTime},
+			   1,
+			   1
+		);
+	</insert>
+	
+	<!-- 根据creditNo查找 -->
+	<select id="findByNo" resultMap="loanbankItemResultMap" parameterType="String">
+		SELECT 
+			ID,
+			PID,
+			CREDIT_NO,
+			MEMBER_PID,
+			LOANS_NO,
+			LOANS_PWD,
+			LOANS_BANK,
+			CREATOR,
+			CREATE_TIME,
+			MODIFIER,
+			MODIFY_TIME,
+			REC_VER,
+			REC_STATUS
+		FROM SS_LOANBANK
+		WHERE
+			1=1
+			AND CREDIT_NO=#{_parameter}
+			AND REC_STATUS='1'
+		
+	</select>
+	
+	<update id="update">
+		UPDATE SS_LOANBANK SET
+				ID = #{id},
+				LOANBANK_PID = #{loanbankPid},
+				MEMBER_PID = #{memberPid},
+				LOANS_NO = #{loansNo},
+				LOANS_PWD = #{loansPwd},
+				LOANS_BANK = #{loansBank},
+				CREATOR = #{creator},
+				CREATE_TIME = #{createTime},
+				MODIFIER = #{modifier},
+				MODIFY_TIME = #{modifyTime},
+				REC_VER = #{recVer},
+				REC_STATUS = #{recStatus},
+	</update>
+	
+	<!-- 根据creditNo删除 -->
+	<delete id="deleteByCreditNo" parameterType="String">
+		DELETE FROM  SS_LOANBANK
+		WHERE
+			1=1
+			AND CREDIT_NO=#{_parameter}
+			AND REC_STATUS='1'
+	</delete>
+	
+</mapper>

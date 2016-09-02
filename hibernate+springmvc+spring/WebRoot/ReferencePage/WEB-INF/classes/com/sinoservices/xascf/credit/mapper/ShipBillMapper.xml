@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.ShipBillMapper">
+	<resultMap type="com.sinoservices.xascf.credit.model.ShipBillModel" id="dmShipBillModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="shipBillNo" column="SHIP_BILL_NO"/>
+		<result property="businessNo" column="BUSINESS_NO"/>
+		<result property="buyName" column="BUY_NAME"/>
+		<result property="buyPid" column="BUY_PID"/>
+		<result property="billAmount" column="BILL_AMOUNT"/>
+		<result property="checkDate" column="CHECK_DATE"/>
+		<result property="billDate" column="BILL_DATE"/>
+		<result property="buyCheckName" column="BUY_CHECK_NAME"/>
+		<result property="checkName" column="CHECK_NAME"/>
+		<result property="billFileName" column="BILL_FILE_NAME"/>
+		<result property="billFileRename" column="BILL_FILE_RENAME"/>
+		<result property="billFileUrl" column="BILL_FILE_URL"/>
+		<result property="toDate" column="TO_DATE"/>
+		<result property="shipBillStatus" column="SHIP_BILL_STATUS"/>
+		<result property="isEffective" column="ISEFFECTIVE"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					SHIP_BILL_NO,
+					BUSINESS_NO,
+					BUY_NAME,
+					BUY_PID,
+					BILL_AMOUNT,
+					CHECK_DATE,
+					BILL_DATE,
+					BUY_CHECK_NAME,
+					CHECK_NAME,
+					BILL_FILE_NAME,
+					BILL_FILE_RENAME,
+					BILL_FILE_URL,
+					TO_DATE,
+					SHIP_BILL_STATUS,ISEFFECTIVE,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="shipBillNo!=null and shipBillNo!=''"> AND SHIP_BILL_NO LIKE ('%${shipBillNo}%' )</if>
+		<if test="businessNo!=null and businessNo!=''"> AND BUSINESS_NO LIKE ('%${businessNo}%' )</if>
+		<if test="buyName!=null and buyName!=''"> AND BUY_NAME LIKE ('%${buyName}%' )</if>
+		<if test="buyPid!=null and buyPid!=''"> AND BUY_PID LIKE ('%${buyPid}%' )</if>
+		<if test="billAmount!=null and billAmount!=''"> AND BILL_AMOUNT LIKE ('%${billAmount}%' )</if>
+		<if test="checkDate!=null and checkDate!=''"> AND CHECK_DATE LIKE ('%${checkDate}%' )</if>
+		<if test="billDate!=null and billDate!=''"> AND BILL_DATE LIKE ('%${billDate}%' )</if>
+		<if test="buyCheckName!=null and buyCheckName!=''"> AND BUY_CHECK_NAME LIKE ('%${buyCheckName}%' )</if>
+		<if test="checkName!=null and checkName!=''"> AND CHECK_NAME LIKE ('%${checkName}%' )</if>
+		<if test="billFileName!=null and billFileName!=''"> AND BILL_FILE_NAME LIKE ('%${billFileName}%' )</if>
+		<if test="billFileRename!=null and billFileRename!=''"> AND BILL_FILE_RENAME LIKE ('%${billFileRename}%' )</if>
+		<if test="billFileUrl!=null and billFileUrl!=''"> AND BILL_FILE_URL LIKE ('%${billFileUrl}%' )</if>
+		<if test="toDate!=null and toDate!=''"> AND TO_DATE LIKE ('%${toDate}%' )</if>
+		<if test="shipBillStatus!=null and shipBillStatus!=''"> AND SHIP_BILL_STATUS LIKE ('%${shipBillStatus}%' )</if>
+	</sql>
+	
+	<!-- 查看单号是否已经存在 -->
+	<select id="getShipBillNos" resultType="String" parameterType="java.util.List">
+		SELECT SHIP_BILL_NO FROM DM_SHIP_BILL
+		WHERE 1=1 AND SHIP_BILL_NO IN
+		<foreach item="shipBillNos" collection="list" open="(" separator="," close=")">
+			#{shipBillNos}
+		</foreach>
+	</select>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.credit.model.ShipBillModel">
+		<include refid="count"/>
+		FROM  DM_SHIP_BILL
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="dmShipBillModelResultMap" parameterType="com.sinoservices.xascf.credit.model.ShipBillModel">
+		<include refid="select"/>
+		FROM  DM_SHIP_BILL
+		<include refid="findByExample"/>
+	</select>
+	<select id="getPageByBusinessNo" resultMap="dmShipBillModelResultMap" parameterType="com.sinoservices.xascf.credit.model.ShipBillModel">
+		<include refid="select"/>
+		FROM  DM_SHIP_BILL
+		WHERE BUSINESS_NO=#{businessNo}
+		<if test="isEffective !=null and isEffective !=''"> AND ISEFFECTIVE =#{isEffective}</if>
+	</select>
+	<insert id="insert" parameterType="com.sinoservices.xascf.credit.model.ShipBillModel">
+		INSERT INTO DM_SHIP_BILL (
+				PID,
+				SHIP_BILL_NO,
+				BUSINESS_NO,
+				BUY_NAME,
+				BUY_PID,
+				BILL_AMOUNT,
+				CHECK_DATE,
+				BILL_DATE,
+				BUY_CHECK_NAME,
+				CHECK_NAME,
+				BILL_FILE_NAME,
+				BILL_FILE_RENAME,
+				BILL_FILE_URL,
+				TO_DATE,
+				SHIP_BILL_STATUS,
+				ISEFFECTIVE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{shipBillNo},
+			   #{businessNo},
+			   #{buyName},
+			   #{buyPid},
+			   #{billAmount},
+			   #{checkDate},
+			   #{billDate},
+			   #{buyCheckName},
+			   #{checkName},
+			   #{billFileName},
+			   #{billFileRename},
+			   #{billFileUrl},
+			   #{toDate},
+			   #{shipBillStatus},
+			   #{isEffective},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   1
+		);
+	</insert>
+	<!-- 新增list -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    	INSERT INTO DM_SHIP_BILL (
+				PID,
+				SHIP_BILL_NO,
+				BUSINESS_NO,
+				BUY_NAME,
+				BUY_PID,
+				BILL_AMOUNT,
+				CHECK_DATE,
+				BILL_DATE,
+				BUY_CHECK_NAME,
+				CHECK_NAME,
+				BILL_FILE_NAME,
+				BILL_FILE_RENAME,
+				BILL_FILE_URL,
+				TO_DATE,
+				SHIP_BILL_STATUS,
+				ISEFFECTIVE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (  #{item.pid},
+			   #{item.shipBillNo},
+			   #{item.businessNo},
+			   #{item.buyName},
+			   #{item.buyPid},
+			   #{item.billAmount},
+			   #{item.checkDate},
+			   #{item.billDate},
+			   #{item.buyCheckName},
+			   #{item.checkName},
+			   #{item.billFileName},
+			   #{item.billFileRename},
+			   #{item.billFileUrl},
+			   #{item.toDate},
+			   #{item.shipBillStatus},
+			   1,
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   1)  
+	    </foreach>  
+  </insert>  
+  <delete id="deleteByBusinessNo" parameterType="String">
+      DELETE FROM DM_SHIP_BILL WHERE BUSINESS_NO=#{_parameter} AND ISEFFECTIVE='1'
+  </delete>
+  <delete id="deleteByCreditNo" parameterType="String">
+      DELETE FROM DM_SHIP_BILL WHERE BUSINESS_NO=#{_parameter} 
+  </delete>
+  <delete id="deleteByPid" parameterType="String">
+      DELETE FROM DM_SHIP_BILL WHERE PID=#{_parameter} 
+  </delete>
+	<update id="updateToNoEffectiveByOrderNo" parameterType="String">
+		UPDATE DM_SHIP_BILL SET
+				ISEFFECTIVE=0,
+				REC_VER=REC_VER+1,
+				MODIFY_TIME=SYSDATE()
+			WHERE BUSINESS_NO=#{_parameter}
+	</update>
+</mapper>

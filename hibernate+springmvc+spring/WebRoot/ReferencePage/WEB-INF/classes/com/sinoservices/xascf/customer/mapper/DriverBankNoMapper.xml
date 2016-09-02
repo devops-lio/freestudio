@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.customer.mapper.DriverBankNoMapper">
+	<resultMap type="com.sinoservices.xascf.customer.model.DriverBankNoModel" id="driverBankNoModelMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="driverName" column="DRIVER_NAME"/>
+		<result property="driverIdNo" column="DRIVER_ID_NO"/>
+		<result property="bankHolder" column="BANK_HOLDER"/>
+		<result property="bankName" column="BANK_NAME"/>
+		<result property="bankAccount" column="BANK_ACCOUNT"/>
+		<result property="remark" column="REMARK"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					MEMBER_NO,
+					MEMBER_PID,
+					DRIVER_NAME,
+					DRIVER_ID_NO,
+					BANK_HOLDER,
+					BANK_NAME,
+					BANK_ACCOUNT,
+					REMARK,
+					CREATOR,
+					CREATE_TIME,
+					MODIFIER,
+					MODIFY_TIME,
+					REC_VER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="memberNo!=null and memberNo!=''"> AND MEMBER_NO =#{memberNo}</if>
+		<if test="memberPid!=null and memberPid!=''"> AND MEMBER_PID =#{memberPid}</if>
+		<if test="driverName!=null and driverName!=''"> AND DRIVER_NAME LIKE ('%${driverName}%' )</if>
+		<if test="driverIdNo!=null and driverIdNo!=''"> AND DRIVER_ID_NO =#{driverIdNo}</if>
+		<if test="bankHolder!=null and bankHolder!=''"> AND BANK_HOLDER LIKE ('%${bankHolder}%' )</if>
+		<if test="bankName!=null and bankName!=''"> AND BANK_NAME LIKE ('%${bankName}%' )</if>
+		<if test="bankAccount!=null and bankAccount!=''"> AND BANK_ACCOUNT =#{bankAccount}</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.customer.model.DriverBankNoModel">
+		<include refid="count"/>
+		FROM  SS_DRIVER_BANK_NO
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="driverBankNoModelMap" parameterType="com.sinoservices.xascf.customer.model.DriverBankNoModel">
+		<include refid="select"/>
+		FROM  SS_DRIVER_BANK_NO
+		<include refid="findByExample"/>
+	</select>
+	<select id="findByMemberPid" resultMap="driverBankNoModelMap" parameterType="String">
+		<include refid="select"/>
+		FROM  SS_DRIVER_BANK_NO
+		WHERE MEMBER_PID =#{_parameter}
+	</select>
+	<!-- 司机账号弹出框查询用于放款申请时 -->
+	<select id="findByMemberPidNoInFancing" resultMap="driverBankNoModelMap" parameterType="com.sinoservices.xascf.customer.model.DriverBankNoModel">
+		<include refid="select"/>
+		FROM  SS_DRIVER_BANK_NO
+		<include refid="findByExample"/>
+		<if test="list!=null"> AND PID NOT IN (
+			   <foreach collection="list" separator="," item="i" index="index" > 
+         			#{i}
+      			</foreach>
+      			)</if>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.customer.model.DriverBankNoModel">
+		INSERT INTO SS_DRIVER_BANK_NO (
+				PID,
+				MEMBER_NO,
+				MEMBER_PID,
+				DRIVER_NAME,
+				DRIVER_ID_NO,
+				BANK_HOLDER,
+				BANK_NAME,
+				BANK_ACCOUNT,
+				REMARK,
+				CREATOR,
+				CREATE_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{memberNo},
+			   #{memberPid},
+			   #{driverName},
+			   #{driverIdNo},
+			   #{bankHolder},
+			   #{bankName},
+			   #{bankAccount},
+			   #{remark},
+			   #{creator},
+			   SYSDATE(),
+			   1,
+			   1
+		)
+	</insert>
+	<!-- 插入list -->
+	<insert id="insertList" parameterType="java.util.List">
+		INSERT INTO SS_DRIVER_BANK_NO (
+				PID,
+				MEMBER_NO,
+				MEMBER_PID,
+				DRIVER_NAME,
+				DRIVER_ID_NO,
+				BANK_HOLDER,
+				BANK_NAME,
+				BANK_ACCOUNT,
+				REMARK,
+				CREATOR,
+				CREATE_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES 
+			<foreach collection="list" item="item" index="index" separator=",">
+			  (#{item.pid},
+			   #{item.memberNo},
+			   #{item.memberPid},
+			   #{item.driverName},
+			   #{item.driverIdNo},
+			   #{item.bankHolder},
+			   #{item.bankName},
+			   #{item.bankAccount},
+			   #{item.remark},
+			   #{item.creator},
+			   SYSDATE(),
+			   1,
+			   1)
+			</foreach>
+	</insert>
+	<delete id="deleteByMemberNo" parameterType="String">
+		DELETE FROM SS_DRIVER_BANK_NO WHERE MEMBER_NO=#{_parameter}
+	
+	</delete>
+</mapper>

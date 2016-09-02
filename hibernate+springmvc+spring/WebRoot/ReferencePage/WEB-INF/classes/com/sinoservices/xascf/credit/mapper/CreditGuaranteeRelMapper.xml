@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.CreditGuaranteeRelMapper">
+	<resultMap type="com.sinoservices.xascf.credit.view.CreditGuaranteeRelItem" id="creditGuaranteeRelItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="guaranteeCompanyPid" column="GUARANTEE_COMPANY_PID"/>
+		<result property="guaranteeProtocolName" column="GUARANTEE_PROTOCOL_NAME"/>
+		<result property="guaranteeProtocolNewname" column="GUARANTEE_PROTOCOL_NEWNAME"/>
+		<result property="guaranteeProtocolUrl" column="GUARANTEE_PROTOCOL_URL"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		
+		<result property="guranteeName" column="GUARANTEE_NAME"/>
+		
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.credit.model.CreditGuaranteeRelModel" id="creditGuaranteeRelModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="guaranteeCompanyPid" column="GUARANTEE_COMPANY_PID"/>
+		<result property="guaranteeProtocolName" column="GUARANTEE_PROTOCOL_NAME"/>
+		<result property="guaranteeProtocolNewname" column="GUARANTEE_PROTOCOL_NEWNAME"/>
+		<result property="guaranteeProtocolUrl" column="GUARANTEE_PROTOCOL_URL"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					CREDIT_NO,
+					GUARANTEE_COMPANY_PID,
+					GUARANTEE_PROTOCOL_NAME,
+					GUARANTEE_PROTOCOL_NEWNAME,
+					GUARANTEE_PROTOCOL_URL,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="pid!=null and pid!=''"> AND PID LIKE ('%'||'pid'||'%' )</if>
+		<if test="creditNo!=null and creditNo!=''"> AND CREDIT_NO LIKE ('%'||'creditNo'||'%' )</if>
+		<if test="guaranteeCompanyPid!=null and guaranteeCompanyPid!=''"> AND GUARANTEE_COMPANY_PID LIKE ('%'||'guaranteeCompanyPid'||'%' )</if>
+		<if test="guaranteeProtocolName!=null and guaranteeProtocolName!=''"> AND GUARANTEE_PROTOCOL_NAME LIKE ('%'||'guaranteeProtocolName'||'%' )</if>
+		<if test="guaranteeProtocolNewname!=null and guaranteeProtocolNewname!=''"> AND GUARANTEE_PROTOCOL_NEWNAME LIKE ('%'||'guaranteeProtocolNewname'||'%' )</if>
+		<if test="guaranteeProtocolUrl!=null and guaranteeProtocolUrl!=''"> AND GUARANTEE_PROTOCOL_URL LIKE ('%'||'guaranteeProtocolUrl'||'%' )</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.model.CreditGuaranteeRelModel">
+		<include refid="count"/>
+		FROM  DM_CREDIT_GUARANTEE_REL
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="creditGuaranteeRelItemResultMap" parameterType="com.sinoservices.xascf.credit.model.CreditGuaranteeRelModel">
+		<include refid="select"/>
+		FROM  DM_CREDIT_GUARANTEE_REL
+		<include refid="findByExample"/>
+	</select>
+	<select id="getListByCreditNo" resultMap="creditGuaranteeRelItemResultMap" parameterType="String">
+		SELECT 
+					a.ID,
+					a.PID,
+					a.CREDIT_NO,
+					a.GUARANTEE_COMPANY_PID,
+					a.GUARANTEE_PROTOCOL_NAME,
+					a.GUARANTEE_PROTOCOL_NEWNAME,
+					a.GUARANTEE_PROTOCOL_URL,
+					a.REMARK,
+					a.REC_VER,
+					a.CREATE_TIME,
+					a.CREATOR,
+					a.MODIFY_TIME,
+					a.MODIFIER,
+					a.REC_STATUS,
+					b.GUARANTEE_NAME
+		FROM  DM_CREDIT_GUARANTEE_REL a ,DM_CREDIT_GUARANTEE b
+		WHERE 
+		1=1
+		and CREDIT_NO=#{_parameter}
+		and a.GUARANTEE_COMPANY_PID=b.PID
+	</select>
+	<insert id="insert">
+		INSERT INTO DM_CREDIT_GUARANTEE_REL (
+				ID,
+				PID,
+				CREDIT_NO,
+				GUARANTEE_COMPANY_PID,
+				GUARANTEE_PROTOCOL_NAME,
+				GUARANTEE_PROTOCOL_NEWNAME,
+				GUARANTEE_PROTOCOL_URL,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS,
+		) VALUES (
+			   #{id},
+			   #{pid},
+			   #{creditNo},
+			   #{guaranteeCompanyPid},
+			   #{guaranteeProtocolName},
+			   #{guaranteeProtocolNewname},
+			   #{guaranteeProtocolUrl},
+			   #{remark},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus},
+		);
+	</insert>
+	<!-- 根据creditNo删除 -->
+	<delete id="deleteByCreditNo" parameterType="String">
+		DELETE FROM  DM_CREDIT_GUARANTEE_REL
+		WHERE
+			1=1
+			AND CREDIT_NO=#{_parameter}
+			AND REC_STATUS='1'
+	</delete>
+	
+	
+	<update id="update">
+		UPDATE DM_CREDIT_GUARANTEE_REL SET
+				ID = #{id},
+				PID = #{pid},
+				CREDIT_NO = #{creditNo},
+				GUARANTEE_COMPANY_PID = #{guaranteeCompanyPid},
+				GUARANTEE_PROTOCOL_NAME = #{guaranteeProtocolName},
+				GUARANTEE_PROTOCOL_NEWNAME = #{guaranteeProtocolNewname},
+				GUARANTEE_PROTOCOL_URL = #{guaranteeProtocolUrl},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus},
+	</update>
+	
+	<!-- 插入list -->
+	<insert id="insertList" parameterType="java.util.List">
+		INSERT INTO DM_CREDIT_GUARANTEE_REL (
+				PID,
+				CREDIT_NO,
+				GUARANTEE_COMPANY_PID,
+				GUARANTEE_PROTOCOL_NAME,
+				GUARANTEE_PROTOCOL_NEWNAME,
+				GUARANTEE_PROTOCOL_URL,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES 
+			<foreach collection="list" item="item" index="index" separator=",">
+			  ( #{item.pid},
+			   #{item.creditNo},
+			   #{item.guaranteeCompanyPid},
+			   #{item.guaranteeProtocolName},
+			   #{item.guaranteeProtocolNewname},
+			   #{item.guaranteeProtocolUrl},
+			   #{item.remark},
+			   1,
+			   #{item.createTime},
+			   #{item.creator},
+			   #{item.modifyTime},
+			   #{item.modifier},
+			   1)
+			</foreach>
+	</insert>
+</mapper>

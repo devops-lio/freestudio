@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.QualificationMaterialMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.view.QualificationMaterialItem" id="qualificationMaterialItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="qualificationPid" column="QUALIFICATION_PID"/>
+		<result property="qualificationType" column="QUALIFICATION_TYPE"/>
+		<result property="qualificationName" column="QUALIFICATION_NAME"/>
+		<result property="resultScore" column="RESULT_SCORE"/>
+		<result property="qualificationFileName" column="QUALIFICATION_FILE_NAME"/>
+		<result property="qualificationUrl" column="QUALIFICATION_URL"/>
+		<result property="qualificationNo" column="QUALIFICATION_NO"/>
+		<result property="qualificationOwerPid" column="QUALIFICATION_OWER_PID"/>
+		<result property="qualificationEffectiveDate" column="QUALIFICATION_EFFECTIVE_DATE"/> 
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.fancing.model.QualificationMaterialModel" id="qualificationMaterialViewItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="qualificationPid" column="QUALIFICATION_PID"/>
+		<result property="qualificationType" column="QUALIFICATION_TYPE"/>
+		<result property="qualificationName" column="QUALIFICATION_NAME"/>
+		<result property="qualificationFileName" column="QUALIFICATION_FILE_NAME"/>
+		<result property="qualificationUrl" column="QUALIFICATION_URL"/>
+		<result property="qualificationNo" column="QUALIFICATION_NO"/>
+		<result property="qualificationOwerPid" column="QUALIFICATION_OWER_PID"/>
+		<result property="qualificationEffectiveDate" column="QUALIFICATION_EFFECTIVE_DATE"/> 
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					QUALIFICATION_PID,
+					QUALIFICATION_TYPE,
+					QUALIFICATION_NAME,
+					QUALIFICATION_FILE_NAME,
+					QUALIFICATION_URL,
+					QUALIFICATION_NO,
+					QUALIFICATION_OWER_PID,
+					QUALIFICATION_EFFECTIVE_DATE,
+					REMARK,
+					REC_VER,
+					DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') AS CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="qualificationPid!=null and qualificationPid!=''"> AND QUALIFICATION_PID LIKE ('%'||'qualificationPid'||'%' )</if>
+		<if test="qualificationType!=null and qualificationType!=''"> AND QUALIFICATION_TYPE LIKE ('%'||'qualificationType'||'%' )</if>
+		<if test="qualificationName!=null and qualificationName!=''"> AND QUALIFICATION_NAME LIKE ('%'||'qualificationName'||'%' )</if>
+		<if test="qualificationUrl!=null and qualificationUrl!=''"> AND QUALIFICATION_URL LIKE ('%'||'qualificationUrl'||'%' )</if>
+		<if test="qualificationNo!=null and qualificationNo!=''"> AND QUALIFICATION_NO LIKE ('%'||'qualificationNo'||'%' )</if>
+		<if test="qualificationOwerPid!=null and qualificationOwerPid!=''"> AND QUALIFICATION_OWER_PID LIKE ('%'||'qualificationOwerPid'||'%' )</if>
+		
+		<if test="qualificationEffectiveDate!=null and qualificationEffectiveDate!=''"> 
+			AND QUALIFICATION_EFFECTIVE_DATE LIKE ('%'||'qualificationEffectiveDate'||'%' )
+			</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.model.QualificationMaterialModel">
+		<include refid="count"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="qualificationMaterialItemResultMap" parameterType="com.sinoservices.xascf.fancing.model.QualificationMaterialModel">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		<include refid="findByExample"/>
+	</select>
+	<!-- 根据融资单号获取抵押材料信息 -->
+	<select id="getQualaficationByOrderNo" resultMap="qualificationMaterialItemResultMap" parameterType="String">
+		SELECT 
+					FQM.QUALIFICATION_PID,
+					RRI.SCORE AS RESULT_SCORE,
+					QUALIFICATION_TYPE,
+					QUALIFICATION_NAME,
+					QUALIFICATION_FILE_NAME,
+					QUALIFICATION_URL,
+					QUALIFICATION_NO,
+					QUALIFICATION_OWER_PID
+			FROM  DM_FANCING_QUALIFICATION_MAP FQM 
+			JOIN  DM_QUALIFICATION_MATERIAL		QM ON FQM.QUALIFICATION_PID=QM.QUALIFICATION_PID
+		LEFT	JOIN RM_RESULT_ITEM RRI ON QM.QUALIFICATION_PID=RRI.FACTOR_PID
+		WHERE FQM.FANCING_ORDER_NO=#{_parameter}
+	</select>
+	<insert id="insert">
+		INSERT INTO DM_QUALIFICATION_MATERIAL (
+				ID,
+				QUALIFICATION_PID,
+				QUALIFICATION_TYPE,
+				QUALIFICATION_NAME,
+				QUALIFICATION_FILE_NAME,
+				QUALIFICATION_URL,
+				QUALIFICATION_NO,
+				QUALIFICATION_OWER_PID,
+				QUALIFICATION_EFFECTIVE_DATE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{qualificationPid},
+			   #{qualificationType},
+			   #{qualificationName},
+			   #{qualificationFileName},
+			   #{qualificationUrl},
+			   #{qualificationNo},
+			   #{qualificationOwerPid},
+			   #{qualificationEffectiveDate}, 
+			   #{remark},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus}
+		);
+	</insert>
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO DM_QUALIFICATION_MATERIAL (
+				QUALIFICATION_PID,
+				QUALIFICATION_TYPE,
+				QUALIFICATION_NAME,
+				QUALIFICATION_FILE_NAME,
+				QUALIFICATION_URL,
+				QUALIFICATION_NO,
+				QUALIFICATION_OWER_PID,
+				QUALIFICATION_EFFECTIVE_DATE,
+				REMARK,
+				REC_VER,
+				CREATOR,
+				CREATE_TIME,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (  
+			   #{item.qualificationPid},
+			   #{item.qualificationType},
+			   #{item.qualificationName},
+			   #{item.qualificationFileName},
+			   #{item.qualificationUrl},
+			   #{item.qualificationNo},
+			   #{item.qualificationOwerPid},
+			   #{item.qualificationEffectiveDate}, 
+			   #{item.remark},
+			   1,
+			   #{item.creator}, 
+			   #{item.createTime},
+			   #{item.recStatus})  
+	    </foreach>  
+  </insert>  
+  <!-- 批量执行更新 -->
+	<update id="updateByList" parameterType="java.util.List">
+			UPDATE DM_QUALIFICATION_MATERIAL 
+			<trim prefix="set" suffixOverrides=","> 
+	          <!-- 更新的字段集合 --> 
+	          <trim prefix="QUALIFICATION_TYPE =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.qualificationType!=null">  
+	                      when (QUALIFICATION_PID = #{i.qualificationPid}) then #{i.qualificationType}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="QUALIFICATION_NAME =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.qualificationName!=null">  
+	                      when (QUALIFICATION_PID = #{i.qualificationPid}) then #{i.qualificationName}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="QUALIFICATION_FILE_NAME =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.qualificationFileName!=null">  
+	                      when (QUALIFICATION_PID = #{i.qualificationPid}) then #{i.qualificationFileName}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="QUALIFICATION_URL =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.qualificationUrl!=null">  
+	                      when (QUALIFICATION_PID = #{i.qualificationPid}) then #{i.qualificationUrl}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="QUALIFICATION_NO =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.qualificationNo!=null">  
+	                      when (QUALIFICATION_PID = #{i.qualificationPid}) then #{i.qualificationNo}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="QUALIFICATION_OWER_PID =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.qualificationOwerPid!=null">  
+	                      when (QUALIFICATION_PID = #{i.qualificationPid}) then #{i.qualificationOwerPid}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	           <trim prefix="Modifier =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                     <if test="i.modifier!=null">  
+	                      when (QUALIFICATION_PID = #{i.qualificationPid}) then #{i.modifier}  
+	                     </if>  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Modify_Time =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (QUALIFICATION_PID = #{i.qualificationPid}) then SYSDATE()  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Rec_Ver =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (QUALIFICATION_PID = #{i.qualificationPid}) then Rec_Ver+1  
+	              </foreach>  
+	           </trim>
+         </trim>   
+         where   
+         <foreach collection="list" separator="or" item="i" index="index" >  
+          (QUALIFICATION_PID = #{i.qualificationPid}) 
+      	</foreach>  
+	
+	</update>
+	<update id="update">
+		UPDATE DM_QUALIFICATION_MATERIAL SET
+				QUALIFICATION_TYPE = #{qualificationType},
+				QUALIFICATION_NAME = #{qualificationName},
+				QUALIFICATION_FILE_NAME = #{qualificationFileName},
+				QUALIFICATION_URL = #{qualificationUrl},
+				QUALIFICATION_NO = #{qualificationNo},
+				QUALIFICATION_OWER_PID = #{qualificationOwerPid},
+				QUALIFICATION_EFFECTIVE_DATE = #{qualificationEffectiveDate},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus}
+	</update>
+	
+	<!-- 营业执照查询 -->
+	<select id="findByBusiness" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '1'
+	</select>
+	
+	<!-- 税务登记证查询 -->
+	<select id="findByTax" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '2'
+	</select>
+	
+	<!-- 财务报表查询 -->
+	<select id="findByFinance" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '3'
+	</select>
+	
+	<!-- 法人身份证查询 -->
+	<select id="findByLegal" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '4'
+	</select>
+	
+	<!-- 开户许可证查询 -->
+	<select id="findByAccount" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '7'
+	</select>
+	
+	<!-- 实际控制人身份证 -->
+	<select id="findByCredit" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '8'
+	</select>
+	
+	<!-- 道路运输经营许可证查询 -->
+	<select id="findByLoans" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '9'
+	</select>
+	
+	<!-- 公司章程查询 -->
+	<select id="findByRule" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '10'
+	</select> 
+	
+	<!-- 身份证查询 -->
+	<select id="findByCard" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '11'
+	</select>
+	
+	<!-- 结婚证查询 -->
+	<select id="findByMarriage" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '12'
+	</select>
+	
+	<!-- 户口本复印件查询 -->
+	<select id="findByRegistered" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '13'
+	</select>
+	
+	<!-- 房产证复印件查询 -->
+	<select id="findByEstate" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '14'
+	</select>
+	
+	<!-- 车辆行驶证复印件查询 -->
+	<select id="findByVehicle" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '15'
+	</select>
+	
+	<!-- 个人银行卡流水查询 -->
+	<select id="findBySerial" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '16'
+	</select> 
+	
+	<!-- 验资报告(实缴金额凭证) -->
+	<select id="findByVerification" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '17'
+	</select>
+	
+	<!-- 其他经营许可证 -->
+	<select id="findByOther" resultMap="qualificationMaterialViewItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_QUALIFICATION_MATERIAL
+		WHERE
+			1=1
+			AND QUALIFICATION_OWER_PID = #{_parameter} AND QUALIFICATION_TYPE = '18'
+	</select>
+	
+	<delete id="delete" parameterType="String">
+		DELETE 
+		FROM DM_QUALIFICATION_MATERIAL
+		WHERE QUALIFICATION_OWER_PID = #{qualificationOwerPid} 
+	</delete>
+	
+</mapper>

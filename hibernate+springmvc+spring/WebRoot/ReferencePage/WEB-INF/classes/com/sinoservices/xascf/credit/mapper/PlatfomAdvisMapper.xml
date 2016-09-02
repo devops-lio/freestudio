@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.PlatfomAdvisMapper">
+	<resultMap type="com.sinoservices.xascf.credit.model.PlatfomAdvisModel" id="platfomAdvisModelMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="platfomNo" column="PLATFOM_NO"/>
+		<result property="platfomName" column="PLATFOM_NAME"/>
+		<result property="creditPrice" column="CREDIT_PRICE"/>
+		<result property="customerScore" column="CUSTOMER_SCORE"/>
+		<result property="creditAdvis" column="CREDIT_ADVIS"/>
+		<result property="customerCredit" column="CUSTOMER_CREDIT"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					CREDIT_NO,
+					PLATFOM_NO,
+					PLATFOM_NAME,
+					CREDIT_PRICE,
+					CUSTOMER_SCORE,
+					CREDIT_ADVIS,
+					CUSTOMER_CREDIT,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="pid!=null and pid!=''"> AND PID LIKE ('%'||'pid'||'%' )</if>
+		<if test="creditNo!=null and creditNo!=''"> AND CREDIT_NO LIKE ('%'||'creditNo'||'%' )</if>
+		<if test="platfomNo!=null and platfomNo!=''"> AND PLATFOM_NO LIKE ('%'||'platfomNo'||'%' )</if>
+		<if test="platfomName!=null and platfomName!=''"> AND PLATFOM_NAME LIKE ('%'||'platfomName'||'%' )</if>
+		<if test="creditPrice!=null and creditPrice!=''"> AND CREDIT_PRICE LIKE ('%'||'creditPrice'||'%' )</if>
+		<if test="customerScore!=null and customerScore!=''"> AND CUSTOMER_SCORE LIKE ('%'||'customerScore'||'%' )</if>
+		<if test="creditAdvis!=null and creditAdvis!=''"> AND CREDIT_ADVIS LIKE ('%'||'creditAdvis'||'%' )</if>
+		<if test="customerCredit!=null and customerCredit!=''"> AND CUSTOMER_CREDIT LIKE ('%'||'customerCredit'||'%' )</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.model.PlatfomAdvisModel">
+		<include refid="count"/>
+		FROM  DM_PLATFOM_ADVIS
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="platfomAdvisModelMap" parameterType="com.sinoservices.xascf.credit.model.PlatfomAdvisModel">
+		<include refid="select"/>
+		FROM  DM_PLATFOM_ADVIS
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_PLATFOM_ADVIS (
+				ID,
+				PID,
+				CREDIT_NO,
+				PLATFOM_NO,
+				PLATFOM_NAME,
+				CREDIT_PRICE,
+				CUSTOMER_SCORE,
+				CREDIT_ADVIS,
+				CUSTOMER_CREDIT,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS,
+		) VALUES (
+			   #{id},
+			   #{pid},
+			   #{creditNo},
+			   #{platfomNo},
+			   #{platfomName},
+			   #{creditPrice},
+			   #{customerScore},
+			   #{creditAdvis},
+			   #{customerCredit},
+			   #{remark},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus},
+		);
+	</insert>
+	
+	<!-- 批量新增-->
+	<insert id="batchInsert" parameterType="java.util.List">  
+		INSERT INTO DM_PLATFOM_ADVIS (
+				ID,
+				PID,
+				CREDIT_NO,
+				PLATFOM_NO,
+				PLATFOM_NAME,
+				CREDIT_PRICE,
+				CUSTOMER_SCORE,
+				CREDIT_ADVIS,
+				CUSTOMER_CREDIT,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (   
+			   #{id},
+			   #{pid},
+			   #{creditNo},
+			   #{platfomNo},
+			   #{platfomName},
+			   #{creditPrice},
+			   #{customerScore},
+			   #{creditAdvis},
+			   #{customerCredit},
+			   #{remark},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus}
+			   )  
+	    </foreach>  
+  	</insert> 
+	
+	<update id="update">
+		UPDATE DM_PLATFOM_ADVIS SET
+				ID = #{id},
+				PID = #{pid},
+				CREDIT_NO = #{creditNo},
+				PLATFOM_NO = #{platfomNo},
+				PLATFOM_NAME = #{platfomName},
+				CREDIT_PRICE = #{creditPrice},
+				CUSTOMER_SCORE = #{customerScore},
+				CREDIT_ADVIS = #{creditAdvis},
+				CUSTOMER_CREDIT = #{customerCredit},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus},
+	</update>
+</mapper>

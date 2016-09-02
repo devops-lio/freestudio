@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.edi.mapper.EdiShipBillMapper">
+	<resultMap type="com.sinoservices.xascf.edi.model.EdiShipBillModel" id="EdiShipBillModel">
+		<result property="shipBillId" column="SHIP_BILL_ID"/>
+		<result property="fancingOrderId" column="FANCING_ORDER_ID"/>
+		<result property="shipBillNo" column="SHIP_BILL_NO"/>
+		<result property="buyName" column="BUY_NAME"/>
+		<result property="buyPid" column="BUY_PID"/>
+		<result property="billAmount" column="BILL_AMOUNT"/>
+		<result property="checkDate" column="CHECK_DATE"/>
+		<result property="billDate" column="BILL_DATE"/>
+		<result property="buyCheckName" column="BUY_CHECK_NAME"/>
+		<result property="checkName" column="CHECK_NAME"/>
+		<result property="toDate" column="TO_DATE"/>
+	</resultMap>  
+	
+	<sql id="select"> 
+		  SELECT 
+				SHIP_BILL_ID,
+				FANCING_ORDER_ID,
+				SHIP_BILL_NO,
+				BUY_NAME,
+				BUY_PID,
+				BILL_AMOUNT,
+				CHECK_DATE,
+				BILL_DATE,
+				BUY_CHECK_NAME,
+				CHECK_NAME,
+				TO_DATE
+	</sql>
+	
+	<!-- 查询  -->
+	<select id="getEdiShipBillByCondition" resultMap="EdiShipBillModel" parameterType="com.sinoservices.xascf.edi.model.EdiShipBillModel">
+		<include refid="select"/>  
+		FROM  EDI_SHIPBILL
+		<include refid="findByExample"/> 
+	</select>
+	
+	<sql id="findByExample">
+		WHERE  1=1
+		<if test="shipBillId !=null and  shipBillId !=''">AND SHIPBILL_ID = #{shipBillId}</if>
+		<if test="fancingOrderId !=null and fancingOrderId != ''">AND FANCING_ORDER_ID = #{fancingOrderId}</if>
+	</sql>
+
+</mapper>

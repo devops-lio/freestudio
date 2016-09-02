@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.funds.mapper.DailyExpectedMapper">
+	<resultMap type="com.sinoservices.xascf.funds.model.DailyExpectedModel" id="dailyExpectedModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="dailyExpectedPid" column="DAILY_EXPECTED_PID"/>
+		<result property="expectedFundAmount" column="EXPECTED_FUND_AMOUNT"/>
+		<result property="expectedPayAmount" column="EXPECTED_PAY_AMOUNT"/>
+		<result property="expectedDate" column="EXPECTED_DATE"/>
+		<result property="accountUsage" column="ACCOUNT_USAGE"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					DAILY_EXPECTED_PID,
+					EXPECTED_FUND_AMOUNT,
+					EXPECTED_PAY_AMOUNT,
+					EXPECTED_DATE,
+					ACCOUNT_USAGE,
+					CREATOR,
+					CREATE_TIME,
+					MODIFIER,
+					MODIFY_TIME,
+					REC_VER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%${id}%')</if>
+		<if test="dailyExpectedPid!=null and dailyExpectedPid!=''"> AND DAILY_EXPECTED_PID LIKE ('%${dailyExpectedPid}%')</if>
+		<if test="expectedFundAmount!=null and expectedFundAmount!=''"> AND EXPECTED_FUND_AMOUNT LIKE ('%${expectedFundAmount}%')</if>
+		<if test="expectedPayAmount!=null and expectedPayAmount!=''"> AND EXPECTED_PAY_AMOUNT LIKE ('%${expectedPayAmount}%')</if>
+		<if test="expectedDate!=null and expectedDate!=''"> AND EXPECTED_DATE LIKE ('%${expectedDate}%')</if>
+		<if test="accountUsage !=null and accountUsage !=''"> AND ACCOUNT_USAGE LIKE ('%${accountUsage}%')</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%')</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%${createTime}%')</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%')</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%${modifyTime}%')</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%${recVer}%')</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%')</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.funds.view.DailyExpectedQueryConditionView">
+		<include refid="count"/>
+		FROM  FM_DAILY_EXPECTED
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="dailyExpectedModelResultMap" parameterType="com.sinoservices.xascf.funds.view.DailyExpectedQueryConditionView">
+		<include refid="select"/>
+		FROM  FM_DAILY_EXPECTED
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getListByCondition" resultMap="dailyExpectedModelResultMap" parameterType="com.sinoservices.xascf.funds.view.DailyExpectedQueryConditionView">
+		<include refid="select"/>
+		FROM  FM_DAILY_EXPECTED
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getSumAmountByCondition" resultMap="dailyExpectedModelResultMap" parameterType="com.sinoservices.xascf.funds.view.DailyExpectedQueryConditionView">
+		SELECT 
+			SUM(EXPECTED_FUND_AMOUNT) EXPECTED_FUND_AMOUNT,
+			SUM(EXPECTED_PAY_AMOUNT) EXPECTED_PAY_AMOUNT,
+			EXPECTED_DATE
+		FROM  FM_DAILY_EXPECTED
+		<include refid="findByExample"/>
+		GROUP BY EXPECTED_DATE
+	</select>
+	
+	
+	<insert id="insert">
+		INSERT INTO FM_DAILY_EXPECTED (
+				ID,
+				DAILY_EXPECTED_PID,
+				EXPECTED_FUND_AMOUNT,
+				EXPECTED_PAY_AMOUNT,
+				EXPECTED_DATE,
+				ACCOUNT_USAGE,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{dailyExpectedPid},
+			   #{expectedFundAmount},
+			   #{expectedPayAmount},
+			   #{expectedDate},
+			   #{accountUsage},
+			   'SYSTEM',
+			   SYSDATE(),
+			   'SYSTEM',
+			   SYSDATE(),
+			   1,
+			   0
+		);
+	</insert>
+	
+		<!-- 批量新增-->
+	<insert id="addByList" parameterType="java.util.List">  
+		INSERT INTO FM_DAILY_EXPECTED (
+				ID,
+				DAILY_EXPECTED_PID,
+				EXPECTED_FUND_AMOUNT,
+				EXPECTED_PAY_AMOUNT,
+				EXPECTED_DATE,
+				ACCOUNT_USAGE,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (   
+			   #{item.id},
+			   #{item.dailyExpectedPid},
+			   #{item.expectedFundAmount},
+			   #{item.expectedPayAmount},
+			   #{item.expectedDate},
+			   #{item.accountUsage},
+			   'SYSTEM',
+			   SYSDATE(),
+			   'SYSTEM',
+			   SYSDATE(),
+			   1,
+			   0
+			   )  
+	    </foreach>  
+  </insert>  
+	
+	<delete id="deleteAll">  
+       DELETE FROM FM_DAILY_EXPECTED
+    </delete>  
+
+</mapper>

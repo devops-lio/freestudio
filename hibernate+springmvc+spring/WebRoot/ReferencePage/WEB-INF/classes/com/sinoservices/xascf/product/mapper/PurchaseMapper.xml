@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.product.mapper.PurchaseMapper">
+	
+	
+	<resultMap type="com.sinoservices.xascf.product.model.PurchaseModel" id="purchaseModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="purchasePid" column="PURCHASE_PID"/>
+		<result property="purchaseUserPid" column="PURCHASE_USER_PID"/>
+		<result property="purchaseProductPid" column="PURCHASE_PRODUCT_PID"/>
+		<result property="purchaseAmount" column="PURCHASE_AMOUNT"/>
+		<result property="purchaseShare" column="PURCHASE_SHARE"/>
+		<result property="purchaseTime" column="PURCHASE_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="purchaseNo" column="PURCHASE_NO"/>
+		
+		<result property="productNo" column="PRODUCT_NO"/>
+		<result property="name" column="NAME"/>
+		<result property="loginName" column="LOGIN_NAME"/>
+		<result property="profitStatus" column="PROFIT_STATUS"/>
+		<result property="interest" column="INTEREST"/>
+		<result property="status" column="STATUS"/>
+		<result property="redeemType" column="REDEEMTYPE"/>
+		<result property="unitPrice" column="UNIT_PRICE"/>
+		<result property="presentProfit" column="PRESENT_PROFIT"/>
+		<result property="companyPid" column="COMPANY_PID"/>
+		
+	</resultMap>
+	
+	
+	<sql id="select">
+		<![CDATA[
+		  SELECT 
+			ID,
+			PURCHASE_PID,
+			PURCHASE_USER_PID,
+			PURCHASE_PRODUCT_PID,
+			PURCHASE_AMOUNT,
+			PURCHASE_SHARE,
+			PURCHASE_TIME,
+			PROFIT_STATUS,
+			INTEREST,
+			REC_VER,
+			CREATE_TIME,
+			CREATOR,
+			MODIFY_TIME,
+			MODIFIER,
+			REC_STATUS,
+			PURCHASE_NO
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+	WHERE 1=1
+	<if test="id!=null and id!=''"> AND ID LIKE ('%${id%}' )</if>
+	<if test="purchasePid!=null and purchasePid!=''"> AND PURCHASE_PID LIKE ('%${purchasePid}%' )</if>
+	<if test="purchaseUserPid!=null and purchaseUserPid!=''"> AND PURCHASE_USER_PID LIKE ('%${purchaseUserPid}%' )</if>
+	<if test="purchaseProductPid!=null and purchaseProductPid!=''"> AND PURCHASE_PRODUCT_PID LIKE ('%${purchaseProductPid}%' )</if>
+	<if test="purchaseAmount!=null and purchaseAmount!=''"> AND PURCHASE_AMOUNT LIKE ('%${purchaseAmount}%' )</if>
+	<if test="purchaseShare!=null and purchaseShare!=''"> AND PURCHASE_SHARE LIKE ('%${purchaseShare}%' )</if>
+	<if test="purchaseTime!=null and purchaseTime!=''"> AND PURCHASE_TIME LIKE ('%${purchaseTime}%' )</if>
+	<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%${recVer}%' )</if>
+	<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%${createTime}%' )</if>
+	<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%' )</if>
+	<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%${modifyTime}%' )</if>
+	<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%' )</if>
+	<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%' )</if>
+	<if test="profitStatus!=null and profitStatus!=''"> AND PROFIT_STATUS LIKE ('%${profitStatus}%' )</if>
+	<if test="interest!=null and interest!=''"> AND INTEREST =${interest}</if>
+	<if test="purchaseNo!=null and purchaseNo!=''"> AND PURCHASE_NO =${purchaseNo}</if>
+	
+	</sql>
+	
+	<!-- 
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.product.view.PurchaseQueryConditionView">
+		<include refid="count"/>
+		FROM  LM_PURCHASE
+		<include refid="findByExample"/>
+	</select>
+	<select id="findByCondition" resultMap="purchaseModelResultMap" parameterType="com.sinoservices.xascf.product.view.PurchaseQueryConditionView">
+		<include refid="select"/>
+		FROM  LM_PURCHASE
+		<include refid="findByExample"/>
+	</select>
+	 -->
+	<!-- 数据行数 --> 
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.product.view.PurchaseQueryConditionView">
+		<include refid="count"/>
+		FROM  LM_PURCHASE a,LM_PRODUCT b,SS_USER c
+		WHERE 
+			1=1
+			AND PURCHASE_USER_PID=c.USER_PID
+			AND PURCHASE_PRODUCT_PID=b.PRODUCT_PID
+			<if test="productNo!=null and productNo!=''"> AND b.PRODUCT_NO LIKE ('%${productNo}%' )</if>
+			<if test="name!=null and name!=''"> AND b.NAME LIKE ('%${name}%' )</if>
+			<if test="loginName!=null and loginName!=''"> AND c.LOGIN_NAME LIKE ('%${loginName%}' )</if>
+			<if test="purchaseTime!=null and purchaseTime!=''"> AND PURCHASE_TIME = '${purchaseTime%}' </if>
+			<if test="status!=null and status!=''"> AND b.STATUS = '${status}' </if>
+			<if test="purchaseNo!=null and purchaseNo!=''"> AND PURCHASE_NO =${purchaseNo}</if>
+	</select>
+	 
+	<!-- 理财认购管理列表 -->
+	<select id="findByCondition" resultMap="purchaseModelResultMap" parameterType="com.sinoservices.xascf.product.view.PurchaseQueryConditionView">
+		 SELECT 
+			a.ID,
+			PURCHASE_PID,
+			PURCHASE_USER_PID,
+			PURCHASE_PRODUCT_PID,
+			PURCHASE_AMOUNT,
+			PURCHASE_SHARE,
+			PURCHASE_TIME,
+			PROFIT_STATUS,
+			INTEREST,
+			PURCHASE_NO,
+			c.LOGIN_NAME,
+			b.REDEEMTYPE,
+			b.PRODUCT_NO,
+			b.NAME,
+			b.END_TIME,
+			b.STATUS,
+			a.REC_VER,
+			a.CREATE_TIME,
+			a.CREATOR,
+			a.MODIFY_TIME,
+			a.MODIFIER,
+			a.REC_STATUS,
+			ROUND(PURCHASE_AMOUNT*b.AUNUAL_RATE/100*b.RENEW_TERM/365,2)  AS PRESENT_PROFIT
+		FROM  LM_PURCHASE a,LM_PRODUCT b,SS_USER c
+		WHERE 
+			1=1
+			AND PURCHASE_USER_PID=c.USER_PID
+			AND PURCHASE_PRODUCT_PID=b.PRODUCT_PID
+			<if test="productNo!=null and productNo!=''"> AND b.PRODUCT_NO LIKE ('%${productNo}%' )</if>
+			<if test="name!=null and name!=''"> AND b.NAME LIKE ('%${name}%' )</if>
+			<if test="loginName!=null and loginName!=''"> AND c.LOGIN_NAME LIKE ('%${loginName}%' )</if>
+			<if test="purchaseTime!=null and purchaseTime!=''"> AND PURCHASE_TIME = '${purchaseTime}' </if>
+			<if test="status!=null and status!=''"> AND b.STATUS = '${status}' </if>
+			<if test="redeemType!=null and redeemType!=''"> AND b.REDEEMTYPE = '${redeemType}' </if>
+			<if test="recStatus!=null and recStatus!=''"> AND a.REC_STATUS = '${recStatus}'</if>
+			<if test="purchaseNo!=null and purchaseNo!=''"> AND PURCHASE_NO =${purchaseNo}</if>
+	</select>
+	
+	<!-- 企业会员理财购买记录列表 -->
+	<select id="findByPurchasePay" resultMap="purchaseModelResultMap" parameterType="com.sinoservices.xascf.product.view.PurchaseQueryConditionView">
+		 SELECT 
+			a.ID,
+			PURCHASE_PID,
+			PURCHASE_USER_PID,
+			PURCHASE_PRODUCT_PID,
+			PURCHASE_AMOUNT,
+			PURCHASE_SHARE,
+			PURCHASE_TIME,
+			PROFIT_STATUS,
+			INTEREST,
+			PURCHASE_NO,
+			c.LOGIN_NAME,
+			b.REDEEMTYPE,
+			b.PRODUCT_NO,
+			b.NAME,
+			b.END_TIME,
+			b.STATUS,
+			a.REC_VER,
+			a.CREATE_TIME,
+			a.CREATOR,
+			a.MODIFY_TIME,
+			a.MODIFIER,
+			a.REC_STATUS,
+			ROUND(PURCHASE_AMOUNT*b.AUNUAL_RATE/100*b.RENEW_TERM/365,2)  AS PRESENT_PROFIT
+		FROM  LM_PURCHASE a,LM_PRODUCT b,SS_USER c, SS_COMPANY d
+		WHERE 
+			1=1
+			AND c.SSCO_PID=d.COMPANY_PID 
+			AND PURCHASE_USER_PID=c.USER_PID
+			AND PURCHASE_PRODUCT_PID=b.PRODUCT_PID 
+			AND d.COMPANY_PID = #{companyPid} 
+	</select>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="com.sinoservices.xascf.product.model.PurchaseModel">
+		UPDATE LM_PURCHASE
+		<set> 	
+			<if test="id != null and id != '' "> ID = ${id}, </if> 
+			<if test="purchasePid != null and purchasePid != '' "> PURCHASE_PID = '${purchasePid}', </if> 
+			<if test="purchaseUserPid != null and purchaseUserPid != '' "> PURCHASE_USER_PID = '${purchaseUserPid}', </if> 
+			<if test="purchaseProductPid != null and purchaseProductPid != '' "> PURCHASE_PRODUCT_PID = '${purchaseProductPid}', </if> 
+			<if test="purchaseAmount != null and purchaseAmount != '' "> PURCHASE_AMOUNT = '${purchaseAmount}', </if> 
+			<if test="purchaseShare != null and purchaseShare != '' "> PURCHASE_SHARE = '${purchaseShare}', </if> 
+			<if test="purchaseTime != null and purchaseTime != '' "> PURCHASE_TIME = ${purchaseTime}, </if> 
+			<if test="profitStatus != null and profitStatus != '' "> PROFIT_STATUS = ${profitStatus}, </if> 
+			<if test="interest != null and interest != '' "> INTEREST = ${interest}, </if> 
+			<if test="recVer != null and recVer != '' "> REC_VER = '${recVer}', </if> 
+			<if test="createTime != null and createTime != '' "> CREATE_TIME = '${createTime}', </if> 
+			<if test="creator != null and creator != '' "> CREATOR = '${creator}', </if> 
+			<if test="modifyTime != null and modifyTime != '' "> MODIFY_TIME = '${modifyTime}', </if> 
+			<if test="modifier != null and modifier != '' "> MODIFIER = '${modifier}', </if> 
+			<if test="recStatus != null and recStatus != '' "> REC_STATUS = '${recStatus}', </if> 
+			<if test="purchaseNo != null and purchaseNo != '' "> PURCHASE_NO = '${purchaseNo}' </if>
+		</set>
+		WHERE
+			1=1
+			AND PURCHASE_PID='${purchasePid}'
+			
+	</update>
+	
+	<!-- 根据pid查找 -->
+	<select id="findByPid" resultMap="purchaseModelResultMap" parameterType="String">
+		SELECT 
+			a.ID,
+			PURCHASE_PID,
+			PURCHASE_USER_PID,
+			PURCHASE_PRODUCT_PID,
+			PURCHASE_AMOUNT,
+			PURCHASE_SHARE,
+			PURCHASE_TIME,
+			PROFIT_STATUS,
+			INTEREST,
+			PURCHASE_NO,
+			c.LOGIN_NAME,
+			b.REDEEMTYPE,
+			b.PRODUCT_NO,
+			b.NAME,
+			b.END_TIME,
+			b.STATUS,
+			a.REC_VER,
+			a.CREATE_TIME,
+			a.CREATOR,
+			a.MODIFY_TIME,
+			a.MODIFIER,
+			a.REC_STATUS,
+			b.UNIT_PRICE
+		FROM  LM_PURCHASE a,LM_PRODUCT b,SS_USER c
+		WHERE 
+			1=1
+			AND PURCHASE_USER_PID=c.USER_PID
+			AND PURCHASE_PRODUCT_PID=b.PRODUCT_PID
+			AND PURCHASE_PID=#{_parameter}
+	</select>
+	
+	<!-- 新增购买记录 -->
+	<insert id="insert" parameterType="com.sinoservices.xascf.product.model.PurchaseModel">
+		INSERT INTO LM_PURCHASE (
+			ID,
+			PURCHASE_PID,
+			PURCHASE_USER_PID,
+			PURCHASE_PRODUCT_PID,
+			PURCHASE_AMOUNT,
+			PURCHASE_SHARE,
+			PURCHASE_TIME,
+			PROFIT_STATUS,
+			INTEREST,
+			REC_VER,
+			CREATE_TIME,
+			CREATOR,
+			MODIFY_TIME,
+			MODIFIER,
+			REC_STATUS,
+			PURCHASE_NO
+		) VALUES (
+			   #{id},
+			   #{purchasePid},
+			   #{purchaseUserPid},
+			   #{purchaseProductPid},
+			   #{purchaseAmount},
+			   #{purchaseShare},
+			   #{purchaseTime},
+			   #{profitStatus},
+			   #{interest},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus},
+			   #{purchaseNo}
+			   
+			   
+		);
+	</insert>
+	<!-- 根据理财产品pid查找购买记录 -->
+	<select id="getByProductPid" resultMap="purchaseModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  LM_PURCHASE
+		WHERE 
+			1=1
+			AND REC_STATUS='1'
+			AND PURCHASE_PRODUCT_PID=#{_parameter}
+	</select>
+	
+</mapper>

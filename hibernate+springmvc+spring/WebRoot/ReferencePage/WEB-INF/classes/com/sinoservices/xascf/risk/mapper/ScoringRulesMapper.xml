@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.risk.mapper.ScoringRulesMapper">
+	<resultMap type="com.sinoservices.xascf.risk.model.ScoringRulesModel" id="scoringRulesResultMap">
+		<result property="id" column="ID"/>
+		<result property="scoringRulePid" column="SCORING_RULE_PID"/>
+		<result property="scoringRuleNo" column="SCORING_RULE_NO"/>
+		<result property="rulePid" column="RULE_PID"/>
+		<result property="ruleNo" column="RULE_NO"/>
+		<result property="ruleName" column="RULE_NAME"/>
+		<result property="minimum" column="MINIMUM"/>
+		<result property="maximum" column="MAXIMUM"/>
+		<result property="score" column="SCORE"/>
+		<result property="description" column="DESCRIPTION"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,SCORING_RULE_PID,SCORING_RULE_NO,RULE_PID,RULE_NO,RULE_NAME,MINIMUM,MAXIMUM,SCORE,DESCRIPTION,REC_VER,CREATE_TIME,
+					CREATOR,MODIFY_TIME,MODIFIER,REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="scoringRulePid !=null and scoringRulePid !=''"> AND SCORING_RULE_PID =#{scoringRulePid}</if>
+		<if test="scoringRuleNo !=null and scoringRuleNo !=''"> AND SCORING_RULE_NO LIKE ('%${scoringRuleNo}%')</if>
+		<if test="rulePid!=null and rulePid!=''"> AND RULE_PID =#{rulePid}</if>
+		<if test="ruleNo!=null and ruleNo!=''"> AND RULE_NO=#{ruleNo}</if>
+		<if test="ruleName!=null and ruleName!=''"> AND RULE_NAME LIKE ('%${ruleName}%')</if>
+		<if test="score!=null and score!=''"> AND SCORE =${score}</if>
+		 AND REC_STATUS=0
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.risk.view.ScoringRulesQueryConditionView">
+		<include refid="count"/>
+		FROM  RM_SCORING_RULES
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="scoringRulesResultMap" parameterType="com.sinoservices.xascf.risk.view.ScoringRulesQueryConditionView">
+		<include refid="select"/>
+		FROM  RM_SCORING_RULES
+		<include refid="findByExample"/>
+	</select>
+	
+	<!-- 新增 -->
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.sinoservices.xascf.risk.model.ScoringRulesModel">
+		INSERT INTO RM_SCORING_RULES(
+		SCORING_RULE_PID,
+		SCORING_RULE_NO,
+		RULE_PID,
+		RULE_NO,
+		RULE_NAME,
+		MINIMUM,
+		MAXIMUM,
+		SCORE,
+		DESCRIPTION,
+		Modify_Time,
+		Modifier,
+		Create_Time,
+		Creator,
+		Rec_Ver,
+		REC_STATUS
+		) VALUES(
+		#{scoringRulePid},
+		#{scoringRuleNo},
+		#{rulePid},
+		#{ruleNo},
+		#{ruleName},
+		#{minimum},
+		#{maximum},
+		#{score},
+		#{description},
+		SYSDATE(),
+		#{modifier},
+		SYSDATE(),
+		#{creator},1,0
+		)
+	</insert>
+	
+	
+	<!-- 修改 -->
+	<update id="updateByModel" parameterType="com.sinoservices.xascf.risk.model.ScoringRulesModel">
+		UPDATE RM_SCORING_RULES SET
+		<if test="rulePid!=null and rulePid!=''">	RULE_PID = #{rulePid},</if>
+		<if test="ruleNo!=null and ruleNo!=''"> RULE_NO=#{ruleNo},</if>
+		<if test="ruleName!=null and ruleName!=''"> RULE_NAME=#{ruleName},</if>
+		<if test="minimum!=null and minimum!=''">	MINIMUM = #{minimum},</if>
+		<if test="maximum!=null and maximum!=''">	MAXIMUM = #{maximum},</if>
+		<if test="score!=null and score!=''">	SCORE =#{score} ,</if>
+		<if test="description !=null and description !=''">	DESCRIPTION = #{description},</if>
+		<if test="recStatus!=null and recStatus!=''">	REC_STATUS = #{recStatus},</if>
+				Modify_Time = SYSDATE(),
+				Modifier =#{modifier},
+				Rec_Ver=Rec_Ver+1 
+		WHERE SCORING_RULE_PID=#{scoringRulePid}	
+	</update>
+	
+	
+	<select id="getByPid" resultMap="scoringRulesResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  RM_SCORING_RULES
+		WHERE SCORING_RULE_PID=#{scoringRulePid}	
+	</select>
+	
+	<select id="getRuleListByParams" resultMap="scoringRulesResultMap" parameterType="com.sinoservices.xascf.risk.view.ScoringRulesQueryConditionView">
+		<include refid="select"/>
+		FROM  RM_SCORING_RULES
+		<include refid="findByExample"/>
+	</select>
+
+</mapper>

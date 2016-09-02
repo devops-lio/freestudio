@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.CreditbuyRelMapper">
+
+	<resultMap type="com.sinoservices.xascf.credit.view.CreditbuyRelEntity" id="creditbuyRelResultMap">
+		<result property="pid" column="PID"/>
+		<result property="buyPid" column="BUY_PID"/>
+		<result property="buyName" column="BUY_NAME"/>
+		<result property="billCycle" column="BILL_CYCLE"/>
+		<result property="billType" column="BILL_TYPE"/>
+		<result property="preBillType" column="PRE_BILL_TYPE"/>
+		<result property="isPrePay" column="IS_PREPAY"/>
+		<result property="businessPercent" column="BUSINESS_PERCENT"/>
+		<result property="disCount" column="DISCOUNT"/>
+		<result property="addressCn" column="ADDRESS_CN"/>
+		<result property="corporate" column="CORPORATE"/>
+		<result property="registeredTime" column="REGISTERED_TIME"/>
+		<result property="fax" column="FAX"/>
+		<result property="tel" column="TEL"/>
+		<result property="email" column="EMAIL"/> 
+		<result property="taxNo" column="TAX_NO"/>
+		<result property="registeredFund" column="REGISTERED_FUND"/>
+		<result property="mainbusiness" column="MAINBUSINESS"/>
+		<result property="organizationCode" column="ORGANIZATION_CODE"/>
+		<result property="businessScope" column="BUSINESS_SCOPE"/>		
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.credit.model.CreditbuyRelModel" id="creditbuyRelModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="buyPid" column="BUY_PID"/>
+		<result property="buyName" column="BUY_NAME"/>
+		<result property="billCycle" column="BILL_CYCLE"/>
+		<result property="billType" column="BILL_TYPE"/>
+		<result property="preBillType" column="PRE_BILL_TYPE"/>
+		<result property="isPrePay" column="IS_PREPAY"/>
+		<result property="businessPercent" column="BUSINESS_PERCENT"/>
+		<result property="disCount" column="DISCOUNT"/>
+		<result property="creditPercent" column="CREDIT_PERCENT"/>
+		<result property="isEffective" column="ISEFFECTIVE"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.credit.view.CreditbuyRelItem" id="creditbuyRelItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="buyPid" column="BUY_PID"/>
+		<result property="buyName" column="BUY_NAME"/>
+		<result property="billCycle" column="BILL_CYCLE"/>
+		<result property="billType" column="BILL_TYPE"/>
+		<result property="preBillType" column="PRE_BILL_TYPE"/>
+		<result property="isPrePay" column="IS_PREPAY"/>
+		<result property="businessPercent" column="BUSINESS_PERCENT"/>
+		<result property="disCount" column="DISCOUNT"/>
+		<result property="creditPercent" column="CREDIT_PERCENT"/>
+		<result property="isEffective" column="ISEFFECTIVE"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					CREDIT_NO,
+					BUY_PID,
+					BUY_NAME,
+					BILL_CYCLE,
+					BILL_TYPE,
+					PRE_BILL_TYPE,
+					IS_PREPAY,
+					BUSINESS_PERCENT,
+					DISCOUNT,
+					CREDIT_PERCENT,
+					ISEFFECTIVE,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="pid!=null and pid!=''"> AND PID LIKE ('%'||'pid'||'%' )</if>
+		<if test="creditNo!=null and creditNo!=''"> AND CREDIT_NO LIKE ('%'||'creditNo'||'%' )</if>
+		<if test="buyPid!=null and buyPid!=''"> AND BUY_PID LIKE ('%'||'buyPid'||'%' )</if>
+		<if test="billCycle!=null and billCycle!=''"> AND BILL_CYCLE LIKE ('%'||'billCycle'||'%' )</if>
+		<if test="businessPercent!=null and businessPercent!=''"> AND BUSINESS_PERCENT LIKE ('%'||'businessPercent'||'%' )</if>
+		<if test="rate!=null and rate!=''"> AND DISCOUNT LIKE ('%'||'rate'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.model.CreditbuyRelModel">
+		<include refid="count"/>
+		FROM  DM_CREDITBUY_REL
+		<include refid="findByExample"/>
+	</select>
+	<!-- 根据委托方PID查看是否有已经进入流程的授信 -->
+	<select id="getPageByBuyPid"  resultType="String"  parameterType="com.sinoservices.xascf.credit.model.CreditbuyRelModel">
+		SELECT DCR.CREDIT_NO
+		FROM DM_CREDITBUY_REL DCR
+		JOIN DM_CREDIT_APPLY DCA ON DCR.CREDIT_NO=DCA.CREDIT_NO 
+		WHERE DCR.REC_STATUS='1' AND 
+		 DCA.`STATUS` !='00' AND DCA.`STATUS` !='01'
+		DCA.`STATUS` !='000' AND DCA.`STATUS` !='001' AND DCA.REC_STATUS='1'
+		<if test="buyPid!=null and buyPid!=''"> AND BUY_PID =#{buyPid}</if>
+	</select>
+	<!-- 根据授信编号查询出有效的委托方信息 -->
+	<select id="getPageByCreditNo" resultMap="creditbuyRelModelResultMap" parameterType="com.sinoservices.xascf.credit.model.CreditbuyRelModel">
+	<include refid="select"/>
+		FROM  DM_CREDITBUY_REL
+		WHERE 1=1
+		<if test="creditNo!=null and creditNo!=''"> AND CREDIT_NO =#{creditNo}</if>
+		<if test="isEffective !=null and isEffective !=''"> AND ISEFFECTIVE =#{isEffective}</if>
+	</select>
+	<!-- 20141221.1 vicky 放款申请界面委托方弹出框数据查询SQL -->
+	<select id="getPageBuyByCreditNo" resultMap="creditbuyRelModelResultMap" parameterType="com.sinoservices.xascf.credit.model.CreditbuyRelModel">
+	<include refid="select"/>
+		FROM  DM_CREDITBUY_REL
+		WHERE 1=1
+		AND CREDIT_NO=#{creditNo}
+		AND IS_PREPAY=#{isPrePay}
+		AND ISEFFECTIVE='1'
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_CREDITBUY_REL (
+				ID,
+				PID,
+				CREDIT_NO,
+				BUY_PID,
+				BUY_NAME,
+				BILL_CYCLE,
+				BILL_TYPE,
+				PRE_BILL_TYPE,
+				IS_PREPAY,
+				BUSINESS_PERCENT,
+				ISEFFECTIVE,
+				DISCOUNT,
+				CREDIT_PERCENT,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{pid},
+			   #{creditNo},
+			   #{buyPid},
+			   #{buyName},
+			   #{billCycle},
+			   #{billType},
+			   #{preBillType},
+			   #{isPrePay},
+			   #{businessPercent},
+			   0,
+			   #{disCount},
+			   #{creditPercent},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   1
+		);
+	</insert>
+	
+	
+	<!-- 根据授信编号查找所有的rel -->
+	<select id="findByNo" resultMap="creditbuyRelItemResultMap" parameterType="com.sinoservices.xascf.credit.view.CreditbuyRelCondition">
+		<include refid="select"/>
+		FROM DM_CREDITBUY_REL
+		WHERE
+			1=1
+			AND REC_STATUS='1'
+			<if test="isEffective!='' and isEffective!=null">and ISEFFECTIVE=#{isEffective}</if>
+			<if test="pids!='' and pids!=null">
+				AND BUY_PID NOT IN
+				<foreach collection="pids" item="pid" index="index" open="(" separator="," close=")">
+					#{pid}
+				</foreach>
+			</if>
+			and CREDIT_NO=#{creditNo}
+	</select>
+	<select id="findByCreditNo" resultMap="creditbuyRelResultMap" parameterType="com.sinoservices.xascf.credit.view.CreditbuyRelCondition">
+		SELECT 
+			CR.PID,
+			CR.BUY_PID,
+			CR.BUY_NAME,
+			CR.BILL_CYCLE,
+			CR.BILL_TYPE,
+			CR.PRE_BILL_TYPE,
+			CR.IS_PREPAY,
+			CR.BUSINESS_PERCENT,
+			CR.DISCOUNT,            			              
+			CS.ADDRESS_CN,    		        
+			CS.CORPORATE,                 
+			DATE_FORMAT(CS.REGISTERED_TIME, '%Y-%m-%d') AS REGISTERED_TIME,                 
+			CS.FAX,    				
+			CS.TEL,
+			CS.EMAIL,   	  				
+			CS.TAX_NO,     		
+			CS.REGISTERED_FUND,  
+			CS.MAINBUSINESS,
+			CS.ORGANIZATION_CODE,		
+			CS.BUSINESS_SCOPE
+		FROM DM_CREDITBUY_REL CR LEFT JOIN SS_CUSTOMER_SUB CS ON CR.BUY_PID=CS.CUSTOMERSUB_PID
+		WHERE 1=1
+			AND CR.REC_STATUS='1'
+			<if test="creditNo!='' and creditNo!=null">and CR.CREDIT_NO=#{creditNo}</if>
+			<if test="pid!='' and pid!=null">and CR.PID=#{pid}</if>
+	</select>
+	<!-- 新增list-->
+	<insert id="insertList" parameterType="java.util.List">
+		INSERT INTO DM_CREDITBUY_REL (
+					PID,
+					CREDIT_NO,
+					BUY_PID,
+					BUY_NAME,
+					BILL_CYCLE,
+					BILL_TYPE,
+					PRE_BILL_TYPE,
+					IS_PREPAY,
+					BUSINESS_PERCENT,
+					ISEFFECTIVE,
+					DISCOUNT,
+					CREDIT_PERCENT,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+			) VALUES 
+			<foreach collection="list" item="item" index="index" separator=",">
+				( #{item.pid},
+				  #{item.creditNo},
+				  #{item.buyPid},
+				  #{item.buyName},
+				  #{item.billCycle},
+				  #{item.billType},
+			   	  #{item.preBillType},
+			   	  #{item.isPrePay},
+				  #{item.businessPercent},
+				  0,
+				  #{item.disCount},
+				  #{item.creditPercent},
+				  1,
+				  #{item.createTime},
+				  #{item.creator},
+				  #{item.modifyTime},
+				  #{item.modifier},
+				  1)
+			</foreach>
+			
+			
+			
+	</insert>
+	
+	<!-- 有效或者无效 -->
+	<update id="update" parameterType="com.sinoservices.xascf.credit.model.CreditbuyRelModel">
+		UPDATE DM_CREDITBUY_REL 
+		SET	
+		<if test="disCount!='' and disCount!=null">	DISCOUNT    = #{disCount},</if>
+		<if test="isEffective!='' and isEffective!=null">	ISEFFECTIVE = #{isEffective},</if>
+		<if test="creditPercent !='' and creditPercent !=null">	CREDIT_PERCENT = #{creditPercent},</if>
+		<if test="isPrePay !='' and isPrePay !=null">	IS_PREPAY = #{isPrePay},</if>
+		<if test="businessPercent !='' and businessPercent !=null">	BUSINESS_PERCENT = #{businessPercent},</if>
+		<if test="billType !='' and billType !=null">	BILL_TYPE = #{billType},</if>
+		<if test="preBillType !='' and preBillType !=null">	PRE_BILL_TYPE = #{preBillType},</if>
+		<if test="billCycle !='' and billCycle !=null">	BILL_CYCLE = #{billCycle},</if>
+		REC_VER=REC_VER+1,
+		MODIFY_TIME=SYSDATE()
+		WHERE
+			1=1
+			AND REC_STATUS='1'
+			AND PID=#{pid}
+	</update>
+	
+	<!-- 根据creditNo删除 -->
+	<delete id="deleteByCreditNo" parameterType="String">
+		DELETE FROM  DM_CREDITBUY_REL
+		WHERE
+			1=1
+			AND CREDIT_NO=#{_parameter}
+			AND REC_STATUS='1'
+	</delete>
+	
+	<!-- 根据creditNo删除 -->
+	<delete id="deleteByPid" parameterType="String">
+		DELETE FROM  DM_CREDITBUY_REL
+		WHERE PID=#{_parameter}
+		AND REC_STATUS='1'
+	</delete>
+	
+	<!-- 批量修改折扣率 和是否有效-->
+	<update id="updateListDiscountAndIsEffectiveByPid" parameterType="java.util.List">
+		UPDATE DM_CREDITBUY_REL 
+		<trim prefix="set" suffixOverrides=","> 
+	          <!-- 更新的字段集合 --> 
+	          <trim prefix="DISCOUNT =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.disCount!=null">  
+	                      when (PID=#{i.pid}) then #{i.disCount}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="ISEFFECTIVE =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.isEffective!=null">  
+	                      when (PID=#{i.pid}) then #{i.isEffective}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	           <trim prefix="Modifier =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                     <if test="i.modifier!=null">  
+	                      when (PID=#{i.pid}) then #{i.modifier}  
+	                     </if>  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Modify_Time =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (PID=#{i.pid}) then SYSDATE()  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Rec_Ver =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (PID=#{i.pid}) then Rec_Ver+1  
+	              </foreach>  
+	           </trim>
+         </trim>   
+         where   
+         <foreach collection="list" separator="or" item="i" index="index" > 
+         <if test="i.pid!=null">  
+          (PID=#{i.pid}) 
+           </if>   
+      	</foreach> 
+	</update>
+</mapper>

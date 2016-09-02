@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.RateMapper">
+	<resultMap type="com.sinoservices.xascf.credit.model.RateModel" id="rateModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="type" column="TYPE"/>
+		<result property="businessOrderNo" column="BUSINESS_ORDER_NO"/>
+		<result property="termRate" column="TERM_RATE"/>
+		<result property="overdueRate" column="OVERDUE_RATE"/>
+		<result property="expandRate" column="EXPAND_RATE"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="overdueTimes" column="OVERDUE_TIMES"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT  
+					PID,
+					TYPE,
+					BUSINESS_ORDER_NO,
+					TERM_RATE,
+					OVERDUE_RATE,
+					EXPAND_RATE,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS,
+					OVERDUE_TIMES
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="type!=null and type!=''"> AND TYPE LIKE ('%type%' )</if>
+		<if test="businessOrderNo!=null and businessOrderNo!=''"> AND BUSINESS_ORDER_NO LIKE ('%businessOrderNo%' )</if>
+		<if test="termRate!=null and termRate!=''"> AND TERM_RATE LIKE ('%termRate%' )</if>
+		<if test="overdueRate!=null and overdueRate!=''"> AND OVERDUE_RATE LIKE ('%overdueRate%' )</if>
+		<if test="expandRate!=null and expandRate!=''"> AND EXPAND_RATE LIKE ('%expandRate%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%recVer%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%createTime%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%creator%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%modifyTime%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%modifier%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%recStatus%' )</if>
+		<if test="overdueTimes!=null and overdueTimes!=''"> AND OVERDUE_TIMES = '${overdueTimes}'</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.credit.model.RateModel">
+		<include refid="count"/>
+		FROM  DM_RATE
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="rateModelResultMap" parameterType="com.sinoservices.xascf.credit.model.RateModel">
+		<include refid="select"/>
+		FROM  DM_RATE
+		<include refid="findByExample"/>
+	</select>
+	<select id="getModelByBusinessNo" resultMap="rateModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_RATE
+	WHERE	BUSINESS_ORDER_NO =#{_parameter}
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.credit.model.RateModel">
+		INSERT INTO DM_RATE (
+				PID,
+				TYPE,
+				BUSINESS_ORDER_NO,
+				TERM_RATE,
+				OVERDUE_RATE,
+				EXPAND_RATE,
+				OVERDUE_TIMES,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{type},
+			   #{businessOrderNo},
+			   #{termRate},
+			   #{overdueRate},
+			   #{expandRate},
+			   #{overdueTimes},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   1
+		)
+	</insert>
+	<update id="updateByPid" parameterType="com.sinoservices.xascf.credit.model.RateModel">
+		UPDATE DM_RATE SET
+			<if test="type !=null and type !=''">	TYPE = #{type},</if>
+			<if test="businessOrderNo !=null and businessOrderNo !=''">	BUSINESS_ORDER_NO = #{businessOrderNo},</if>
+			<if test="termRate !=null and termRate !=''">	TERM_RATE = #{termRate},</if>
+			<if test="overdueRate !=null and overdueRate !=''">	OVERDUE_RATE = #{overdueRate},</if>
+			<if test="expandRate !=null and expandRate !=''">	EXPAND_RATE = #{expandRate},</if>
+			<if test="modifier !=null and modifier !=''">	MODIFIER = #{modifier},</if>
+			<if test="recStatus !=null and recStatus !=''">	REC_STATUS = #{recStatus},</if>
+			<if test="overdueTimes !=null and overdueTimes !=''">	OVERDUE_TIMES = #{overdueTimes},</if>
+			REC_VER=REC_VER+1,MODIFY_TIME=SYSDATE()
+		WHERE 1=1
+		<if test="pid !=null and pid !=''"> AND	PID = #{pid}</if>
+		<if test="businessOrderNo !=null and businessOrderNo !=''"> AND BUSINESS_ORDER_NO = #{businessOrderNo}</if>
+				
+	</update>
+</mapper>

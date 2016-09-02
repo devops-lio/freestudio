@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.customer.mapper.CompanyMapper">
+	<resultMap type="com.sinoservices.xascf.customer.view.CompanyQueryItemView" id="CompanyItemViewResultMap">
+		<result property="id" column="ID"/>
+		<result property="companyPid" column="COMPANY_PID"/>
+		<result property="companyNo" column="COMPANY_NO"/>
+		<result property="companyType" column="COMPANY_TYPE"/>
+		<result property="companyLevel" column="COMPANY_LEVEL"/>
+		<result property="companySource" column="COMPANY_SOURCE"/>
+		<result property="companyNameCn" column="COMPANY_NAME_CN"/>
+		<result property="companyNameEn" column="COMPANY_NAME_EN"/> 
+		<result property="corporate" column="CORPORATE"/>
+		<result property="registeredTime" column="REGISTERED_TIME"/>
+		<result property="sendCode" column="SEND_CODE"/>
+		<result property="addressCn" column="ADDRESS_CN"/>
+		<result property="addressEn" column="ADDRESS_EN"/>
+		<result property="postalCode" column="POSTAL_CODE"/>
+		<result property="mail" column="MAIL"/>
+		<result property="fax" column="FAX"/>
+		<result property="url" column="URL"/>
+		<result property="businessNo" column="BUSINESS_NO"/>
+		<result property="phone" column="PHONE"/>
+		<result property="taxNo" column="TAX_NO"/>
+		<result property="financeCode" column="FINANCE_CODE"/>
+		<result property="status" column="STATUS"/>
+		<result property="registeredFund" column="REGISTERED_FUND"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="bank" column="BANK"/>
+		<result property="bankNo" column="BANK_NO"/>
+		<result property="outline" column="OUTLINE"/> 
+		<result property="industry" column="INDUSTRY"/>
+		<result property="businessScope" column="BUSINESS_SCOPE"/>
+		<result property="area" column="AREA"/>
+		<result property="property" column="PROPERTY"/>
+		<result property="businessPeople" column="BUSINESS_PEOPLE"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	
+	<resultMap type="com.sinoservices.xascf.customer.model.CompanyModel" id="CompanyModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="companyPid" column="COMPANY_PID"/>
+		<result property="companyNo" column="COMPANY_NO"/>
+		<result property="companyType" column="COMPANY_TYPE"/>
+		<result property="companyLevel" column="COMPANY_LEVEL"/>
+		<result property="companySource" column="COMPANY_SOURCE"/>
+		<result property="companyNameCn" column="COMPANY_NAME_CN"/>
+		<result property="companyNameEn" column="COMPANY_NAME_EN"/> 
+		<result property="corporate" column="CORPORATE"/>
+		<result property="registeredTime" column="REGISTERED_TIME"/>
+		<result property="sendCode" column="SEND_CODE"/>
+		<result property="addressCn" column="ADDRESS_CN"/>
+		<result property="addressEn" column="ADDRESS_EN"/>
+		<result property="postalCode" column="POSTAL_CODE"/>
+		<result property="mail" column="MAIL"/>
+		<result property="fax" column="FAX"/>
+		<result property="url" column="URL"/>
+		<result property="businessNo" column="BUSINESS_NO"/>
+		<result property="phone" column="PHONE"/>
+		<result property="taxNo" column="TAX_NO"/>
+		<result property="financeCode" column="FINANCE_CODE"/>
+		<result property="status" column="STATUS"/>
+		<result property="registeredFund" column="REGISTERED_FUND"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="bank" column="BANK"/>
+		<result property="bankNo" column="BANK_NO"/>
+		<result property="outline" column="OUTLINE"/> 
+		<result property="industry" column="INDUSTRY"/>
+		<result property="businessScope" column="BUSINESS_SCOPE"/>
+		<result property="area" column="AREA"/>
+		<result property="property" column="PROPERTY"/>
+		<result property="businessPeople" column="BUSINESS_PEOPLE"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="selectCompany"> 
+		  SELECT 
+			ID,
+			COMPANY_PID,
+			COMPANY_NO,
+			COMPANY_TYPE,
+			COMPANY_LEVEL,
+			COMPANY_SOURCE,
+			COMPANY_NAME_CN,
+			COMPANY_NAME_EN, 
+			CORPORATE,
+			DATE_FORMAT(REGISTERED_TIME, '%Y-%m-%d') AS REGISTERED_TIME,
+			SEND_CODE,
+			ADDRESS_CN,
+			ADDRESS_EN,
+			POSTAL_CODE,
+			MAIL,
+			FAX,
+			URL,
+			BUSINESS_NO,
+			PHONE,
+			TAX_NO,
+			FINANCE_CODE,
+			STATUS,
+			REGISTERED_FUND,
+			CURRENCY,
+			BANK,
+			BANK_NO,
+			OUTLINE,
+			INDUSTRY,
+			BUSINESS_SCOPE,
+			AREA,
+			PROPERTY,
+			BUSINESS_PEOPLE,
+			CREATOR,
+			DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') AS CREATE_TIME,
+			MODIFIER,
+			MODIFY_TIME,
+			REC_VER,
+			REC_STATUS 
+	</sql>
+	
+	<sql id="count"> 
+	    	SELECT COUNT(1)  
+	</sql>
+	
+	<sql id="findCompExample">
+		WHERE 1=1 AND REC_STATUS !=0
+		<if test="companyNo!=null and companyNo!=''">AND COMPANY_NO LIKE ('%${companyNo}%')</if>
+		<if test="companyNameCn!=null and companyNameCn!=''">AND COMPANY_NAME_CN LIKE ('%${companyNameCn}%')</if> 
+		<if test="companySource != null and companySource != ''"> AND COMPANY_SOURCE=#{companySource}</if>
+	</sql>
+	
+	<sql id="findByExample">
+	WHERE 1=1 AND REC_STATUS !=0
+		<if test="companyNo!=null and companyNo!=''">AND COMPANY_NO LIKE ('%${companyNo}%')</if>
+		<if test="companyNameCn!=null and companyNameCn!=''">AND COMPANY_NAME_CN LIKE ('%${companyNameCn}%')</if> 
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.customer.view.CompanyQueryConditionView">
+		<include refid="count"/>
+		FROM  SS_COMPANY
+		<include refid="findByExample"/>
+	</select> 
+
+		<!-- 企业登记查询 -->	
+	<select id="getPageByCompany" resultMap="CompanyItemViewResultMap" parameterType="com.sinoservices.xascf.customer.view.CompanyQueryConditionView">
+		<include refid="selectCompany"/>
+		FROM SS_COMPANY
+		<include refid="findCompExample"/>
+	</select>
+	
+	<!-- 根据pid查找  编辑 -->
+	<select id="findByPid" resultMap="CompanyModelResultMap" parameterType="String">
+		<include refid="selectCompany"/>
+		FROM  SS_COMPANY
+		WHERE
+			1=1
+			AND COMPANY_PID = #{_parameter}  AND REC_STATUS !=0
+	</select>
+
+	<insert id="insert"  parameterType="com.sinoservices.xascf.customer.model.CompanyModel">
+		INSERT INTO SS_COMPANY( 
+			ID,
+			COMPANY_PID,
+			COMPANY_NO,
+			COMPANY_NAME_CN,
+			CORPORATE,
+			REGISTERED_FUND,
+			TAX_NO,
+			REGISTERED_TIME,
+			BANK,
+			BANK_NO,
+			PHONE,
+			FAX,
+			MAIL,
+			ADDRESS_CN,
+			OUTLINE,
+			COMPANY_LEVEL,
+			COMPANY_SOURCE, 
+			BUSINESS_PEOPLE
+		)VALUES( 
+			#{id},
+			#{companyPid},
+			#{companyNo},
+			#{companyNameCn},
+			#{corporate},
+			#{registeredFund},
+			#{taxNo},
+			#{registeredTime},
+			#{bank},
+			#{bankNo},
+			#{phone},
+			#{fax},
+			#{mail},
+			#{addressCn},
+			#{outline},
+			#{companyLevel}, 
+			#{companySource}, 
+			#{businessPeople}
+		); 
+	</insert>  
+	
+	<update id="deleteById" parameterType="String">
+		UPDATE SS_COMPANY 
+		SET 
+			REC_STATUS=0 
+			WHERE 1=1 
+			AND COMPANY_PID=#{companyPid}
+	</update>
+	
+	<!-- 企业会员审核通过状态修改 -->
+	<update id="defineByPid" parameterType="String">
+		UPDATE SS_COMPANY
+			SET 
+				STATUS=2
+			WHERE COMPANY_PID=#{companyPid}
+	</update>
+	
+	<!-- 企业会员审核取消状态修改 -->
+	<update id="cancelByPid" parameterType="String">
+		UPDATE SS_COMPANY
+			SET 
+				STATUS=3
+			WHERE COMPANY_PID=#{companyPid}
+	</update>
+	
+	<update id="updateByCompany" parameterType="com.sinoservices.xascf.customer.model.CompanyModel">
+		UPDATE SS_COMPANY
+		<set>   
+			<if test="companyType != null and companyType != ''">COMPANY_TYPE = ${companyType},</if>
+			<if test="companyLevel != null and companyLevel != ''">COMPANY_LEVEL = #{companyLevel}</if>
+			<if test="companySource != null and companySource != ''">COMPANY_SOURCE = #{companySource}</if>
+			<if test="companyNameCn != null and companyNameCn != ''">COMPANY_NAME_CN = ${companyNameCn},</if>
+			<if test="companyNameEn != null and companyNameEn != ''">COMPANY_NAME_EN = ${companyNameEn},</if>
+			<if test="corporate != null and corporate != ''">CORPORATE = ${corporate},</if>
+			<if test="registeredTime != null and registeredTime != ''">REGISTERED_TIME = ${registeredTime},</if>
+			<if test="sendCode != null and sendCode != ''">SEND_CODE = ${sendCode},</if>
+			<if test="addressCn != null and addressCn != ''">ADDRESS_CN = ${addressCn},</if>
+			<if test="addressEn != null and addressEn != ''">ADDRESS_EN = ${addressEn},</if>
+			<if test="postalCode != null and postalCode != ''">POSTAL_CODE = ${postalCode},</if>
+			<if test="mail != null and mail != ''">MAIL = ${mail},</if>
+			<if test="fax != null and fax != ''">FAX = ${fax},</if>
+			<if test="url != null and url != ''">URL = ${url},</if>
+			<if test="businessNo != null and businessNo != ''">BUSINESS_NO = ${businessNo},</if>
+			<if test="phone != null and phone != ''">PHONE = ${phone},</if>
+			<if test="taxNo != null and taxNo != ''">TAX_NO = ${taxNo},</if>
+			<if test="financeCode != null and financeCode != ''">FINANCE_CODE = ${financeCode},</if>
+			<if test="status != null and status != ''">STATUS = ${status},</if>
+			<if test="registeredFund != null and registeredFund != ''">REGISTERED_FUND = ${registeredFund},</if>
+			<if test="currency != null and currency != ''">CURRENCY = ${currency},</if>
+			<if test="bank != null and bank != ''">BANK = ${bank},</if>
+			<if test="bankNo != null and bankNo != ''">BANK_NO = ${bankNo},</if>
+			<if test="outline != null and outline != ''">OUTLINE = ${outline},</if>
+			<if test="industry != null and industry != ''">INDUSTRY = ${industry},</if>
+			<if test="businessScope != null and businessScope != ''">BUSINESS_SCOPE = ${businessScope},</if>
+			<if test="area != null and area != ''">AREA = ${area},</if>
+			<if test="property != null and property != ''">PROPERTY = ${property},</if>
+			<if test="businessPeople != null and businessPeople != ''">BUSINESS_PEOPLE = ${businessPeople}</if>
+			<if test="modifier != null and modifier != ''">MODIFIER = ${modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''">MODIFY_TIME = ${modifyTime}</if>
+		</set>
+		WHERE 1=1 AND
+		COMPANY_PID = #{companyPid}
+	</update> 
+	
+	<update id="update" parameterType="com.sinoservices.xascf.customer.model.CompanyModel">
+		UPDATE SS_COMPANY  
+		<set>  
+			<if test="companyNameCn != null and companyNameCn != ''">COMPANY_NAME_CN = #{companyNameCn},</if>
+			<if test="companyNameEn != null and companyNameEn != ''">COMPANY_NAME_EN = #{companyNameEn},</if>
+			<if test="companyLevel != null and companyLevel != ''">COMPANY_LEVEL = #{companyLevel},</if>
+			<if test="companySource != null and companySource != ''">COMPANY_SOURCE = #{companySource},</if>
+			<if test="corporate != null and corporate != ''">CORPORATE = #{corporate},</if>
+			<if test="registeredTime != null and registeredTime != ''">REGISTERED_TIME = #{registeredTime},</if>
+			<if test="sendCode != null and sendCode != ''">SEND_CODE = #{sendCode},</if>
+			<if test="addressCn != null and addressCn != ''">ADDRESS_CN = #{addressCn},</if>
+			<if test="addressEn != null and addressEn != ''">ADDRESS_EN = #{addressEn},</if>
+			<if test="postalCode != null and postalCode != ''">POSTAL_CODE = #{postalCode},</if>
+			<if test="mail != null and mail != ''">MAIL = #{mail},</if>
+			<if test="fax != null and fax != ''">FAX = #{fax},</if>
+			<if test="url != null and url != ''">URL = #{url},</if>
+			<if test="businessNo != null and businessNo != ''">BUSINESS_NO = #{businessNo},</if>
+			<if test="phone != null and phone != ''">PHONE = #{phone},</if>
+			<if test="taxNo != null and taxNo != ''">TAX_NO = #{taxNo},</if>
+			<if test="financeCode != null and financeCode != ''">FINANCE_CODE = #{financeCode},</if>
+			<if test="status != null and status != ''">STATUS = #{status},</if>
+			<if test="registeredFund != null and registeredFund != ''">REGISTERED_FUND = #{registeredFund},</if>
+			<if test="currency != null and currency != ''">CURRENCY = #{currency},</if>
+			<if test="bank != null and bank != ''">BANK = #{bank},</if>
+			<if test="bankNo != null and bankNo != ''">BANK_NO = #{bankNo},</if>
+			<if test="outline != null and outline != ''">OUTLINE = #{outline},</if>
+			<if test="industry != null and industry != ''">INDUSTRY = #{industry},</if>
+			<if test="businessScope != null and businessScope != ''">BUSINESS_SCOPE = #{businessScope},</if>
+			<if test="area != null and area != ''">AREA = #{area},</if>
+			<if test="property != null and property != ''">PROPERTY = #{property},</if> 
+			<if test="businessPeople != null and businessPeople != ''">BUSINESS_PEOPLE = ${businessPeople}</if>
+			<if test="modifier != null and modifier != ''">MODIFIER = #{modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''">MODIFY_TIME = #{modifyTime}</if>
+		</set>
+			WHERE 
+			COMPANY_PID = #{companyPid} AND 
+			COMPANY_NO = #{companyNo} 
+	</update>
+	
+	
+</mapper>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.CreditQualificationMapper">
+	<resultMap type="com.sinoservices.xascf.credit.view.CreditQualificationItem" id="creditQualificationItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="qualificationType" column="QUALIFICATION_TYPE"/>
+		<result property="qualificationName" column="QUALIFICATION_NAME"/>
+		<result property="qualificationNewName" column="QUALIFICATION_NEW_NAME"/>
+		<result property="qualificationUrl" column="QUALIFICATION_URL"/>
+		<result property="qualificationNo" column="QUALIFICATION_NO"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					CREDIT_NO,
+					QUALIFICATION_TYPE,
+					QUALIFICATION_NAME,
+					QUALIFICATION_NEW_NAME,
+					QUALIFICATION_URL,
+					QUALIFICATION_NO,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="pid!=null and pid!=''"> AND PID LIKE ('%'||'pid'||'%' )</if>
+		<if test="creditNo!=null and creditNo!=''"> AND CREDIT_NO LIKE ('%'||'creditNo'||'%' )</if>
+		<if test="qualificationType!=null and qualificationType!=''"> AND QUALIFICATION_TYPE LIKE ('%'||'qualificationType'||'%' )</if>
+		<if test="qualificationName!=null and qualificationName!=''"> AND QUALIFICATION_NAME LIKE ('%'||'qualificationName'||'%' )</if>
+		<if test="qualificationNewName!=null and qualificationNewName!=''"> AND QUALIFICATION_NEW_NAME LIKE ('%'||'qualificationNewName'||'%' )</if>
+		<if test="qualificationUrl!=null and qualificationUrl!=''"> AND QUALIFICATION_URL LIKE ('%'||'qualificationUrl'||'%' )</if>
+		<if test="qualificationNo!=null and qualificationNo!=''"> AND QUALIFICATION_NO LIKE ('%'||'qualificationNo'||'%' )</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.model.CreditQualificationModel">
+		<include refid="count"/>
+		FROM  DM_CREDIT_QUALIFICATION
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="creditQualificationItemResultMap" parameterType="com.sinoservices.xascf.credit.model.CreditQualificationModel">
+		<include refid="select"/>
+		FROM  DM_CREDIT_QUALIFICATION
+		<include refid="findByExample"/>
+	</select>
+	<select id="getListByCreditNo" resultMap="creditQualificationItemResultMap" parameterType="String">
+	<include refid="select"/>
+		FROM  DM_CREDIT_QUALIFICATION
+		WHERE CREDIT_NO=#{_parameter}
+	</select>
+	<insert id="insert">
+		INSERT INTO DM_CREDIT_QUALIFICATION (
+				ID,
+				PID,
+				CREDIT_NO,
+				QUALIFICATION_TYPE,
+				QUALIFICATION_NAME,
+				QUALIFICATION_NEW_NAME,
+				QUALIFICATION_URL,
+				QUALIFICATION_NO,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS,
+		) VALUES (
+			   #{id},
+			   #{pid},
+			   #{creditNo},
+			   #{qualificationType},
+			   #{qualificationName},
+			   #{qualificationNewName},
+			   #{qualificationUrl},
+			   #{qualificationNo},
+			   #{remark},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus},
+		);
+	</insert>
+	<!-- 插入list -->
+	<insert id="insertList" parameterType="java.util.List">
+		INSERT INTO DM_CREDIT_QUALIFICATION (
+				PID,
+				CREDIT_NO,
+				QUALIFICATION_TYPE,
+				QUALIFICATION_NAME,
+				QUALIFICATION_NEW_NAME,
+				QUALIFICATION_URL,
+				QUALIFICATION_NO,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES 
+			<foreach collection="list" item="item" index="index" separator=",">
+			  (#{item.pid},
+			   #{item.creditNo},
+			   #{item.qualificationType},
+			   #{item.qualificationName},
+			   #{item.qualificationNewName},
+			   #{item.qualificationUrl},
+			   #{item.qualificationNo},
+			   #{item.remark},
+			   1,
+			   #{item.createTime},
+			   #{item.creator},
+			   #{item.modifyTime},
+			   #{item.modifier},
+			   1)
+			</foreach>
+	</insert>
+	
+	<update id="update">
+		UPDATE DM_CREDIT_QUALIFICATION SET
+				ID = #{id},
+				PID = #{pid},
+				CREDIT_NO = #{creditNo},
+				QUALIFICATION_TYPE = #{qualificationType},
+				QUALIFICATION_NAME = #{qualificationName},
+				QUALIFICATION_NEW_NAME = #{qualificationNewName},
+				QUALIFICATION_URL = #{qualificationUrl},
+				QUALIFICATION_NO = #{qualificationNo},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus},
+	</update>
+	<!-- 无分页查找 -->
+	<select id="findByNo" resultMap="creditQualificationItemResultMap" parameterType="String">
+		SELECT 
+					ID,
+					PID,
+					CREDIT_NO,
+					QUALIFICATION_TYPE,
+					QUALIFICATION_NAME,
+					QUALIFICATION_NEW_NAME,
+					QUALIFICATION_URL,
+					QUALIFICATION_NO,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		FROM DM_CREDIT_QUALIFICATION
+		WHERE
+			1=1
+			AND CREDIT_NO=#{_parameter}
+			AND REC_STATUS='1'
+	</select>
+	
+	<!-- 根据授信编号删除 -->
+	<delete id="deleteByCreditNo" parameterType="String">
+		DELETE FROM  DM_CREDIT_QUALIFICATION
+		WHERE
+			1=1
+			AND CREDIT_NO=#{_parameter}
+			AND REC_STATUS='1'
+	</delete>
+	
+</mapper>

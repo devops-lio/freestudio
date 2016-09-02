@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.product.mapper.ProfitMapper">
+	<resultMap type="com.sinoservices.xascf.product.model.ProfitModel" id="profitModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="profitPid" column="PROFIT_PID"/>
+		<result property="profitPurchasePid" column="PROFIT_PURCHASE_PID"/>
+		<result property="profitStatus" column="PROFIT_STATUS"/>
+		<result property="principal" column="PRINCIPAL"/>
+		<result property="interest" column="INTEREST"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+		  SELECT 
+			ID,
+			PROFIT_PID,
+			PROFIT_PURCHASE_PID,
+			PROFIT_STATUS,
+			PRINCIPAL,
+			INTEREST,
+			REC_VER,
+			CREATE_TIME,
+			CREATOR,
+			MODIFY_TIME,
+			MODIFIER,
+			REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+	WHERE 1=1
+	<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+	<if test="profitPid!=null and profitPid!=''"> AND PROFIT_PID LIKE ('%'||'profitPid'||'%' )</if>
+	<if test="profitPurchasePid!=null and profitPurchasePid!=''"> AND PROFIT_PURCHASE_PID LIKE ('%'||'profitPurchasePid'||'%' )</if>
+	<if test="profitStatus!=null and profitStatus!=''"> AND PROFIT_STATUS LIKE ('%'||'profitStatus'||'%' )</if>
+	<if test="principal!=null and principal!=''"> AND PRINCIPAL LIKE ('%'||'principal'||'%' )</if>
+	<if test="interest!=null and interest!=''"> AND INTEREST LIKE ('%'||'interest'||'%' )</if>
+	<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+	<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+	<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+	<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+	<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+	<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.product.view.ProfitQueryConditionView">
+		<include refid="count"/>
+		FROM  LM_PROFIT
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="profitModelResultMap" parameterType="com.sinoservices.xascf.product.view.ProfitQueryConditionView">
+		<include refid="select"/>
+		FROM  LM_PROFIT
+		<include refid="findByExample"/>
+	</select>
+</mapper>

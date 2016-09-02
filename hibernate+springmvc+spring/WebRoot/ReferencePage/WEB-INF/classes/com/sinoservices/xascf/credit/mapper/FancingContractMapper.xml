@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.FancingContractMapper">
+
+	<!-- creditEntity结果集 -->
+	<resultMap type="com.sinoservices.xascf.credit.view.FancingContractEntity" id="fancingContractEntityResultMap">
+		<collection property="fancingContractItem" resultMap="fancingContractItemResultMap"/>
+	</resultMap>
+
+	<resultMap type="com.sinoservices.xascf.credit.view.FancingContractItem" id="fancingContractItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="creditResultNo" column="CREDIT_RESULT_NO"/>
+		<result property="contractNo" column="CONTRACT_NO"/>
+		<result property="remaingAmount" column="REMAING_AMOUNT"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="legaiMen" column="LEGAI_MEN"/>
+		<result property="address" column="ADDRESS"/>
+		<result property="creditPrice" column="CREDIT_PRICE"/>
+		<result property="creditFrom" column="CREDIT_FROM"/>
+		<result property="creditTo" column="CREDIT_TO"/>
+		<result property="supervisonName" column="SUPERVISON_NAME"/>
+		<result property="supervisonNo" column="SUPERVISON_NO"/>
+		<result property="supervisonBank" column="SUPERVISON_BANK"/>
+		<result property="rate" column="RATE"/>
+		<result property="delayDate" column="DELAY_DATE"/>
+		<result property="interest" column="INTEREST"/>
+		<result property="compoundType" column="COMPOUND_TYPE"/>
+		<result property="interestDate" column="INTEREST_DATE"/>
+		<result property="delayMulpitle" column="DELAY_MULPITLE"/>
+		<result property="payAccountName" column="PAY_ACCOUNT_NAME"/>
+		<result property="payAccountNo" column="PAY_ACCOUNT_NO"/>
+		<result property="payAccountBank" column="PAY_ACCOUNT_BANK"/>
+		<result property="serviceType" column="SERVICE_TYPE"/>
+		<result property="serviceTypeCn" column="SERVICE_TYPE"/>
+		<result property="serviceRate" column="SERVICE_RATE"/>
+		<result property="bondType" column="BOND_TYPE"/>
+		<result property="bondTypeCn" column="BOND_TYPE"/>
+		<result property="bondRate" column="BOND_RATE"/>
+		<result property="bondAccountBank" column="BOND_ACCOUNT_BANK"/>
+		<result property="bondAccountNo" column="BOND_ACCOUNT_NO"/>
+		<result property="bondAccountName" column="BOND_ACCOUNT_NAME"/>
+		<result property="status" column="STATUS"/>
+		<result property="statusCn" column="STATUS"/>
+		<result property="remark" column="REMARK"/>
+		<result property="buyRelNames" column="BUY_REL_NAMES"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="contractAmount" column="CONTRACT_AMOUNT"/>
+		<result property="paymentTerm" column="PAYMENT_TERM"/>
+		<result property="billRate" column="BILL_RATE"/>
+		<result property="otherContent" column="OTHER_CONTENT"/>
+	</resultMap>
+	<!-- 合同下放款统计信息 -->
+	<resultMap type="com.sinoservices.xascf.credit.view.FancingContractLoanResultItem" id="contractItemLoanResultMap">
+		<result property="contractNo" column="CONTRACT_NO"/>
+		<result property="lostAmount" column="LOST_AMOUNT"/>
+		<result property="remaingAmount" column="REMAING_AMCOUNT"/>
+		<result property="rebackPrice" column="REBACK_PRICE"/>
+		<result property="contractAmount" column="CONTRACT_AMOUNT"/>
+		<result property="usedAmount" column="USED_AMOUNT"/>
+		<result property="allNotePrice" column="ALL_NOTEPRICE"/>
+		<result property="allNoteDisPrice" column="ALL_NOTEDISPRICE"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT DISTINCT 
+				   a.ID,
+					PID,
+					CREDIT_NO,
+					CREDIT_RESULT_NO,
+					CONTRACT_NO,
+					MEMBER_PID,
+					MEMBER_NAME,
+					LEGAI_MEN,
+					ADDRESS,
+					CREDIT_PRICE,
+					CREDIT_FROM,
+					CREDIT_TO,
+					SUPERVISON_NAME,
+					SUPERVISON_NO,
+					SUPERVISON_BANK,
+					RATE,
+					DELAY_DATE,
+					INTEREST,
+					COMPOUND_TYPE,
+					INTEREST_DATE,
+					DELAY_MULPITLE,
+					PAY_ACCOUNT_NAME,
+					PAY_ACCOUNT_NO,
+					PAY_ACCOUNT_BANK,
+					SERVICE_TYPE,
+					SERVICE_RATE,
+					BOND_TYPE,
+					BOND_RATE,
+					BOND_ACCOUNT_BANK,
+					BOND_ACCOUNT_NO,
+					BOND_ACCOUNT_NAME,
+					STATUS,
+					CONTRACT_AMOUNT,
+					PAYMENT_TERM
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="creditNo!=null and creditNo!=''"> AND CREDIT_NO LIKE ('%${creditNo}%' )</if>
+		<if test="creditResultNo!=null and creditResultNo!=''"> AND CREDIT_RESULT_NO LIKE ('%${creditResultNo}%' )</if>
+		<if test="contractNo!=null and contractNo!=''"> AND CONTRACT_NO LIKE ('%${contractNo}%' )</if>
+		<if test="memberPid!=null and memberPid!=''"> AND MEMBER_PID LIKE ('%${memberPid}%' ) </if>
+		<if test="memberName!=null and memberName!=''"> AND MEMBER_NAME LIKE ('%${memberName}%' )</if>
+		<if test="legaiMen!=null and legaiMen!=''"> AND LEGAI_MEN LIKE ('%${legaiMen}%' )</if>
+		<if test="address!=null and address!=''"> AND ADDRESS LIKE ('%${address}%' )</if>
+		<if test="creditPrice!=null and creditPrice!=''"> AND CREDIT_PRICE LIKE ('%${creditPrice}%' )</if>
+		<if test="creditFrom!=null and creditFrom!=''"> AND CREDIT_FROM LIKE ('%${creditFrom}%' )</if>
+		<if test="creditTo!=null and creditTo!=''"> AND CREDIT_TO LIKE ('%${creditTo}%' )</if>
+		<if test="supervisonName!=null and supervisonName!=''"> AND SUPERVISON_NAME LIKE ('%${supervisonName}%' )</if>
+		<if test="supervisonNo!=null and supervisonNo!=''"> AND SUPERVISON_NO LIKE ('%${supervisonNo}%' )</if>
+		<if test="supervisonBank!=null and supervisonBank!=''"> AND SUPERVISON_BANK LIKE ('%${supervisonBank}%' )</if>
+		<if test="rate!=null and rate!=''"> AND RATE LIKE ('%${rate}%' )</if>
+		<if test="delayDate!=null and delayDate!=''"> AND DELAY_DATE LIKE ('%${delayDate}%' )</if>
+		<if test="interest!=null and interest!=''"> AND INTEREST LIKE ('%${interest}%' )</if>
+		<if test="compoundType!=null and compoundType!=''"> AND COMPOUND_TYPE LIKE ('%${compoundType}%' )</if>
+		<if test="interestDate!=null and interestDate!=''"> AND INTEREST_DATE LIKE ('%${interestDate}%' )</if>
+		<if test="delayMulpitle!=null and delayMulpitle!=''"> AND DELAY_MULPITLE LIKE ('%${delayMulpitle}%' )</if>
+		<if test="payAccountName!=null and payAccountName!=''"> AND PAY_ACCOUNT_NAME LIKE ('%${payAccountName}%' )</if>
+		<if test="payAccountNo!=null and payAccountNo!=''"> AND PAY_ACCOUNT_NO LIKE ('%${payAccountNo}%' )</if>
+		<if test="payAccountBank!=null and payAccountBank!=''"> AND PAY_ACCOUNT_BANK LIKE ('%${payAccountBank}%' )</if>
+		<if test="serviceType!=null and serviceType!=''"> AND SERVICE_TYPE LIKE ('%${serviceType}%' )</if>
+		<if test="serviceRate!=null and serviceRate!=''"> AND SERVICE_RATE LIKE ('%${serviceRate}%' )</if>
+		<if test="bondType!=null and bondType!=''"> AND BOND_TYPE LIKE ('%${bondType}%' )</if>
+		<if test="bondRate!=null and bondRate!=''"> AND BOND_RATE LIKE ('%${bondRate}%' )</if>
+		<if test="bondAccountBank!=null and bondAccountBank!=''"> AND BOND_ACCOUNT_BANK LIKE ('%${bondAccountBank}%' )</if>
+		<if test="bondAccountNo!=null and bondAccountNo!=''"> AND BOND_ACCOUNT_NO LIKE ('%${bondAccountNo}%' )</if>
+		<if test="bondAccountName!=null and bondAccountName!=''"> AND BOND_ACCOUNT_NAME LIKE ('%${bondAccountName}%' )</if>
+		<if test="status!=null and status!=''"> AND STATUS=#{status}</if>
+		<if test="paymentTerm!=null and paymentTerm!=''"> AND PAYMENT_TERM = '${paymentTerm}'</if>
+		<if test="userPid !=null and userPid !=''"> AND SKI.USER_PID =#{userPid} </if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.view.FancingContractCondition">
+		<include refid="count"/>
+		FROM (
+		SELECT DISTINCT a.ID
+		FROM DM_FANCING_CONTRACT a
+		JOIN SS_KPICUSTOMER SKI ON SKI.CUSTOMERSUB_PID=a.MEMBER_PID
+		<include refid="findByExample"/>
+		AND a.REC_STATUS=1
+		ORDER BY a.CREATE_TIME DESC
+		) R
+	</select>
+	
+	<select id="getPage" resultMap="fancingContractItemResultMap" parameterType="com.sinoservices.xascf.credit.view.FancingContractCondition">
+		<include refid="select"/>
+		FROM DM_FANCING_CONTRACT a
+		JOIN SS_KPICUSTOMER SKI ON SKI.CUSTOMERSUB_PID=a.MEMBER_PID
+		<include refid="findByExample"/>
+		AND a.REC_STATUS=1
+		ORDER BY a.CREATE_TIME DESC
+	</select>
+	
+	<select id="getPageWithBuyRel" resultMap="fancingContractItemResultMap" parameterType="com.sinoservices.xascf.credit.view.FancingContractCondition">
+		SELECT 
+			C.ID,
+			C.PID,
+			C.CREDIT_NO,
+			C.CREDIT_RESULT_NO,
+			C.CONTRACT_NO,
+			C.MEMBER_PID,
+			C.MEMBER_NAME,
+			C.LEGAI_MEN,
+			C.ADDRESS,
+			C.CREDIT_PRICE,
+			C.CREDIT_FROM,
+			C.CREDIT_TO,
+			C.SUPERVISON_NAME,
+			C.SUPERVISON_NO,
+			C.SUPERVISON_BANK,
+			C.RATE,
+			C.DELAY_DATE,
+			C.INTEREST,
+			C.COMPOUND_TYPE,
+			C.INTEREST_DATE,
+			C.DELAY_MULPITLE,
+			C.PAY_ACCOUNT_NAME,
+			C.PAY_ACCOUNT_NO,
+			C.PAY_ACCOUNT_BANK,
+			C.SERVICE_TYPE,
+			C.SERVICE_RATE,
+			C.BOND_TYPE,
+			C.BOND_RATE,
+			C.BOND_ACCOUNT_BANK,
+			C.BOND_ACCOUNT_NO,
+			C.BOND_ACCOUNT_NAME,
+			C.STATUS,
+			C.REMARK,
+			C.PAYMENT_TERM,
+			GROUP_CONCAT(B.BUY_NAME separator '、') AS BUY_REL_NAMES
+		FROM  DM_FANCING_CONTRACT C
+		LEFT JOIN DM_CONTRACTBUY_REL B ON C.CONTRACT_NO=B.CONTRACT_NO
+		<if test="userPid !=null and userPid !=''">
+			JOIN SS_KPICUSTOMER SKI ON SKI.CUSTOMERSUB_PID=C.MEMBER_PID
+		</if>
+		WHERE 1=1 AND C.REC_STATUS=1
+		<if test="contractNo!=null and contractNo!=''"> AND C.CONTRACT_NO LIKE ('%${contractNo}%' )</if>
+		<if test="memberPid!=null and memberPid!=''"> AND C.MEMBER_PID LIKE ('%${memberPid}%' )</if>
+		<if test="creditNo!=null and creditNo!=''"> AND C.CREDIT_NO LIKE ('%${creditNo}%' )</if>
+		<if test="creditResultNo!=null and creditResultNo!=''"> AND C.CREDIT_RESULT_NO LIKE ('%${creditResultNo}%' )</if>
+		<if test="status!=null and status!=''"> AND C.STATUS =#{status}</if>
+		<if test="userPid !=null and userPid !=''"> AND SKI.USER_PID =#{userPid} </if>
+		GROUP BY C.CONTRACT_NO
+	</select>
+	<!-- 根据放款单号查询合同信息 -->
+	<select id="findContractByFancingNo" resultMap="fancingContractItemResultMap" parameterType="String">
+		SELECT a.CREDIT_NO,
+			a.PID,
+			a.CONTRACT_NO,
+			a.CREDIT_RESULT_NO,
+			a.CONTRACT_AMOUNT,
+			a.MEMBER_PID,
+			a.MEMBER_NAME,
+			a.LEGAI_MEN,
+			a.ADDRESS,
+			a.CREDIT_PRICE,
+			a.CREDIT_FROM,
+			a.CREDIT_TO,
+			a.SUPERVISON_NAME,
+			a.SUPERVISON_NO,
+			a.SUPERVISON_BANK,
+			a.RATE,
+			a.DELAY_DATE,
+			a.INTEREST,
+			a.COMPOUND_TYPE,
+			a.INTEREST_DATE,
+			a.DELAY_MULPITLE,
+			a.PAY_ACCOUNT_NAME,
+			a.PAY_ACCOUNT_NO,
+			a.PAY_ACCOUNT_BANK,
+			a.SERVICE_TYPE,
+			a.SERVICE_RATE,
+			a.BOND_TYPE,
+			a.BOND_RATE,
+			a.BOND_ACCOUNT_BANK,
+			a.BOND_ACCOUNT_NO,
+			a.BOND_ACCOUNT_NAME,
+			a.STATUS,
+			a.REMARK,
+			a.PAYMENT_TERM,
+			a.BILL_RATE,
+			a.OTHER_CONTENT
+		FROM  DM_FANCING_CONTRACT a
+		JOIN DM_FANCING_ORDER b on a.CONTRACT_NO=b.CONTRACT_NO
+		WHERE b.FANCING_ORDER_NO=#{_parameter}
+		GROUP BY a.CONTRACT_NO
+	</select>
+	<!-- 根据合同编号查询合同下放款汇总信息
+	授信额度=合同金额
+	当前放款总额：SUM(申请金额/批复金额)-本次放款金额
+	授信剩余额度：（授信额度 - 当前放款总额）+本次申请金额
+	有效票据总额：    累计有效票据总额-本次票据总额  因为(页面根据票据动态添加本次票据金额)
+	有效票据折后总额：累计有效票据折扣后金额-本次票据折扣后金额  因为(页面根据票据动态添加本次票据金额)
+	当前最大可申请额度：MIN ( 授信剩余额度，有效票据折后总额 - 当前放款总额 )+本次申请金额
+	
+	 -->
+	<select id="getLoanTJByContractNo" resultMap="contractItemLoanResultMap" parameterType="com.sinoservices.xascf.credit.view.FancingContractCondition">
+			SELECT
+				AA.CONTRACT_NO,
+				AA.ALL_NOTEDISPRICE AS ALL_NOTEDISPRICE,
+				AA.ALL_NOTEPRICE AS ALL_NOTEPRICE,
+				AA.CONTRACT_AMOUNT,
+				AA.USED_AMOUNT - AA.THIS_AMOUNT AS USED_AMOUNT,
+				AA.THIS_AMOUNT,
+				AA.LOST_AMOUNT + AA.THIS_AMOUNT  AS LOST_AMOUNT,
+				LEAST(
+					LOST_AMOUNT,
+					AA.ALL_NOTEDISPRICE - USED_AMOUNT
+				) + AA.THIS_AMOUNT AS REMAING_AMCOUNT
+			FROM
+			(
+				SELECT
+					FC.CONTRACT_NO,
+					FC.CONTRACT_AMOUNT,
+					FC.CONTRACT_AMOUNT - SUM(
+						IFNULL(
+							REPLY_PRICE,
+							IFNULL(REQUEST_PRICE, 0)
+							)
+							) + IFNULL(T2.REBACK_PRICE,0) AS LOST_AMOUNT,
+					(IFNULL(SUM(FOO.NOTE_PRICE), 0)-IFNULL(THIS_NOTEPRICE,0))*FC.BILL_RATE/100 AS ALL_NOTEDISPRICE,
+					IFNULL(SUM(FOO.NOTE_PRICE),0)-IFNULL(THIS_NOTEPRICE,0) AS ALL_NOTEPRICE,
+					SUM(
+						IFNULL(
+							REPLY_PRICE,
+							IFNULL(REQUEST_PRICE, 0)
+						)
+					) -IFNULL(T2.REBACK_PRICE,0) AS USED_AMOUNT,
+					IFNULL(THIS_REQUEST.THIS_AMOUNT, 0) AS THIS_AMOUNT,
+					IFNULL(THIS_NOTEPRICE, 0)*FC.BILL_RATE/100 AS THIS_NOTE_DISPRICE,
+					IFNULL(THIS_NOTEPRICE,0) AS THIS_NOTEPRICE
+				FROM	DM_FANCING_CONTRACT FC
+				LEFT JOIN (
+						SELECT F.FANCING_ORDER_NO,F.REPLY_PRICE,F.REQUEST_PRICE,F.CONTRACT_NO,
+						IFNULL(T0.ALL_NUM,0)+IFNULL(T1.ALL_NUM,0)+IFNULL(T2.ALL_NUM,0) AS
+						ALL_NUM,
+						IFNULL(T0.EFF_PRICE,0)+IFNULL(T1.EFF_PRICE,0) +IFNULL(T2.EFF_PRICE,0) AS NOTE_PRICE
+						FROM DM_FANCING_ORDER F
+						LEFT JOIN(
+						SELECT SUM(1) AS ALL_NUM,DRR.FANCING_ORDER_NO,
+						SUM(
+						CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+						ACTUAL_AMOUNT ELSE 0 END
+						) AS EFF_PRICE
+						FROM DM_RECEIPT DRR
+						GROUP BY DRR.FANCING_ORDER_NO
+						) T0
+						ON T0.FANCING_ORDER_NO=F.FANCING_ORDER_NO
+						LEFT JOIN(
+						SELECT SUM(1) AS ALL_NUM, DSB.BUSINESS_NO,
+						SUM(
+						CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+						BILL_AMOUNT ELSE 0 END
+						) AS EFF_PRICE
+						
+						FROM DM_SHIP_BILL DSB
+						GROUP BY DSB.BUSINESS_NO
+						) T1 ON T1.BUSINESS_NO=F.FANCING_ORDER_NO
+						LEFT JOIN(
+						SELECT SUM(1) AS ALL_NUM, DST.BUSINESS_NO,
+						SUM(
+						CASE WHEN DST.ISEFFECTIVE = '1' THEN
+						TOTAL_PRICE ELSE 0 END
+						) AS EFF_PRICE
+					
+						FROM DM_SHIP_TURN DST
+						GROUP BY DST.BUSINESS_NO
+						) T2 ON T2.BUSINESS_NO=F.FANCING_ORDER_NO
+						GROUP BY F.FANCING_ORDER_NO
+					) 	 FOO ON FC.CONTRACT_NO = FOO.CONTRACT_NO
+				LEFT JOIN (
+						SELECT
+							IFNULL(
+								REPLY_PRICE,
+								IFNULL(REQUEST_PRICE, 0)
+							) AS THIS_AMOUNT,
+				
+							IFNULL(T0.EFF_PRICE,0)+IFNULL(T1.EFF_PRICE,0) +IFNULL(T2.EFF_PRICE,0) AS THIS_NOTEPRICE,
+							F.CONTRACT_NO
+						FROM	DM_FANCING_ORDER F
+							LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM,DRR.FANCING_ORDER_NO,
+									SUM(
+									CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									ACTUAL_AMOUNT ELSE 0 END
+									) AS EFF_PRICE
+									FROM DM_RECEIPT DRR
+									GROUP BY DRR.FANCING_ORDER_NO
+									) T0
+									ON T0.FANCING_ORDER_NO=F.FANCING_ORDER_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM, DSB.BUSINESS_NO,
+									SUM(
+									CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									BILL_AMOUNT ELSE 0 END
+									) AS EFF_PRICE
+									
+									FROM DM_SHIP_BILL DSB
+									GROUP BY DSB.BUSINESS_NO
+									) T1 ON T1.BUSINESS_NO=F.FANCING_ORDER_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM, DST.BUSINESS_NO,
+									SUM(
+									CASE WHEN DST.ISEFFECTIVE = '1' THEN
+									TOTAL_PRICE ELSE 0 END
+									) AS EFF_PRICE
+								
+									FROM DM_SHIP_TURN DST
+									GROUP BY DST.BUSINESS_NO
+									) T2 ON T2.BUSINESS_NO=F.FANCING_ORDER_NO
+									
+						WHERE
+							1 = 1
+						AND F.FANCING_ORDER_NO =#{fancingOrderNo}
+					) THIS_REQUEST ON THIS_REQUEST.CONTRACT_NO = FC.CONTRACT_NO
+			LEFT JOIN (
+						SELECT
+							SUM(TT.REBACK_PRICE) AS REBACK_PRICE,
+							TT.CONTRACT_NO
+						FROM
+							(
+								SELECT
+									(
+										IFNULL(SUM(BR.REPAYMENT_PRICE), 0)
+									) AS REBACK_PRICE,
+									FC.CONTRACT_NO
+								FROM
+									DM_FANCING_BILL FB
+								LEFT JOIN DM_FANCING_ORDER FO ON FB.FANCING_ORDER_NO = FO.FANCING_ORDER_NO
+								LEFT JOIN DM_FANCING_CONTRACT FC ON FO.CONTRACT_NO = FC.CONTRACT_NO
+								LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO = FB.BILL_NO
+								AND BR.FANCING_ORDER_NO = FB.FANCING_ORDER_NO
+								WHERE
+									FC.CONTRACT_NO =#{contractNo}
+								AND FB.BILL_TYPE = '1'
+								GROUP BY
+									BR.BILL_NO
+						) TT
+					GROUP BY
+						TT.CONTRACT_NO
+				) T2 ON T2.CONTRACT_NO = FOO.CONTRACT_NO
+				WHERE
+					1 = 1
+				AND FC.CONTRACT_NO =#{contractNo}
+				GROUP BY
+				FOO.CONTRACT_NO
+		)AA
+	</select>
+		<!-- 根据contractNo查找 -->
+	<select id="findByContractNo" resultMap="fancingContractItemResultMap" parameterType="String">
+		SELECT
+			a.CREDIT_NO,
+			a.PID,
+			a.CONTRACT_NO,
+			a.CREDIT_RESULT_NO,
+			a.CONTRACT_AMOUNT,
+			a.CONTRACT_AMOUNT - IFNULL((SELECT SUM(IFNULL(REPLY_PRICE,IFNULL(REQUEST_PRICE,0))) FROM DM_FANCING_ORDER F WHERE 1=1
+			 AND F.CONTRACT_NO =#{_parameter}),0)
+			 + IFNULL((SELECT SUM(TT.REBACK_PRICE) 
+								FROM (
+												SELECT 		(IFNULL(SUM(BR.REPAYMENT_PRICE),0)) as REBACK_PRICE,FC.CONTRACT_NO
+												FROM	DM_FANCING_BILL FB
+												LEFT JOIN DM_FANCING_ORDER FO ON FB.FANCING_ORDER_NO= FO.FANCING_ORDER_NO
+												LEFT JOIN DM_FANCING_CONTRACT FC ON FO.CONTRACT_NO = FC.CONTRACT_NO
+												LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO=FB.BILL_NO and BR.FANCING_ORDER_NO=FB.FANCING_ORDER_NO
+												WHERE 1=1 AND FC.CONTRACT_NO=#{_parameter} AND FB.BILL_TYPE='1'  GROUP BY BR.BILL_NO
+								) TT
+							GROUP BY TT.CONTRACT_NO),0)
+			  AS REMAING_AMOUNT,
+			a.MEMBER_PID,
+			a.LEGAI_MEN,
+			a.ADDRESS,
+			a.CREDIT_PRICE,
+			a.CREDIT_FROM,
+			a.CREDIT_TO,
+			a.SUPERVISON_NAME,
+			a.SUPERVISON_NO,
+			a.SUPERVISON_BANK,
+			a.RATE,
+			a.DELAY_DATE,
+			a.INTEREST,
+			a.COMPOUND_TYPE,
+			a.INTEREST_DATE,
+			a.DELAY_MULPITLE,
+			a.PAY_ACCOUNT_NAME,
+			a.PAY_ACCOUNT_NO,
+			a.PAY_ACCOUNT_BANK,
+			a.SERVICE_TYPE,
+			a.SERVICE_RATE,
+			a.BOND_TYPE,
+			a.BOND_RATE,
+			a.BOND_ACCOUNT_BANK,
+			a.BOND_ACCOUNT_NO,
+			a.BOND_ACCOUNT_NAME,
+			a.STATUS,
+			a.REMARK,
+			b.MEMBER_NO,
+			b.MEMBER_NAME,
+			a.PAYMENT_TERM,
+			a.BILL_RATE,
+			a.OTHER_CONTENT
+		FROM  DM_FANCING_CONTRACT a,SS_CUSTOMER b
+		WHERE
+			1=1
+			AND a.CONTRACT_NO=#{_parameter}
+			AND a.MEMBER_PID=b.MEMBER_PID
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_FANCING_CONTRACT (
+				ID,
+				PID,
+				CREDIT_NO,
+				CREDIT_RESULT_NO,
+				CONTRACT_NO,
+				MEMBER_PID,
+				MEMBER_NAME,
+				LEGAI_MEN,
+				ADDRESS,
+				CREDIT_PRICE,
+				CREDIT_FROM,
+				CREDIT_TO,
+				SUPERVISON_NAME,
+				SUPERVISON_NO,
+				SUPERVISON_BANK,
+				RATE,
+				DELAY_DATE,
+				INTEREST,
+				COMPOUND_TYPE,
+				INTEREST_DATE,
+				DELAY_MULPITLE,
+				PAY_ACCOUNT_NAME,
+				PAY_ACCOUNT_NO,
+				PAY_ACCOUNT_BANK,
+				SERVICE_TYPE,
+				SERVICE_RATE,
+				BOND_TYPE,
+				BOND_RATE,
+				BOND_ACCOUNT_BANK,
+				BOND_ACCOUNT_NO,
+				BOND_ACCOUNT_NAME,
+				STATUS,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS,
+				CONTRACT_AMOUNT,
+				OTHER_CONTENT,
+				BILL_RATE,
+				PAYMENT_TERM
+		
+				
+				
+				
+				
+		) VALUES (
+			   #{id},
+			   #{pid},
+			   #{creditNo},
+			   #{creditResultNo},
+			   #{contractNo},
+			   #{memberPid},
+			   #{memberName},
+			   #{legaiMen},
+			   #{address},
+			   #{creditPrice},
+			   #{creditFrom},
+			   #{creditTo},
+			   #{supervisonName},
+			   #{supervisonNo},
+			   #{supervisonBank},
+			   #{rate},
+			   #{delayDate},
+			   #{interest},
+			   #{compoundType},
+			   #{interestDate},
+			   #{delayMulpitle},
+			   #{payAccountName},
+			   #{payAccountNo},
+			   #{payAccountBank},
+			   #{serviceType},
+			   #{serviceRate},
+			   #{bondType},
+			   #{bondRate},
+			   #{bondAccountBank},
+			   #{bondAccountNo},
+			   #{bondAccountName},
+			   #{status},
+			   #{remark},
+			   1,
+			  SYSDATE(),
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   1,
+			   #{contractAmount},
+			   #{otherContent},
+			   #{billRate},
+			   #{paymentTerm}
+			   
+			   
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE DM_FANCING_CONTRACT 
+				SET
+					<if test="creditNo != null and creditNo != '' "> CREDIT_NO = #{creditNo},</if> 
+					<if test="contractNo != null and contractNo != '' "> CONTRACT_NO = #{contractNo},</if> 
+					<if test="creditResultNo != null and creditResultNo != '' "> CREDIT_RESULT_NO = #{creditResultNo},</if> 
+					<if test="contractAmount != null and contractAmount != '' "> CONTRACT_AMOUNT = #{contractAmount},</if> 
+					<if test="memberPid != null and memberPid != '' "> MEMBER_PID = #{memberPid},</if> 
+					<if test="memberName != null and memberName != '' "> MEMBER_NAME = #{memberName},</if> 
+					<if test="legaiMen != null and legaiMen != '' "> LEGAI_MEN = #{legaiMen},</if> 
+					<if test="address != null and address != '' "> ADDRESS = #{address},</if> 
+					<if test="creditPrice != null and creditPrice != '' "> CREDIT_PRICE = #{creditPrice},</if> 
+					<if test="creditFrom != null and creditFrom != '' "> CREDIT_FROM = #{creditFrom},</if> 
+					<if test="creditTo != null and creditTo != '' "> CREDIT_TO = #{creditTo},</if> 
+					<if test="supervisonName != null and supervisonName != '' "> SUPERVISON_NAME = #{supervisonName},</if> 
+					<if test="supervisonNo != null and supervisonNo != '' "> SUPERVISON_NO = #{supervisonNo},</if> 
+					<if test="supervisonBank != null and supervisonBank != '' "> SUPERVISON_BANK = #{supervisonBank},</if> 
+					<if test="rate != null and rate != '' "> RATE = #{rate},</if> 
+					<if test="delayDate != null and delayDate != '' "> DELAY_DATE = #{delayDate},</if> 
+					<if test="interest != null and interest != '' "> INTEREST = #{interest},</if> 
+					<if test="compoundType != null and compoundType != '' "> COMPOUND_TYPE = #{compoundType},</if> 
+					<if test="interestDate != null and interestDate != '' "> INTEREST_DATE = #{interestDate},</if> 
+					<if test="delayMulpitle != null and delayMulpitle != '' "> DELAY_MULPITLE = #{delayMulpitle},</if> 
+					<if test="payAccountName != null and payAccountName != '' "> PAY_ACCOUNT_NAME = #{payAccountName},</if> 
+					<if test="payAccountNo != null and payAccountNo != '' "> PAY_ACCOUNT_NO = #{payAccountNo},</if> 
+					<if test="payAccountBank != null and payAccountBank != '' "> PAY_ACCOUNT_BANK = #{payAccountBank},</if> 
+					<if test="serviceType != null and serviceType != '' "> SERVICE_TYPE = #{serviceType},</if> 
+					<if test="serviceRate != null and serviceRate != '' "> SERVICE_RATE = #{serviceRate},</if> 
+					<if test="bondType != null and bondType != '' "> BOND_TYPE = #{bondType},</if> 
+					<if test="bondRate != null and bondRate != '' "> BOND_RATE = #{bondRate},</if> 
+					<if test="bondAccountBank != null and bondAccountBank != '' "> BOND_ACCOUNT_BANK = #{bondAccountBank},</if> 
+					<if test="bondAccountNo != null and bondAccountNo != '' "> BOND_ACCOUNT_NO = #{bondAccountNo},</if> 
+					<if test="bondAccountName != null and bondAccountName != '' "> BOND_ACCOUNT_NAME = #{bondAccountName},</if> 
+					<if test="status != null and status != '' "> STATUS = #{status},</if> 
+					<if test="remark != null and remark != '' "> REMARK = #{remark},</if> 
+					<if test="recVer != null and recVer != '' "> REC_VER = #{recVer},</if> 
+					<if test="recStatus != null and recStatus != '' "> REC_STATUS = #{recStatus},</if> 
+					
+					
+					<if test="otherContent != null and otherContent != '' "> OTHER_CONTENT = #{otherContent},</if> 
+					<if test="billRate != null and billRate != '' "> BILL_RATE = #{billRate},</if> 
+					
+					<if test="modifyTime != null and modifyTime != '' "> MODIFY_TIME = #{modifyTime},</if> 
+					<if test="modifier != null and modifier != '' "> MODIFIER = #{modifier}</if> 
+				WHERE
+					1=1
+					AND PID = #{pid}
+	</update>
+	
+	<!-- 批量作废合同 -->
+	<update id="toVoidContract" parameterType="java.util.List">
+		UPDATE DM_FANCING_CONTRACT SET STATUS=30
+		WHERE 
+        <if test="null!=list and list.size!=0">
+            ID IN
+            <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+	</update>
+	<update id="toVoidContractByNo" parameterType="String">
+		UPDATE DM_FANCING_CONTRACT SET STATUS=30
+		WHERE CONTRACT_NO = #{_parameter}
+	</update>
+	<delete id="toDeleteContractByNo" parameterType="String">
+		DELETE FROM  DM_FANCING_CONTRACT 
+		WHERE CONTRACT_NO = #{_parameter}
+	</delete>
+</mapper>

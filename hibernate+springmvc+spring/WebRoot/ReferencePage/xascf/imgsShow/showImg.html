@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=7" />
+<title>178图库jQuery相册代码 - 源码之家</title>
+<link href="xascf/imgsShow/css/photo-scan.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="xascf/imgsShow/js/jquery.ad-gallery.new.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+	$(function() {
+		var galleries = $('.ad-gallery').adGallery({
+			width: 990, 
+			height: '100%', 
+			start_at_index: 0,
+			left_img_container : false,
+			mouse_cursor : {next: 'style="cursor: url(&quot;xascf/imgsShow//images/img_next.cur&quot;), auto;"', prev: 'style="cursor: url(&quot;xascf/imgsShow//images/img_pre.cur&quot;), auto;"'},
+			jump : true,
+			cycle: 8,
+			loader_image: 'xascf/imgsShow/images/ajax-loader.gif',
+			slideshow: {enable:false},
+			effect: 'fade', // or 'slide-hori', 'slide-vert', 'resize', 'fade', 'none' or false
+			callbacks: {
+				beforeImageVisible: function(new_image, old_image) {
+				}
+			}
+		});
+	});
+</script>
+<div id="showImgPop">
+      <div class="photo-warp-inner ad-gallery" style="visibility: visible;" >
+        
+            <div class="img-title">
+          <span class="r-area"></span>
+          </div>  
+          <!--img-title end-->     
+          <div class="mainArea ad-image-wrapper" ></div>
+          <!--mainArea end-->
+        <!--photo-info end -->        
+        <div class="photoList-wrap cf" style=" height:120px;">
+          <div class="ad-nav" style="width:950px;display:inline;margin:0 10px;float:left;">
+            <div bosszone="photoShowList" id="photo-List" class="photo-List ad-thumbs" style="width:875px;">
+              <ul class="ad-thumb-list">
+                <li><a href="xascf/imgsShow/photo/big1.jpg" rel="photo.big1.jpg"><img src="xascf/imgsShow/photo/1.jpg" class="image0" rel="1"/></a></li>
+                <li><a href="xascf/imgsShow/photo/big2.jpg" rel="photo.big2.jpg"><img src="xascf/imgsShow/photo/2.jpg" class="image1" rel="2"/></a></li>
+                <li><a href="xascf/imgsShow/photo/big3.jpg" rel="photo/big3.jpg"><img src="xascf/imgsShow/photo/3.jpg" class="image2" rel="3"/></a></li>
+                <li><a href="xascf/imgsShow/photo/big4.jpg" rel="photo/big4.jpg"><img src="xascf/imgsShow/photo/4.jpg" class="image3" rel="4"/></a></li>
+                <li><a href="xascf/imgsShow/photo/big5.jpg" rel="photo/big5.jpg"><img src="xascf/imgsShow/photo/5.jpg" class="image4" rel="5"/></a></li>
+                <li><a href="xascf/imgsShow/photo/big6.jpg" rel="photo/big6.jpg"><img src="xascf/imgsShow/photo/6.jpg" class="image5" rel="6"/></a></li>
+                <li><a href="xascf/imgsShow/photo/big7.jpg" rel="photo/big7.jpg"><img src="xascf/imgsShow/photo/7.jpg" class="image6" rel="7"/></a></li>
+                <li><a href="xascf/imgsShow/photo/big8.jpg" rel="photo/big8.jpg"><img src="xascf/imgsShow/photo/8.jpg" class="image7" rel="8"/></a></li>
+                <li><a href="xascf/imgsShow/photo/big8.jpg" rel="photo/big8.jpg"><img src="xascf/imgsShow/photo/8.jpg" class="image7" rel="8"/></a></li>
+                <li><a href="xascf/imgsShow/photo/big8.jpg" rel="photo/big8.jpg"><img src="xascf/imgsShow/photo/8.jpg" class="image7" rel="8"/></a></li>
+                <li><a href="xascf/imgsShow/photo/big8.jpg" rel="photo/big8.jpg"><img src="xascf/imgsShow/photo/8.jpg" class="image7" rel="8"/></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="scrollbar-box">
+          <div id="scrollbar" bossZone="photoShowBar" style=" width:855px" class="scrollbar">
+          	<a class="nph_btn_scrl scroolbar-handle" href="javascript:void(0)" onfocus="this.blur()" title="拖动工具条以快速查看图片" style="width:100px;">
+	          	<b class="nph_btn_lt"></b>
+	          	<b class="nph_btn_rt"></b>
+	          	<span class="nph_btn_bd">
+	          		<span>
+	          			<b class="nph_btn_ct"></b>
+	          		</span>
+	          	</span>
+          	</a>
+          	</div>
+        </div>
+      </div>
+	 </div> 
+</body>
+</html>

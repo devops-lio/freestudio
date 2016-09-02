@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.payable.mapper.IncomeInfoMapper">  
+	<resultMap type="com.sinoservices.xascf.payable.model.IncomeInfoModel" id="IncomeInfoModelResultMap">
+		<result property="id" column="ID"/> 
+		<result property="incomePid" column="INCOME_PID"/>
+		<result property="incomeType" column="INCOME_TYPE"/> 
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="businessNo" column="BUSINESS_NO"/>
+		<result property="billType" column="BILL_TYPE"/>
+		<result property="incomePrice" column="INCOME_PRICE"/>
+		<result property="paidPrice" column="PAID_PRICE"/>
+		<result property="collectPrice" column="COLLECT_PRICE"/>
+		<result property="billCycle" column="BILL_CYCLE"/>
+		<result property="remark" column="REMARK"/>
+		
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.payable.view.IncomeInfoItem" id="IncomeInfoItemResultMap">
+		<result property="id" column="ID"/> 
+		<result property="incomePid" column="INCOME_PID"/>
+		<result property="incomeType" column="INCOME_TYPE"/> 
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="businessNo" column="BUSINESS_NO"/>
+		<result property="billType" column="BILL_TYPE"/>
+		<result property="incomePrice" column="INCOME_PRICE"/>
+		<result property="paidPrice" column="PAID_PRICE"/>
+		<result property="collectPrice" column="COLLECT_PRICE"/>
+		<result property="billCycle" column="BILL_CYCLE"/>
+		<result property="remark" column="REMARK"/>
+		
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap> 
+	<resultMap type="com.sinoservices.xascf.payable.view.IncomeAllMsgItem" id="incomeAllMsgItemResultMap">
+		<result property="allPrice" column="ALL_PRICE"/>
+		<result property="allPaidPrice" column="ALL_PAID_PRICE"/>
+		<result property="allCollectPrice" column="ALL_COLLECT_PRICE"/>
+		<result property="lxPrice" column="LX_PRICE"/>
+		<result property="lxPaidPrice" column="LX_PAID_PRICE"/>
+		<result property="lxCollectPrice" column="LX_COLLECT_PRICE"/>
+		<result property="servicePrice" column="SERVICE_PRICE"/>
+		<result property="servicePaidPrice" column="SERVICE_PAID_PRICE"/>
+		<result property="serviceCollectPrice" column="SERVICE_COLLECT_PRICE"/>
+	</resultMap>
+	<sql id="select"> 
+		  SELECT  
+		  	INCOME_PID,
+		  	INCOME_TYPE,
+		  	FANCING_ORDER_NO,
+		  	BUSINESS_NO,
+		  	BILL_TYPE,
+		  	INCOME_PRICE,
+		  	PAID_PRICE,
+		  	COLLECT_PRICE,
+		  	BILL_CYCLE,
+		  	REMARK
+	</sql> 
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.payable.model.IncomeInfoModel">
+		INSERT INTO PM_INCOME_INFO ( 
+				INCOME_PID,
+				INCOME_TYPE,
+				FANCING_ORDER_NO,
+				BUSINESS_NO,
+				BILL_TYPE,
+				INCOME_PRICE,
+				PAID_PRICE,
+				COLLECT_PRICE, 
+				BILL_CYCLE,
+				REMARK, 
+				CREATOR,
+				CREATE_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES(
+				#{incomePid},
+				#{incomeType},
+				#{fancingOrderNo},
+				#{businessNo},
+				#{billType},
+				#{incomePrice},
+				#{paidPrice},
+				#{collectPrice},
+				#{billCycle},
+				#{remark}, 
+				#{creator},
+				SYSDATE(),
+				1,
+				1 
+		)
+	</insert>
+	<update id="updateByBusenessNo" parameterType="com.sinoservices.xascf.payable.model.IncomeInfoModel">
+		UPDATE PM_INCOME_INFO SET
+			<if test="incomeType !=null and incomeType !=''">	INCOME_TYPE = #{incomeType},</if>
+			<if test="fancingOrderNo !=null and fancingOrderNo !=''">	FANCING_ORDER_NO = #{fancingOrderNo},</if>
+			<if test="billType !=null and billType !=''">	BILL_TYPE = #{billType},</if>
+			<if test="incomePrice !=null and incomePrice !=''">	INCOME_PRICE = #{incomePrice},</if>
+			<if test="paidPrice !=null and paidPrice !=''">	PAID_PRICE = #{paidPrice},</if>
+			<if test="collectPrice !=null and collectPrice !=''">	COLLECT_PRICE = #{collectPrice},</if>
+			<if test="billCycle !=null and billCycle !=''">	BILL_CYCLE = #{billCycle},</if>
+			REC_VER=REC_VER+1,MODIFY_TIME=SYSDATE()
+		WHERE 1=1 AND BUSINESS_NO = #{businessNo}
+	</update>
+	<update id="updatePaidByList" parameterType="java.util.List">
+		UPDATE PM_INCOME_INFO 
+		<trim prefix="set" suffixOverrides=","> 
+	          <!-- 更新的字段集合 --> 
+	          <trim prefix="PAID_PRICE =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.paidPrice!=null">  
+	                      when (BUSINESS_NO=#{i.businessNo}) then #{i.paidPrice}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <!-- 更新的字段集合 --> 
+	          <trim prefix="COLLECT_PRICE =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.collectPrice!=null">  
+	                      when (BUSINESS_NO=#{i.businessNo}) then #{i.collectPrice}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	           <trim prefix="Modifier =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                     <if test="i.modifier!=null">  
+	                      when (BUSINESS_NO=#{i.businessNo}) then #{i.modifier}  
+	                     </if>  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Modify_Time =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (BUSINESS_NO=#{i.businessNo}) then SYSDATE()  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Rec_Ver =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (BUSINESS_NO=#{i.businessNo}) then Rec_Ver+1  
+	              </foreach>  
+	           </trim>
+         </trim>   
+         where   
+         <foreach collection="list" separator="or" item="i" index="index" > 
+         <if test="i.businessNo!=null">  
+          (BUSINESS_NO=#{i.businessNo})
+           </if>   
+      	</foreach> 
+	</update>
+	
+	
+	
+	<!-- 批量执行插入 -->
+	<insert id="addByIncomeInfoList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO PM_INCOME_INFO (
+				INCOME_PID,
+				INCOME_TYPE,
+				FANCING_ORDER_NO,
+				BUSINESS_NO,
+				BILL_TYPE,
+				INCOME_PRICE,
+				PAID_PRICE,
+				COLLECT_PRICE, 
+				BILL_CYCLE,
+				REMARK, 
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+				)VALUES
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( 	  
+				#{item.incomePid},
+				#{item.incomeType},
+				#{item.fancingOrderNo},
+				#{item.businessNo},
+				#{item.billType},
+				#{item.incomePrice},
+				#{item.paidPrice},
+				#{item.collectPrice},
+				#{item.billCycle},
+				#{item.remark}, 
+				#{item.creator},
+				#{item.createTime},
+				#{item.modifier},
+				#{item.modifyTime},
+				#{item.recVer},
+				#{item.recStatus} 
+				  	)
+	    </foreach>  
+  </insert>  
+	
+	<sql id="count"> 
+	    	SELECT COUNT(1)  
+	</sql>
+	
+	<sql id="findByExample">
+	WHERE 1=1  
+		<if test="incomePid !=null and incomePid !=''"> AND INCOME_PID LIKE ('%${incomePid}%' )</if>
+		<if test="incomeType !=null and incomeType !=''"> AND INCOME_TYPE LIKE ('%${incomeType}%' )</if> 
+		<if test="fancingOrderNo !=null and fancingOrderNo !=''"> AND FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%' )</if>
+		<if test="businessNo !=null and businessNo !=''"> AND BUSINESS_NO LIKE ('%${businessNo}%' )</if> 
+		<if test="billType !=null and billType !=''">AND BILL_TYPE = #{billType}</if>
+		<if test="incomePrice !=null and incomePrice != ''"> AND INCOME_PRICE =#{incomePrice}</if>
+		<if test="paidPrice !=null and paidPrice !=''"> AND PAID_PRICE =#{paidPrice}</if>
+		<if test="collectPrice != null and collectPrice != ''">AND COLLECT_PRICE LIKE ('%${collectPrice}%' )</if> 
+		<if test="billCycle != null and billCycle != ''">AND BILL_CYCLE LIKE ('%${billCycle}%' )</if>  
+		ORDER BY CREATE_TIME DESC
+	</sql>  
+	 
+	
+	<!-- 业务收入列表 -->
+	<select id="findIncomeByPage" resultMap="IncomeInfoItemResultMap" parameterType="com.sinoservices.xascf.payable.view.IncomeInfoConditionView">
+		<include refid="select"/>
+		FROM  PM_INCOME_INFO 
+		<include refid="findByExample"/>
+	</select>
+	
+	<!-- 业务收入列表 -->
+	<select id="findIncomeByCount" 
+		 resultType="int" parameterType="com.sinoservices.xascf.payable.view.IncomeInfoConditionView">
+		<include refid="count"/>
+		FROM  PM_INCOME_INFO 
+		<include refid="findByExample"/>
+	</select>
+	
+	<!-- 业务收入列表 -->
+	<select id="findByBusinessNo" resultMap="IncomeInfoModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  PM_INCOME_INFO 
+		WHERE 
+			1=1
+			AND BUSINESS_NO=#{_parameter}
+			LIMIT 1
+	</select>
+	<!-- 业务收入统计 
+	手续费收入：10,000.00 元   已收：3,000.00 元  待收：7,000.00 元
+  	利息收入：10,000.00 元   已收：3,000.00 元  待收：7,000.00 元
+   	 总收入：20,000.00 元   已收：6,000.00 元  待收：14,000.00 元
+	-->
+	<select id="findAllMsg" resultMap="incomeAllMsgItemResultMap" >
+		SELECT 
+			SUM(PII.INCOME_PRICE) AS ALL_PRICE,
+			SUM(PII.PAID_PRICE) AS ALL_PAID_PRICE,
+			SUM(PII.COLLECT_PRICE) AS ALL_COLLECT_PRICE,
+			 SUM(CASE WHEN PII.INCOME_TYPE = '1' THEN
+												PII.INCOME_PRICE ELSE 0 END
+												) AS LX_PRICE,
+			SUM(CASE WHEN PII.INCOME_TYPE = '1' THEN
+												PII.PAID_PRICE ELSE 0 END
+												) AS LX_PAID_PRICE,
+			SUM(CASE WHEN PII.INCOME_TYPE = '1' THEN
+												PII.COLLECT_PRICE ELSE 0 END
+												) AS LX_COLLECT_PRICE,
+			SUM(CASE WHEN PII.INCOME_TYPE = '2' THEN
+												PII.INCOME_PRICE ELSE 0 END
+												) AS SERVICE_PRICE,
+			SUM(CASE WHEN PII.INCOME_TYPE = '2' THEN
+												PII.PAID_PRICE ELSE 0 END
+												) AS SERVICE_PAID_PRICE,
+			SUM(CASE WHEN PII.INCOME_TYPE = '2' THEN
+												PII.COLLECT_PRICE ELSE 0 END
+												) AS SERVICE_COLLECT_PRICE
+			
+			FROM 
+			PM_INCOME_INFO PII
+	</select>
+	
+	<delete id="deleteByBusnessNo" parameterType="String">
+		DELETE FROM PM_INCOME_INFO WHERE BUSINESS_NO=#{_parameter}
+	
+	</delete>
+	
+	<!-- 应收图标 -->
+	<select id="getList" resultMap="IncomeInfoModelResultMap" >
+		SELECT
+			DATE_FORMAT(CREATE_TIME, '%m') AS BUSINESS_NO, 
+			SUM(PAID_PRICE) AS PAID_PRICE 
+		FROM PM_INCOME_INFO
+		GROUP BY  DATE_FORMAT(CREATE_TIME, '%m')
+	</select>
+	
+</mapper>

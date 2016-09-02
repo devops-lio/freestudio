@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.funds.mapper.LoanRecordMapper">
+	<resultMap type="com.sinoservices.xascf.funds.model.LoanRecordModel" id="loanRecordModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="loanRecordPid" column="LOAN_RECORD_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="loanNo" column="LOAN_NO"/>
+		<result property="loanPrice" column="LOAN_PRICE"/>
+		<result property="loanDate" column="LOAN_DATE"/>
+		<result property="payNo" column="PAY_NO"/>
+		<result property="palyBanktoNo" column="PALY_BANKTO_NO"/>
+		<result property="payBankNo" column="PAY_BANK_NO"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileUrl" column="FILE_URL"/>
+		<result property="remark" column="REMARK"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					LOAN_RECORD_PID,
+					FANCING_ORDER_NO,
+					LOAN_NO,
+					LOAN_PRICE,
+					LOAN_DATE,
+					PAY_NO,
+					PALY_BANKTO_NO,
+					PAY_BANK_NO,
+					FILE_NAME,
+					FILE_URL,
+					REMARK,
+					CREATOR,
+					CREATE_TIME,
+					MODIFIER,
+					MODIFY_TIME,
+					REC_VER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="loanRecordPid!=null and loanRecordPid!=''"> AND LOAN_RECORD_PID LIKE ('%${loanRecordPid}%' )</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO=#{fancingOrderNo}</if>
+		<if test="loanNo!=null and loanNo!=''"> AND LOAN_NO LIKE ('%${loanNo}%' )</if>
+		<if test="loanPrice!=null and loanPrice!=''"> AND LOAN_PRICE LIKE ('%${loanPrice}%' )</if>
+		<if test="loanDate!=null and loanDate!=''"> AND LOAN_DATE LIKE ('%${loanDate}%' )</if>
+		<if test="payNo!=null and payNo!=''"> AND PAY_NO LIKE ('%${payNo}%' )</if>
+		<if test="palyBanktoNo!=null and palyBanktoNo!=''"> AND PALY_BANKTO_NO LIKE ('%${palyBanktoNo}%' )</if>
+		<if test="payBankNo!=null and payBankNo!=''"> AND PAY_BANK_NO LIKE ('%${payBankNo}%' )</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.funds.model.LoanRecordModel">
+		<include refid="count"/>
+		FROM  FM_LOAN_RECORD
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="loanRecordModelResultMap" parameterType="com.sinoservices.xascf.funds.model.LoanRecordModel">
+		<include refid="select"/>
+		FROM  FM_LOAN_RECORD
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getLoanRecordByOrderNo" resultMap="loanRecordModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  FM_LOAN_RECORD
+		WHERE FANCING_ORDER_NO=#{fancingOrderNo}
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.funds.model.LoanRecordModel">
+		INSERT INTO FM_LOAN_RECORD (
+				LOAN_RECORD_PID,
+				FANCING_ORDER_NO,
+				LOAN_NO,
+				LOAN_PRICE,
+				LOAN_DATE,
+				PAY_NO,
+				PALY_BANKTO_NO,
+				PAY_BANK_NO,
+				FILE_NAME,
+				FILE_URL,
+				REMARK,
+				CREATOR,
+				CREATE_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{loanRecordPid},
+			   #{fancingOrderNo},
+			   #{loanNo},
+			   #{loanPrice},
+			   #{loanDate},
+			   #{payNo},
+			   #{palyBanktoNo},
+			   #{payBankNo},
+			   #{fileName},
+			   #{fileUrl},
+			   #{remark},
+			   #{creator},
+			   SYSDATE(),
+			   1,
+			   1
+		)
+	</insert>
+	
+	<update id="updateByPid" parameterType="com.sinoservices.xascf.funds.model.LoanRecordModel">
+		UPDATE FM_LOAN_RECORD SET
+			<if test="fancingOrderNo !=null and fancingOrderNo !=''">	FANCING_ORDER_NO = #{fancingOrderNo},</if>
+			<if test="loanNo !=null and loanNo !=''">	LOAN_NO = #{loanNo},</if>
+			<if test="loanPrice !=null and loanPrice !=''">	LOAN_PRICE = #{loanPrice},</if>
+			<if test="loanDate !=null and loanDate !=''">	LOAN_DATE = #{loanDate},</if>
+			<if test="payNo !=null and payNo !=''">	PAY_NO = #{payNo},</if>
+			<if test="palyBanktoNo !=null and palyBanktoNo !=''">	PALY_BANKTO_NO = #{palyBanktoNo},</if>
+			<if test="payBankNo !=null and payBankNo !=''">	PAY_BANK_NO = #{payBankNo},</if>
+			<if test="fileName !=null and fileName !=''">	FILE_NAME = #{fileName},</if>
+			<if test="fileUrl !=null and fileUrl !=''">	FILE_URL = #{fileUrl},</if>
+			<if test="remark !=null and remark !=''">	REMARK = #{remark},</if>
+			<if test="modifier !=null and modifier !=''">	MODIFIER = #{modifier},</if>
+			<if test="modifyTime !=null and modifyTime !=''">	MODIFY_TIME = #{modifyTime},</if>
+			REC_VER=REC_VER+1
+		WHERE LOAN_RECORD_PID = #{loanRecordPid}
+	</update>
+</mapper>

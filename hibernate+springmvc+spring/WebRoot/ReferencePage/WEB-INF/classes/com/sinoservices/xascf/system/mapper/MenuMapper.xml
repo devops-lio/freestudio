@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.MenuMapper">
+
+    <resultMap type="com.sinoservices.xascf.system.model.MenuModel" id="menuResultMap">
+        <id property="id" column="ID"/>
+        <result property="menuPid" column="MENU_PID"/>
+        <result property="resourcePid" column="RESOURCE_PID"/>
+        <result property="resourceParentPid" column="RESOURCE_PARENT_PID"/>
+        <result property="menuName" column="MENU_NAME"/>
+        <result property="url" column="URL"/>
+        <result property="iconClass" column="ICON_CLASS"/>
+        <result property="orderNo" column="ORDER_NO"/>
+        <result property="systemPid" column="SYSTEM_PID"/>
+     	<collection property="children" column="RESOURCE_PID" ofType="com.sinoservices.xascf.system.model.MenuModel" select="select-children"/>
+    </resultMap>
+  
+     <resultMap type="com.sinoservices.xascf.system.view.MenuResourceItem" id="menuResourceResultMap">
+        <id property="id" column="ID"/>
+        <result property="menuPid" column="MENU_PID"/>
+        <result property="resourcePid" column="RESOURCE_PID"/>
+        <result property="resourceParentPid" column="RESOURCE_PARENT_PID"/>
+        <result property="menuName" column="MENU_NAME"/>
+        <result property="url" column="URL"/>
+        <result property="iconClass" column="ICON_CLASS"/>
+        <result property="orderNo" column="ORDER_NO"/>
+        <result property="systemPid" column="SYSTEM_PID"/>
+        <result property="resourceCode" column="RESOURCE_CODE"/>
+    </resultMap>
+
+    <select id="select-children" parameterType="String" resultMap="menuResultMap">
+        SELECT M.ID,M.MENU_PID, M.RESOURCE_PID,MENU_NAME,
+        URL,ICON_CLASS,ORDER_NO,M.SYSTEM_PID,R.PARENT_PID AS RESOURCE_PARENT_PID
+        FROM SS_MENU M 
+        JOIN SS_RESOURCE R ON M.RESOURCE_PID=R.RESOURCE_PID
+         WHERE R.PARENT_PID = #{resourcePid}
+        ORDER BY M.ORDER_NO ASC
+    </select>  
+    <!-- 
+    <sql id="selectAll">
+      SELECT M.ID, M.RESOURCE_ID,MENU_NAME,URL,ICON_CLASS,ORDER_NO,M.SYSTEM_ID,R.PARENT_ID AS RESOURCE_PID
+        FROM MENU M 
+        JOIN RESOURCE R ON M.RESOURCE_ID=R.ID
+    </sql>
+    <sql id="findByExampleWhere">
+        WHERE 1=1
+         <if test="systemId!=null and systemId!=''"> AND M.SYSTEM_ID = #{systemId}</if>
+    </sql>
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.upm.model.MenuModel">
+        SELECT COUNT(1) FROM MENU M 
+        JOIN RESOURCE R ON M.RESOURCE_ID=R.ID
+        <include refid="findByExampleWhere"/>
+    </select>
+    <select id="getPage" resultMap="menuResultMap" parameterType="com.sinoservices.upm.model.MenuModel">
+        <include refid="selectAll"/>
+        <include refid="findByExampleWhere"/>
+        ORDER BY CREATE_TIME DESC
+    </select>
+    -->
+    <select id="getMenu" parameterType="String" resultMap="menuResultMap">
+        SELECT M.ID,M.MENU_PID,M.RESOURCE_PID,MENU_NAME,URL,ICON_CLASS,ORDER_NO,M.SYSTEM_PID,R.PARENT_PID AS RESOURCE_PRAENT_PID 
+        FROM SS_MENU M 
+        JOIN SS_RESOURCE R ON M.RESOURCE_PID=R.RESOURCE_PID
+        WHERE R.SYSTEM_PID=#{_parameter} AND R.PARENT_PID ='0' AND R.RESOURCE_TYPE=1
+         ORDER BY M.ORDER_NO ASC
+    </select>
+    <!-- facade通过系统编码获取系统菜单 
+    <select id="getMenuBySystemCode" parameterType="String" resultMap="menuResultMap">
+        SELECT M.ID, M.RESOURCE_ID,MENU_NAME,URL,ICON_CLASS,ORDER_NO,M.SYSTEM_ID,R.PARENT_ID AS RESOURCE_PID 
+        FROM MENU M 
+        JOIN RESOURCE R ON M.RESOURCE_ID=R.ID
+        JOIN SYSTEM S ON R.SYSTEM_ID=S.ID
+        WHERE S.SYSTEM_CODE=#{_parameter}
+        AND R.PARENT_ID =0 AND R.RESOURCE_TYPE=1
+         ORDER BY M.ORDER_NO ASC
+    </select>
+    子系统根据用户和系统获取已配置的菜单ids
+    <select id="getMenuIdListByUserId" resultType="java.lang.String" parameterType="java.util.Map">
+		SELECT M.ID FROM MENU M 
+			WHERE M.RESOURCE_ID IN (
+				SELECT  F.RESOURCE_ID AS RESOURCE_ID FROM 
+						 `FUNCTION` F 
+						JOIN ROLE_FUNCTION RF ON F.ID=RF.FUNCTION_ID
+						JOIN USER_ROLE UR ON UR.ROLE_ID=RF.ROLE_ID
+						JOIN `USER` U ON UR.USER_ID=U.ID
+						WHERE 1=1  AND UR.USER_ID=#{userId} AND F.SYSTEM_ID=#{systemId}
+						AND F.ID  NOT IN(
+						SELECT USF.FUNCTION_ID
+						FROM USER_SHIELDFUNCTION USF WHERE USF.USER_ID=#{userId}
+						AND USF.SYSTEM_ID=#{systemId}
+						)
+						UNION (SELECT  F2.RESOURCE_ID  AS RESOURCE_ID FROM 
+						 `FUNCTION` F2 
+							JOIN USER_FUNCTION UF ON UF.FUNCTION_ID=F2.ID
+						WHERE 1=1	AND UF.USER_ID=#{userId} AND  UF.SYSTEM_ID=#{systemId}
+						)
+				)
+    </select>
+    子系统根据用户和系统获取菜单列表
+    <select id="getMenuListByUserId" resultMap="menuResourceResultMap" parameterType="java.util.Map">
+		SELECT  M.ID, M.RESOURCE_ID,MENU_NAME,URL,ICON_CLASS,ORDER_NO,M.SYSTEM_ID,R.PARENT_ID AS RESOURCE_PID,R.RESOURCE_CODE
+		 FROM MENU M 
+		 JOIN RESOURCE R ON M.RESOURCE_ID=R.ID
+			WHERE M.RESOURCE_ID IN (
+				SELECT  F.RESOURCE_ID AS RESOURCE_ID FROM 
+						 `FUNCTION` F 
+						JOIN ROLE_FUNCTION RF ON F.ID=RF.FUNCTION_ID
+						JOIN USER_ROLE UR ON UR.ROLE_ID=RF.ROLE_ID
+						JOIN `USER` U ON UR.USER_ID=U.ID
+						WHERE 1=1  AND UR.USER_ID=#{userId} AND F.SYSTEM_ID=#{systemId}
+						AND F.ID  NOT IN(
+						SELECT USF.FUNCTION_ID
+						FROM USER_SHIELDFUNCTION USF WHERE USF.USER_ID=#{userId}
+						AND USF.SYSTEM_ID=#{systemId}
+						)
+						UNION (SELECT  F2.RESOURCE_ID  AS RESOURCE_ID FROM 
+						 `FUNCTION` F2 
+							JOIN USER_FUNCTION UF ON UF.FUNCTION_ID=F2.ID
+						WHERE 1=1	AND UF.USER_ID=#{userId} AND  UF.SYSTEM_ID=#{systemId}
+						)
+				)
+    </select>
+    根据系统编码获取系统菜单列表 
+     <select id="getMenuResourceListBySystemCode" parameterType="java.lang.String" resultMap="menuResourceResultMap">
+        SELECT M.ID, M.RESOURCE_ID,MENU_NAME,URL,ICON_CLASS,ORDER_NO,M.SYSTEM_ID,R.PARENT_ID AS RESOURCE_PID,R.RESOURCE_CODE
+        FROM MENU M 
+        JOIN RESOURCE R ON M.RESOURCE_ID=R.ID
+         JOIN SYSTEM S ON R.SYSTEM_ID=S.ID
+         WHERE S.SYSTEM_CODE=#{_parameter}
+         ORDER BY M.ORDER_NO ASC
+    </select>
+    <select id="getMenuList" parameterType="String" resultMap="menuResultMap">
+    	 SELECT M.ID, M.RESOURCE_ID,MENU_NAME,URL,ICON_CLASS,ORDER_NO,M.SYSTEM_ID,R.PARENT_ID AS RESOURCE_PID 
+        FROM MENU M 
+        JOIN RESOURCE R ON M.RESOURCE_ID=R.ID
+        JOIN SYSTEM S ON S.ID=M.SYSTEM_ID
+        WHERE S.SYSTEM_CODE=#{_parameter}
+        LIMIT 1
+    </select>
+    <select id="getById" parameterType="java.lang.Long" resultMap="menuResourceResultMap">
+       SELECT M.ID, M.RESOURCE_ID,MENU_NAME,URL,ICON_CLASS,ORDER_NO,M.SYSTEM_ID,R.PARENT_ID AS RESOURCE_PID,R.RESOURCE_CODE
+        FROM MENU M 
+        JOIN RESOURCE R ON M.RESOURCE_ID=R.ID
+         WHERE M.ID = #{id}
+    </select>
+    -->
+    <select id="getByResourcePid" parameterType="String" resultMap="menuResourceResultMap">
+        SELECT M.ID,M.MENU_PID, M.RESOURCE_PID,MENU_NAME,URL,ICON_CLASS,ORDER_NO,M.SYSTEM_PID,R.PARENT_PID AS RESOURCE_PARENT_PID,R.RESOURCE_CODE
+        FROM SS_MENU M 
+        JOIN SS_RESOURCE R ON M.RESOURCE_PID=R.RESOURCE_PID
+         WHERE M.RESOURCE_PID = #{resourcePid}
+    </select>
+    <!--  
+    <select id="getBaseMenuByResourceId" parameterType="java.lang.Long" resultMap="menuResultMap">
+        SELECT M.ID, M.RESOURCE_ID,MENU_NAME,URL,ICON_CLASS,ORDER_NO,M.SYSTEM_ID,R.PARENT_ID AS RESOURCE_PID,R.RESOURCE_CODE
+        FROM MENU M 
+        JOIN RESOURCE R ON M.RESOURCE_ID=R.ID
+         WHERE M.RESOURCE_ID = #{resourceId}
+         AND  R.RESOURCE_TYPE=1
+    </select>
+    -->
+    
+    <insert id="insert" parameterType="com.sinoservices.xascf.system.model.MenuModel">
+        INSERT INTO `SS_MENU` (ID,MENU_PID,RESOURCE_PID, MENU_NAME, URL, ICON_CLASS, ORDER_NO,SYSTEM_PID,
+            CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME)    
+        VALUES (#{id},#{menuPid},#{resourcePid}, #{menuName}, #{url}, #{iconClass},  ${orderNo},#{systemPid},
+            #{creator}, #{createTime, jdbcType=TIMESTAMP}, #{modifier}, #{modifyTime, jdbcType=TIMESTAMP})
+    </insert>
+    
+        <!-- 批量执行插入 -->
+	<insert id="addByList"  parameterType="java.util.List">  
+	    	INSERT INTO `SS_MENU` (MENU_PID,RESOURCE_PID, MENU_NAME, URL, ICON_CLASS, ORDER_NO,SYSTEM_PID,
+            CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+			) values  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (#{item.menuPid},#{item.resourcePid}, #{item.menuName}, #{item.url}, #{item.iconClass},${item.orderNo},#{item.systemPid},
+            #{item.creator}, #{item.createTime, jdbcType=TIMESTAMP}, #{item.modifier}, #{item.modifyTime, jdbcType=TIMESTAMP})  
+	    </foreach>  
+  </insert>  
+    
+    
+    <update id="update" parameterType="com.sinoservices.xascf.system.model.MenuModel">
+        UPDATE `SS_MENU` SET 
+        <if test="menuName!=null and menuName!=''"> MENU_NAME = #{menuName},</if>
+        <if test="url!=null and url!=''">  URL = #{url},</if>
+        <if test="iconClass!=null and iconClass!=''">  ICON_CLASS = #{iconClass},</if>
+        <if test="orderNo!=null and orderNo!=''">   ORDER_NO = #{orderNo},</if>
+        <if test="modifier!=null and modifier!=''">   MODIFIER = #{modifier},</if>
+         MODIFY_TIME = SYSDATE()
+         WHERE MENU_PID = #{menuPid}
+    </update>
+    <delete id="delete" parameterType="java.util.List">
+        DELETE FROM `SS_MENU` WHERE
+        <choose>
+            <when test="null!=list and list.size!=0">
+                RESOURCE_PID IN
+	            <foreach collection="list" item="resourcePid" index="index" open="(" separator="," close=")">
+	                #{resourcePid}
+	            </foreach>
+	        </when>
+	        <otherwise>
+	           1 != 1
+	        </otherwise>
+        </choose>
+    </delete>
+</mapper>

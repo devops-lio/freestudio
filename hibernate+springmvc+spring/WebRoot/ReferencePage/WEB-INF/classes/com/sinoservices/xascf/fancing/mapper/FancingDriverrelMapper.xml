@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.FancingDriverrelMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.model.FancingDriverrelModel" id="fancingDriverrelModelMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="driverbanknoPid" column="DRIVERBANKNO_PID"/>
+		<result property="driverName" column="DRIVER_NAME"/>
+		<result property="driverIdNo" column="DRIVER_ID_NO"/>
+		<result property="driverNo" column="DRIVER_NO"/>
+		<result property="loanPrice" column="LOAN_PRICE"/>
+		<result property="remark" column="REMARK"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					DFD.ID,DFD.PID,
+					FANCING_ORDER_NO,
+					DRIVERBANKNO_PID,
+					DFD.DRIVER_NAME,
+					DFD.DRIVER_ID_NO,
+					DBN.BANK_ACCOUNT AS DRIVER_NO,
+					LOAN_PRICE
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO =#{fancingOrderNo}</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.model.FancingDriverrelModel">
+		<include refid="count"/>
+		FROM  DM_FANCING_DRIVERREL
+		<include refid="findByExample"/>
+	</select>
+	<select id="getPageByOrderNo" resultMap="fancingDriverrelModelMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_FANCING_DRIVERREL DFD
+		JOIN SS_DRIVER_BANK_NO DBN ON DFD.DRIVERBANKNO_PID=DBN.PID
+			WHERE FANCING_ORDER_NO=#{_parameter}
+	
+	</select>
+	<select id="findByCondition" resultMap="fancingDriverrelModelMap" parameterType="com.sinoservices.xascf.fancing.model.FancingDriverrelModel">
+		<include refid="select"/>
+		FROM  DM_FANCING_DRIVERREL
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insertByList" parameterType="java.util.List">
+		INSERT INTO DM_FANCING_DRIVERREL (
+				PID,
+				FANCING_ORDER_NO,
+				DRIVERBANKNO_PID,
+				DRIVER_NAME,
+				DRIVER_ID_NO,
+				LOAN_PRICE,
+				REMARK,
+				CREATOR,
+				CREATE_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES 
+		  <foreach collection="list" item="item" index="index"  separator=",">  
+		(
+			   #{item.pid},
+			   #{item.fancingOrderNo},
+			   #{item.driverbanknoPid},
+			   #{item.driverName},
+			   #{item.driverIdNo},
+			   #{item.loanPrice},
+			   #{item.remark},
+			   #{item.creator},
+			   SYSDATE(),
+			   1,
+			   1
+		)</foreach>  
+	</insert>
+	<delete id="deleteByFancingNo" parameterType="String">
+		DELETE FROM DM_FANCING_DRIVERREL WHERE FANCING_ORDER_NO=#{_parameter}
+	
+	</delete>
+	
+
+</mapper>

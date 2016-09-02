@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.funds.mapper.FundIncomeMapper">
+	<resultMap type="com.sinoservices.xascf.funds.view.FundIncomeQueryItemView" id="fundIncomeQueryItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="fundIncomePid" column="FUND_INCOME_PID"/>
+		<result property="transactionSerialNo" column="TRANSACTION_SERIAL_NO"/>
+		<result property="bankNo" column="BANK_NO"/>
+		<result property="incomeNo" column="INCOME_NO"/>
+		<result property="incomeAmount" column="INCOME_AMOUNT"/>
+		<result property="incomeDate" column="INCOME_DATE"/>
+		<result property="currentAmount" column="CURRENT_AMOUNT"/>
+		<result property="expireDate" column="EXPIRE_DATE"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="incomeType" column="INCOME_TYPE"/>
+		<result property="fundRate" column="FUND_RATE"/>
+		<result property="incomeSource" column="INCOME_SOURCE"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="createTimeStr" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.funds.model.FundIncomeModel" id="fundIncomeModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="fundIncomePid" column="FUND_INCOME_PID"/>
+		<result property="transactionSerialNo" column="TRANSACTION_SERIAL_NO"/>
+		<result property="bankNo" column="BANK_NO"/>
+		<result property="incomeNo" column="INCOME_NO"/>
+		<result property="incomeAmount" column="INCOME_AMOUNT"/>
+		<result property="incomeDate" column="INCOME_DATE"/>
+		<result property="currentAmount" column="CURRENT_AMOUNT"/>
+		<result property="expireDate" column="EXPIRE_DATE"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="incomeType" column="INCOME_TYPE"/>
+		<result property="fundRate" column="FUND_RATE"/>
+		<result property="incomeSource" column="INCOME_SOURCE"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					FUND_INCOME_PID,
+					TRANSACTION_SERIAL_NO,
+					BANK_NO,
+					INCOME_NO,
+					INCOME_AMOUNT,
+					INCOME_DATE,
+					CURRENT_AMOUNT,
+					date_format(EXPIRE_DATE, '%Y-%m-%d') as EXPIRE_DATE ,
+					CURRENCY,
+					INCOME_TYPE,
+					FUND_RATE,
+					INCOME_SOURCE,
+					CREATOR,
+					CREATE_TIME,
+					MODIFIER,
+					MODIFY_TIME,
+					REC_VER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1 AND REC_STATUS=0
+		<if test="fundIncomePid!=null and fundIncomePid!=''"> AND FUND_INCOME_PID LIKE ('%${fundIncomePid}%')</if>
+		<if test="bankNo!=null and bankNo!=''"> AND BANK_NO LIKE ('%${bankNo}%')</if>
+		<if test="incomeNo !=null and incomeNo !=''"> AND INCOME_NO LIKE ('%${incomeNo}%')</if>
+		<if test="incomeAmount!=null and incomeAmount!=''"> AND INCOME_AMOUNT LIKE ('%${incomeAmount}%')</if>
+		<if test="currentAmount!=null and currentAmount!=''"> AND CURRENT_AMOUNT LIKE ('%${currentAmount}%')</if>
+		<if test="(expireDateStart!=null and expireDateStart!='') and (expireDateEnd==null or expireDateEnd == '') "> AND EXPIRE_DATE &gt;= #{expireDateStart}</if>
+		<if test="(expireDateStart==null or expireDateStart=='') and (expireDateEnd!=null and expireDateEnd != '') "> AND EXPIRE_DATE &lt;  DATE_ADD( #{expireDateEnd},INTERVAL 1 DAY)</if>
+		<if test="(expireDateStart!=null and expireDateStart!='') and (expireDateEnd!=null and expireDateEnd != '') "> AND EXPIRE_DATE between #{expireDateStart} and DATE_ADD( #{expireDateEnd},INTERVAL 1 DAY)</if> 
+		<if test="incomeType !=null and incomeType !=''"> AND INCOME_TYPE =#{incomeType}</if>
+		<if test="notIncomeType !=null and notIncomeType !=''"> AND INCOME_TYPE !=#{notIncomeType}</if>
+		<if test="transactionSerialNo !=null and transactionSerialNo !=''"> AND TRANSACTION_SERIAL_NO LIKE ('%${transactionSerialNo}%')</if>
+		<if test="incomeSource !=null and incomeSource !=''"> AND INCOME_SOURCE =#{incomeSource}</if>
+		ORDER BY CREATE_TIME DESC
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.funds.view.FundIncomeQueryConditionView">
+		<include refid="count"/>
+		FROM  FM_FUND_INCOME
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="fundIncomeQueryItemResultMap" parameterType="com.sinoservices.xascf.funds.view.FundIncomeQueryConditionView">
+		<include refid="select"/>
+		FROM  FM_FUND_INCOME
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getFundIncomeByPid" resultMap="fundIncomeModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  FM_FUND_INCOME
+		WHERE FUND_INCOME_PID=#{fundIncomePid}
+	</select>
+	
+	<select id="getListByCondition" resultMap="fundIncomeModelResultMap" parameterType="com.sinoservices.xascf.funds.view.FundIncomeQueryConditionView">
+		<include refid="select"/>
+		FROM  FM_FUND_INCOME
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getOwnFundBankNo" resultType="String">
+		SELECT FI.BANK_NO FROM FM_FUND_INCOME FI WHERE FI.INCOME_TYPE ='01' 
+			ORDER BY FI.CURRENT_AMOUNT DESC LIMIT 1
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO FM_FUND_INCOME (
+			ID,
+			FUND_INCOME_PID,
+			TRANSACTION_SERIAL_NO,
+			BANK_NO,
+			INCOME_NO,
+			INCOME_AMOUNT,
+			INCOME_DATE,
+			CURRENT_AMOUNT,
+			EXPIRE_DATE ,
+			CURRENCY,
+			INCOME_TYPE,
+			FUND_RATE,
+			INCOME_SOURCE,
+			CREATOR,
+			CREATE_TIME,
+			MODIFIER,
+			MODIFY_TIME,
+			REC_VER,
+			REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{fundIncomePid},
+			   #{transactionSerialNo},
+			   #{bankNo},
+			   #{incomeNo},
+			   #{incomeAmount},
+			   #{incomeDate},
+			   #{currentAmount},
+			   #{expireDate},
+			   #{currency},
+			   #{incomeType},
+			   #{fundRate},
+			   #{incomeSource},
+			   #{creator},
+			   #{createTime},
+			   #{modifier},
+			   #{modifyTime},
+			   1,
+			   0
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE FM_FUND_INCOME SET
+				<if test="bankNo !=null and bankNo !=''"> BANK_NO = #{bankNo},</if>
+				<if test="incomeNo !=null and incomeNo !=''"> INCOME_NO = #{incomeNo},</if>
+				<if test="incomeAmount !=null and incomeAmount !=''"> INCOME_AMOUNT = #{incomeAmount},</if>
+				<if test="incomeDate !=null and incomeDate !=''"> INCOME_DATE = #{incomeDate},</if>
+				<if test="currentAmount !=null and currentAmount !=''"> CURRENT_AMOUNT = #{currentAmount},</if>
+				<if test="expireDate !=null and expireDate !=''"> EXPIRE_DATE = #{expireDate},</if>
+				<if test="currency !=null and currency !=''"> CURRENCY = #{currency},</if>
+				<if test="incomeType !=null and incomeType !=''"> INCOME_TYPE = #{incomeType},</if>
+				<if test="fundRate !=null and fundRate !=''"> FUND_RATE = #{fundRate},</if>
+				<if test="transactionSerialNo !=null and transactionSerialNo !=''"> TRANSACTION_SERIAL_NO = #{transactionSerialNo},</if>
+				<if test="incomeSource !=null and incomeSource !=''"> INCOME_SOURCE = #{incomeSource},</if>
+				<if test="recStatus !=null and recStatus !=''"> REC_STATUS = #{recStatus},</if>
+				Rec_Ver = Rec_Ver+1,
+		  		MODIFY_TIME=SYSDATE(),
+		  		MODIFIER=#{modifier} 		
+		WHERE FUND_INCOME_PID=#{fundIncomePid}			
+	</update>
+</mapper>

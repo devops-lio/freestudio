@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.ShipTurnMapper">
+	<resultMap type="com.sinoservices.xascf.credit.model.ShipTurnModel" id="dmShipTurnModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="turnNo" column="TURN_NO"/>
+		<result property="businessNo" column="BUSINESS_NO"/>
+		<result property="logisticsOrderNo" column="LOGISTICS_ORDER_NO"/>
+		<result property="customerOrderNo" column="CUSTOMER_ORDER_NO"/>
+		<result property="orderNo" column="ORDER_NO"/>
+		<result property="shipNo" column="SHIP_NO"/>
+		<result property="dispatchOrder" column="DISPATCH_ORDER"/>
+		<result property="carNo" column="CAR_NO"/>
+		<result property="electronicExist" column="ELECTRONIC_EXIST"/>
+		<result property="drivers" column="DRIVERS"/>
+		<result property="buyName" column="BUY_NAME"/>
+		<result property="buyPid" column="BUY_PID"/>
+		<result property="startPlace" column="START_PLACE"/>
+		<result property="toPlace" column="TO_PLACE"/>
+		<result property="shipperContact" column="SHIPPER_CONTACT"/>
+		<result property="shipperContactTel" column="SHIPPER_CONTACT_TEL"/>
+		<result property="startAddress" column="START_ADDRESS"/>
+		<result property="consigneeName" column="CONSIGNEE_NAME"/>
+		<result property="consigneeTel" column="CONSIGNEE_TEL"/>
+		<result property="consigneeAddress" column="CONSIGNEE_ADDRESS"/>
+		<result property="turnStatus" column="TURN_STATUS"/>
+		<result property="signPerson" column="SIGN_PERSON"/>
+		<result property="signTime" column="SIGN_TIME"/>
+		<result property="signRemark" column="SIGN_REMARK"/>
+		<result property="checkSignTime" column="CHECK_SIGN_TIME"/>
+		<result property="collectPerson" column="COLLECT_PERSON"/>
+		<result property="collectTime" column="COLLECT_TIME"/>
+		<result property="collectRemark" column="COLLECT_REMARK"/>
+		<result property="confirmCustomer" column="CONFIRM_CUSTOMER"/>
+		<result property="confirmTime" column="CONFIRM_TIME"/>
+		<result property="contactTel" column="CONTACT_TEL"/>
+		<result property="customerRemark" column="CUSTOMER_REMARK"/>
+		<result property="quantity" column="QUANTITY"/>
+		<result property="weight" column="WEIGHT"/>
+		<result property="volume" column="VOLUME"/>
+		<result property="totalPrice" column="TOTAL_PRICE"/>
+		<result property="signPrice" column="SIGN_PRICE"/>
+		<result property="toDate" column="TO_DATE"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileRename" column="FILE_RENAME"/>
+		<result property="fileUrl" column="FILE_URL"/>
+		<result property="isEffective" column="ISEFFECTIVE"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					TURN_NO,
+					BUSINESS_NO,
+					LOGISTICS_ORDER_NO,
+					CUSTOMER_ORDER_NO,
+					ORDER_NO,
+					SHIP_NO,
+					DISPATCH_ORDER,
+					CAR_NO,
+					ELECTRONIC_EXIST,
+					DRIVERS,
+					BUY_NAME,
+					BUY_PID,
+					START_PLACE,
+					TO_PLACE,
+					SHIPPER_CONTACT,
+					SHIPPER_CONTACT_TEL,
+					START_ADDRESS,
+					CONSIGNEE_NAME,
+					CONSIGNEE_TEL,
+					CONSIGNEE_ADDRESS,
+					TURN_STATUS,
+					SIGN_PERSON,
+					SIGN_TIME,
+					SIGN_REMARK,
+					CHECK_SIGN_TIME,
+					COLLECT_PERSON,
+					COLLECT_TIME,
+					COLLECT_REMARK,
+					CONFIRM_CUSTOMER,
+					CONFIRM_TIME,
+					CONTACT_TEL,
+					CUSTOMER_REMARK,
+					QUANTITY,
+					WEIGHT,
+					VOLUME,
+					TOTAL_PRICE,
+					SIGN_PRICE,
+					TO_DATE,
+					FILE_NAME,
+					FILE_RENAME,
+					FILE_URL,
+					ISEFFECTIVE,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="turnNo!=null and turnNo!=''"> AND TURN_NO LIKE ('%'||'turnNo'||'%' )</if>
+		<if test="businessNo!=null and businessNo!=''"> AND BUSINESS_NO LIKE ('%'||'businessNo'||'%' )</if>
+		<if test="logisticsOrderNo!=null and logisticsOrderNo!=''"> AND LOGISTICS_ORDER_NO LIKE ('%'||'logisticsOrderNo'||'%' )</if>
+		<if test="customerOrderNo!=null and customerOrderNo!=''"> AND CUSTOMER_ORDER_NO LIKE ('%'||'customerOrderNo'||'%' )</if>
+		<if test="orderNo!=null and orderNo!=''"> AND ORDER_NO LIKE ('%'||'orderNo'||'%' )</if>
+		<if test="shipNo!=null and shipNo!=''"> AND SHIP_NO LIKE ('%'||'shipNo'||'%' )</if>
+		<if test="dispatchOrder!=null and dispatchOrder!=''"> AND DISPATCH_ORDER LIKE ('%'||'dispatchOrder'||'%' )</if>
+		<if test="carNo!=null and carNo!=''"> AND CAR_NO LIKE ('%'||'carNo'||'%' )</if>
+		<if test="electronicExist!=null and electronicExist!=''"> AND ELECTRONIC_EXIST LIKE ('%'||'electronicExist'||'%' )</if>
+		<if test="drivers!=null and drivers!=''"> AND DRIVERS LIKE ('%'||'drivers'||'%' )</if>
+		<if test="buyName!=null and buyName!=''"> AND BUY_NAME LIKE ('%'||'buyName'||'%' )</if>
+		<if test="buyPid!=null and buyPid!=''"> AND BUY_PID LIKE ('%'||'buyPid'||'%' )</if>
+		<if test="startPlace!=null and startPlace!=''"> AND START_PLACE LIKE ('%'||'startPlace'||'%' )</if>
+		<if test="toPlace!=null and toPlace!=''"> AND TO_PLACE LIKE ('%'||'toPlace'||'%' )</if>
+		<if test="shipperContact!=null and shipperContact!=''"> AND SHIPPER_CONTACT LIKE ('%'||'shipperContact'||'%' )</if>
+		<if test="shipperContactTel!=null and shipperContactTel!=''"> AND SHIPPER_CONTACT_TEL LIKE ('%'||'shipperContactTel'||'%' )</if>
+		<if test="startAddress!=null and startAddress!=''"> AND START_ADDRESS LIKE ('%'||'startAddress'||'%' )</if>
+		<if test="consigneeName!=null and consigneeName!=''"> AND CONSIGNEE_NAME LIKE ('%'||'consigneeName'||'%' )</if>
+		<if test="consigneeTel!=null and consigneeTel!=''"> AND CONSIGNEE_TEL LIKE ('%'||'consigneeTel'||'%' )</if>
+		<if test="consigneeAddress!=null and consigneeAddress!=''"> AND CONSIGNEE_ADDRESS LIKE ('%'||'consigneeAddress'||'%' )</if>
+		<if test="turnStatus!=null and turnStatus!=''"> AND TURN_STATUS LIKE ('%'||'turnStatus'||'%' )</if>
+		<if test="signPerson!=null and signPerson!=''"> AND SIGN_PERSON LIKE ('%'||'signPerson'||'%' )</if>
+		<if test="signTime!=null and signTime!=''"> AND SIGN_TIME LIKE ('%'||'signTime'||'%' )</if>
+		<if test="signRemark!=null and signRemark!=''"> AND SIGN_REMARK LIKE ('%'||'signRemark'||'%' )</if>
+		<if test="checkSignTime!=null and checkSignTime!=''"> AND CHECK_SIGN_TIME LIKE ('%'||'checkSignTime'||'%' )</if>
+		<if test="collectPerson!=null and collectPerson!=''"> AND COLLECT_PERSON LIKE ('%'||'collectPerson'||'%' )</if>
+		<if test="collectTime!=null and collectTime!=''"> AND COLLECT_TIME LIKE ('%'||'collectTime'||'%' )</if>
+		<if test="collectRemark!=null and collectRemark!=''"> AND COLLECT_REMARK LIKE ('%'||'collectRemark'||'%' )</if>
+		<if test="confirmCustomer!=null and confirmCustomer!=''"> AND CONFIRM_CUSTOMER LIKE ('%'||'confirmCustomer'||'%' )</if>
+		<if test="confirmTime!=null and confirmTime!=''"> AND CONFIRM_TIME LIKE ('%'||'confirmTime'||'%' )</if>
+		<if test="contactTel!=null and contactTel!=''"> AND CONTACT_TEL LIKE ('%'||'contactTel'||'%' )</if>
+		<if test="customerRemark!=null and customerRemark!=''"> AND CUSTOMER_REMARK LIKE ('%'||'customerRemark'||'%' )</if>
+		<if test="quantity!=null and quantity!=''"> AND QUANTITY LIKE ('%'||'quantity'||'%' )</if>
+		<if test="weight!=null and weight!=''"> AND WEIGHT LIKE ('%'||'weight'||'%' )</if>
+		<if test="volume!=null and volume!=''"> AND VOLUME LIKE ('%'||'volume'||'%' )</if>
+		<if test="totalPrice!=null and totalPrice!=''"> AND TOTAL_PRICE LIKE ('%'||'totalPrice'||'%' )</if>
+		<if test="signPrice!=null and signPrice!=''"> AND SIGN_PRICE LIKE ('%'||'signPrice'||'%' )</if>
+		<if test="toDate!=null and toDate!=''"> AND TO_DATE LIKE ('%'||'toDate'||'%' )</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.credit.model.ShipTurnModel">
+		<include refid="count"/>
+		FROM  DM_SHIP_TURN
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="dmShipTurnModelResultMap" parameterType="com.sinoservices.xascf.credit.model.ShipTurnModel">
+		<include refid="select"/>
+		FROM  DM_SHIP_TURN
+		<include refid="findByExample"/>
+	</select>
+	<select id="getPageByBusinessNo" resultMap="dmShipTurnModelResultMap" parameterType="com.sinoservices.xascf.credit.model.ShipTurnModel">
+		<include refid="select"/>
+		FROM  DM_SHIP_TURN
+		WHERE BUSINESS_NO=#{businessNo}
+		<if test="isEffective !=null and isEffective !=''"> AND ISEFFECTIVE =#{isEffective}</if>
+	</select>
+	
+	<select id="getShipTurnNos" resultType="String" parameterType="java.util.List">
+		SELECT TURN_NO FROM DM_SHIP_TURN
+		WHERE 1=1 AND TURN_NO IN
+		<foreach item="shipTurnNos" collection="list" open="(" separator="," close=")">
+			#{shipTurnNos}
+		</foreach>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_SHIP_TURN (
+				PID,
+				TURN_NO,
+				BUSINESS_NO,
+				LOGISTICS_ORDER_NO,
+				CUSTOMER_ORDER_NO,
+				ORDER_NO,
+				SHIP_NO,
+				DISPATCH_ORDER,
+				CAR_NO,
+				ELECTRONIC_EXIST,
+				DRIVERS,
+				BUY_NAME,
+				BUY_PID,
+				START_PLACE,
+				TO_PLACE,
+				SHIPPER_CONTACT,
+				SHIPPER_CONTACT_TEL,
+				START_ADDRESS,
+				CONSIGNEE_NAME,
+				CONSIGNEE_TEL,
+				CONSIGNEE_ADDRESS,
+				TURN_STATUS,
+				SIGN_PERSON,
+				SIGN_TIME,
+				SIGN_REMARK,
+				CHECK_SIGN_TIME,
+				COLLECT_PERSON,
+				COLLECT_TIME,
+				COLLECT_REMARK,
+				CONFIRM_CUSTOMER,
+				CONFIRM_TIME,
+				CONTACT_TEL,
+				CUSTOMER_REMARK,
+				QUANTITY,
+				WEIGHT,
+				VOLUME,
+				TOTAL_PRICE,
+				SIGN_PRICE,
+				TO_DATE,
+				FILE_NAME,
+				FILE_RENAME,
+				FILE_URL,
+				ISEFFECTIVE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{turnNo},
+			   #{businessNo},
+			   #{logisticsOrderNo},
+			   #{customerOrderNo},
+			   #{orderNo},
+			   #{shipNo},
+			   #{dispatchOrder},
+			   #{carNo},
+			   #{electronicExist},
+			   #{drivers},
+			   #{buyName},
+			   #{buyPid},
+			   #{startPlace},
+			   #{toPlace},
+			   #{shipperContact},
+			   #{shipperContactTel},
+			   #{startAddress},
+			   #{consigneeName},
+			   #{consigneeTel},
+			   #{consigneeAddress},
+			   #{turnStatus},
+			   #{signPerson},
+			   #{signTime},
+			   #{signRemark},
+			   #{checkSignTime},
+			   #{collectPerson},
+			   #{collectTime},
+			   #{collectRemark},
+			   #{confirmCustomer},
+			   #{confirmTime},
+			   #{contactTel},
+			   #{customerRemark},
+			   #{quantity},
+			   #{weight},
+			   #{volume},
+			   #{totalPrice},
+			   #{signPrice},
+			   #{toDate},
+			   #{fileName},
+			   #{fileRename},
+			   #{fileUrl},
+			   #{isEffective},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   1
+		)
+	</insert>
+	<insert id="addByList" parameterType="java.util.List">  
+	    	INSERT INTO DM_SHIP_TURN (
+				PID,
+				TURN_NO,
+				BUSINESS_NO,
+				LOGISTICS_ORDER_NO,
+				CUSTOMER_ORDER_NO,
+				ORDER_NO,
+				SHIP_NO,
+				DISPATCH_ORDER,
+				CAR_NO,
+				ELECTRONIC_EXIST,
+				DRIVERS,
+				BUY_NAME,
+				BUY_PID,
+				START_PLACE,
+				TO_PLACE,
+				SHIPPER_CONTACT,
+				SHIPPER_CONTACT_TEL,
+				START_ADDRESS,
+				CONSIGNEE_NAME,
+				CONSIGNEE_TEL,
+				CONSIGNEE_ADDRESS,
+				TURN_STATUS,
+				SIGN_PERSON,
+				SIGN_TIME,
+				SIGN_REMARK,
+				CHECK_SIGN_TIME,
+				COLLECT_PERSON,
+				COLLECT_TIME,
+				COLLECT_REMARK,
+				CONFIRM_CUSTOMER,
+				CONFIRM_TIME,
+				CONTACT_TEL,
+				CUSTOMER_REMARK,
+				QUANTITY,
+				WEIGHT,
+				VOLUME,
+				TOTAL_PRICE,
+				SIGN_PRICE,
+				TO_DATE,
+				ISEFFECTIVE,
+				FILE_NAME,
+				FILE_RENAME,
+				FILE_URL,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (  #{item.pid},
+			   #{item.turnNo},
+			   #{item.businessNo},
+			   #{item.logisticsOrderNo},
+			   #{item.customerOrderNo},
+			   #{item.orderNo},
+			   #{item.shipNo},
+			   #{item.dispatchOrder},
+			   #{item.carNo},
+			   #{item.electronicExist},
+			   #{item.drivers},
+			   #{item.buyName},
+			   #{item.buyPid},
+			   #{item.startPlace},
+			   #{item.toPlace},
+			   #{item.shipperContact},
+			   #{item.shipperContactTel},
+			   #{item.startAddress},
+			   #{item.consigneeName},
+			   #{item.consigneeTel},
+			   #{item.consigneeAddress},
+			   #{item.turnStatus},
+			   #{item.signPerson},
+			   #{item.signTime},
+			   #{item.signRemark},
+			   #{item.checkSignTime},
+			   #{item.collectPerson},
+			   #{item.collectTime},
+			   #{item.collectRemark},
+			   #{item.confirmCustomer},
+			   #{item.confirmTime},
+			   #{item.contactTel},
+			   #{item.customerRemark},
+			   #{item.quantity},
+			   #{item.weight},
+			   #{item.volume},
+			   #{item.totalPrice},
+			   #{item.signPrice},
+			   #{item.toDate},
+			   1,
+			   #{item.fileName},
+			   #{item.fileRename},
+			   #{item.fileUrl},
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   1)  
+	    </foreach>  
+  </insert>  
+  <delete id="deleteByBusinessNo" parameterType="String">
+      DELETE FROM DM_SHIP_TURN WHERE BUSINESS_NO=#{_parameter} 	AND ISEFFECTIVE='1'
+  
+  </delete>
+  <delete id="deleteByCreditNo" parameterType="String">
+      DELETE FROM DM_SHIP_TURN WHERE BUSINESS_NO=#{_parameter} 	
+  
+  </delete>
+  <delete id="deleteByPid" parameterType="String">
+      DELETE FROM DM_SHIP_TURN WHERE PID=#{_parameter} 	
+  </delete>
+	<update id="update">
+		UPDATE DM_SHIP_TURN SET
+				ID = #{id},
+				PID = #{pid},
+				TURN_NO = #{turnNo},
+				BUSINESS_NO = #{businessNo},
+				LOGISTICS_ORDER_NO = #{logisticsOrderNo},
+				CUSTOMER_ORDER_NO = #{customerOrderNo},
+				ORDER_NO = #{orderNo},
+				SHIP_NO = #{shipNo},
+				DISPATCH_ORDER = #{dispatchOrder},
+				CAR_NO = #{carNo},
+				ELECTRONIC_EXIST = #{electronicExist},
+				DRIVERS = #{drivers},
+				BUY_NAME = #{buyName},
+				BUY_PID = #{buyPid},
+				START_PLACE = #{startPlace},
+				TO_PLACE = #{toPlace},
+				SHIPPER_CONTACT = #{shipperContact},
+				SHIPPER_CONTACT_TEL = #{shipperContactTel},
+				START_ADDRESS = #{startAddress},
+				CONSIGNEE_NAME = #{consigneeName},
+				CONSIGNEE_TEL = #{consigneeTel},
+				CONSIGNEE_ADDRESS = #{consigneeAddress},
+				TURN_STATUS = #{turnStatus},
+				SIGN_PERSON = #{signPerson},
+				SIGN_TIME = #{signTime},
+				SIGN_REMARK = #{signRemark},
+				CHECK_SIGN_TIME = #{checkSignTime},
+				COLLECT_PERSON = #{collectPerson},
+				COLLECT_TIME = #{collectTime},
+				COLLECT_REMARK = #{collectRemark},
+				CONFIRM_CUSTOMER = #{confirmCustomer},
+				CONFIRM_TIME = #{confirmTime},
+				CONTACT_TEL = #{contactTel},
+				CUSTOMER_REMARK = #{customerRemark},
+				QUANTITY = #{quantity},
+				WEIGHT = #{weight},
+				VOLUME = #{volume},
+				TOTAL_PRICE = #{totalPrice},
+				SIGN_PRICE = #{signPrice},
+				TO_DATE = #{toDate},
+				FILE_NAME = #{fileName},
+				FILE_RENAME = #{fileRename},
+				FILE_URL = #{fileUrl},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus},
+	</update>
+	<update id="updateToNoEffectiveByOrderNo" parameterType="String">
+		UPDATE DM_SHIP_TURN SET
+				ISEFFECTIVE=0,
+				REC_VER=REC_VER+1,
+				MODIFY_TIME=SYSDATE()
+			WHERE BUSINESS_NO=#{_parameter}
+	</update>
+</mapper>

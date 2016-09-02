@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.funds.mapper.LoanNoticeMapper">
+	<resultMap type="com.sinoservices.xascf.funds.view.LoanNoticeItem" id="loanNoticeItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="loanPid" column="LOAN_PID"/>
+		<result property="loanNo" column="LOAN_NO"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="loanMemberPid" column="LOAN_MEMBER_PID"/>
+		<result property="loanMemberName" column="LOAN_MEMBER_NAME"/>
+		<result property="loanOperatorName" column="LOAN_OPERATOR_NAME"/>
+		<result property="loanPrice" column="LOAN_PRICE"/>
+		<result property="loanDate" column="LOAN_DATE"/>
+		<result property="payDate" column="PAY_DATE"/>
+		<result property="loanOperatorPid" column="LOAN_OPERATOR_PID"/>
+		<result property="loanBankPayee" column="LOAN_BANK_PAYEE"/>
+		<result property="loanBankName" column="LOAN_BANK_NAME"/>
+		<result property="loanBankAccount" column="LOAN_BANK_ACCOUNT"/>
+		<result property="accountType" column="ACCOUNT_TYPE"/>
+		<result property="accountOpenbank" column="ACCOUNT_OPENBANK"/>
+		<result property="account" column="ACCOUNT"/>
+		<result property="loanStatus" column="LOAN_STATUS"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+				SELECT
+					LOAN_PID,
+					LOAN_NO,
+					FANCING_ORDER_NO,
+					LOAN_MEMBER_PID,
+					LOAN_MEMBER_NAME,
+					LOAN_PRICE,
+					LOAN_DATE,
+					LOAN_OPERATOR_PID,
+					LOAN_BANK_PAYEE,
+					LOAN_BANK_NAME,
+					LOAN_BANK_ACCOUNT,
+					ACCOUNT_TYPE,
+					ACCOUNT_OPENBANK,
+					ACCOUNT,
+					LOAN_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="loanPid !=null and loanPid !=''"> AND LOAN_PID LIKE ('%${loanPid}%' )</if>
+		<if test="fancingOrderNo !=null and fancingOrderNo !=''"> AND FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%')</if>
+		<if test="loanNo !=null and loanNo !=''"> AND LOAN_NO LIKE ('%${loanNo}%')</if>
+		<if test="loanStatus!=null and loanStatus!=''"> AND LOAN_STATUS in (${loanStatus})</if>
+	</sql>
+	<sql id="findByJoin">
+		WHERE 1=1
+		<if test="loanPid !=null and loanPid !=''"> AND LOAN_PID LIKE ('%${loanPid}%' )</if>
+		<if test="fancingOrderNo !=null and fancingOrderNo !=''"> AND FLN.FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%')</if>
+		<if test="loanNo !=null and loanNo !=''"> AND LOAN_NO LIKE ('%${loanNo}%')</if>
+		<if test="loanStatus!=null and loanStatus!=''"> AND LOAN_STATUS in (${loanStatus})</if>
+		<if test="chargerStatus !=null and chargerStatus !=''">	
+			AND	FO.FANCING_ORDER_NO  NOT IN (
+					SELECT		F.FANCING_ORDER_NO
+					FROM 	DM_FANCING_CHARGE DFC
+					JOIN DM_FANCING_ORDER F ON F.CONTRACT_NO=DFC.FANCING_ORDER_NO 
+					WHERE 1=1 AND DFC.CHARGE_STATUS !=#{chargerStatus}
+					GROUP BY F.FANCING_ORDER_NO 
+					)		
+		</if>
+		
+	</sql>
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.funds.view.LoanNoticeItem">
+		<include refid="count"/>
+		FROM  FM_LOAN_NOTICE
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="loanNoticeItemResultMap" parameterType="com.sinoservices.xascf.funds.view.LoanNoticeItem">
+		<include refid="select"/>
+		FROM  FM_LOAN_NOTICE
+		<include refid="findByExample"/>
+	</select>
+	<!-- 查询已收服务费、保证金的放款通知书 -->
+	<select id="getByCondition" resultType="int" parameterType="com.sinoservices.xascf.funds.view.LoanNoticeItem">
+		<include refid="count"/>
+		FROM  FM_LOAN_NOTICE FLN
+		JOIN SS_USER S ON S.USER_PID=FLN.LOAN_OPERATOR_PID
+		JOIN DM_FANCING_ORDER FO ON FO.FANCING_ORDER_NO=FLN.FANCING_ORDER_NO
+		LEFT JOIN FM_LOAN_RECORD FLR ON FLR.LOAN_NO=FLN.LOAN_NO
+		<include refid="findByJoin"/>
+		ORDER BY FLN.CREATE_TIME DESC
+	</select>
+	<select id="getByLoanNo" resultMap="loanNoticeItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  FM_LOAN_NOTICE
+		WHERE LOAN_NO=#{loanNo}
+		</select>
+	<select id="getPage" resultMap="loanNoticeItemResultMap" parameterType="com.sinoservices.xascf.funds.view.LoanNoticeItem">
+		SELECT 
+					LOAN_PID,
+					FLN.LOAN_NO,
+					FLN.FANCING_ORDER_NO,
+					LOAN_MEMBER_PID,
+					LOAN_MEMBER_NAME,
+					FLN.LOAN_PRICE,
+					FLN.LOAN_DATE,
+					FLR.LOAN_DATE AS PAY_DATE,
+					LOAN_OPERATOR_PID,
+					S.USER_NAME_CN AS LOAN_OPERATOR_NAME,
+					FLN.LOAN_BANK_PAYEE,
+					FLN.LOAN_BANK_NAME,
+					FLN.LOAN_BANK_ACCOUNT,
+					FLN.ACCOUNT_TYPE,
+					FLN.ACCOUNT_OPENBANK,
+					FLN.ACCOUNT,
+					LOAN_STATUS
+		FROM  FM_LOAN_NOTICE FLN
+		JOIN SS_USER S ON S.USER_PID=FLN.LOAN_OPERATOR_PID
+		JOIN DM_FANCING_ORDER FO ON FO.FANCING_ORDER_NO=FLN.FANCING_ORDER_NO
+		LEFT JOIN FM_LOAN_RECORD FLR ON FLR.LOAN_NO=FLN.LOAN_NO
+		<include refid="findByJoin"/>
+		ORDER BY FLN.CREATE_TIME DESC
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.funds.model.LoanNoticeModel">
+		INSERT INTO FM_LOAN_NOTICE (
+				LOAN_PID,
+				LOAN_NO,
+				FANCING_ORDER_NO,
+				LOAN_MEMBER_PID,
+				LOAN_MEMBER_NAME,
+				LOAN_PRICE,
+				LOAN_DATE,
+				LOAN_OPERATOR_PID,
+				LOAN_BANK_PAYEE,
+				LOAN_BANK_NAME,
+				LOAN_BANK_ACCOUNT,
+				ACCOUNT_TYPE,
+				ACCOUNT_OPENBANK,
+				ACCOUNT,
+				LOAN_STATUS,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			  #{loanPid},
+			   #{loanNo},
+			   #{fancingOrderNo},
+			   #{loanMemberPid},
+			   #{loanMemberName},
+			   #{loanPrice},
+			   #{loanDate},
+			   #{loanOperatorPid},
+			   #{loanBankPayee},
+			   #{loanBankName},
+			   #{loanBankAccount},
+			   #{accountType},
+			   #{accountOpenbank},
+			   #{account},
+			   #{loanStatus},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   1
+		)
+	</insert>
+	
+	<update id="updateByPid" parameterType="com.sinoservices.xascf.funds.model.LoanNoticeModel">
+		UPDATE FM_LOAN_NOTICE SET
+			<if test="fancingOrderNo !=null and fancingOrderNo !=''">	FANCING_ORDER_NO = #{fancingOrderNo},</if>
+			<if test="loanMemberPid !=null and loanMemberPid !=''">	LOAN_MEMBER_PID = #{loanMemberPid},</if>
+			<if test="loanMemberName !=null and loanMemberName !=''">	LOAN_MEMBER_NAME = #{loanMemberName},</if>
+			<if test="loanPrice !=null and loanPrice !=''">	LOAN_PRICE = #{loanPrice},</if>
+			<if test="loanDate !=null and loanDate !=''">	LOAN_DATE = #{loanDate},</if>
+			<if test="loanOperatorPid !=null and loanOperatorPid !=''">	LOAN_OPERATOR_PID = #{loanOperatorPid},</if>
+			<if test="loanBankPayee !=null and loanBankPayee !=''">	LOAN_BANK_PAYEE = #{loanBankPayee},</if>
+			<if test="loanBankName !=null and loanBankName !=''">	LOAN_BANK_NAME = #{loanBankName},</if>
+			<if test="loanBankAccount !=null and loanBankAccount !=''">	LOAN_BANK_ACCOUNT = #{loanBankAccount},</if>
+			<if test="accountType !=null and accountType !=''">	ACCOUNT_TYPE = #{accountType},</if>
+			<if test="accountOpenbank !=null and accountOpenbank !=''">	ACCOUNT_OPENBANK = #{accountOpenbank},</if>
+			<if test="account !=null and account !=''">	ACCOUNT = #{account},</if>
+			<if test="loanStatus !=null and loanStatus !=''">	LOAN_STATUS = #{loanStatus},</if>
+			MODIFY_TIME =SYSDATE(),
+			REC_VER=REC_VER+1
+		WHERE LOAN_PID = #{loanPid}
+	</update>
+</mapper>

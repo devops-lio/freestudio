@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.FancingEntityMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.view.FancingOrderEntity" id="fancingEnityResultMap">
+		<collection property="fancingOrderItem" resultMap="fancingOrderItemResultMap"/>
+		<collection property="fancingOrderRate" resultMap="rateModelResultMap"/>
+	</resultMap>
+
+	<resultMap type="com.sinoservices.xascf.fancing.view.FancingOrderItem" id="fancingOrderItemResultMap">
+		<result property="pid" column="PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="parentOrderNo" column="PARENT_ORDER_NO"/>
+		<result property="operatorPid" column="OPERATOR_PID"/>
+		<result property="contractNo" column="CONTRACT_NO"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="menberPid" column="MENBER_PID"/>
+		<result property="menberName" column="MENBER_NAME"/>
+		<result property="menberType" column="MENBER_TYPE"/>
+		<result property="menberTypeCn" column="MENBER_TYPE"/>
+		<result property="fancingFrom" column="FANCING_FROM"/>
+		<result property="fancingFromCn" column="FANCING_FROM"/>
+		<result property="noteType" column="NOTE_TYPE"/>
+		<result property="notePrice" column="NOTE_PRICE"/>
+		<result property="noteDisprice" column="NOTE_DISPRICE"/>
+		<result property="buyerPid" column="BUYER_PID"/>
+		<result property="buyerName" column="BUYER_NAME"/>
+		<result property="requestPrice" column="REQUEST_PRICE"/>
+		<result property="replyPrice" column="REPLY_PRICE"/>
+		<result property="requestReplyPrice" column="REQUEST_REPLY_PRICE"/>
+		<result property="lostPrice" column="LOST_PRICE"/>
+		<result property="prepayPrice" column="PREPAY_PRICE"/>
+		<result property="requestTime" column="REQUEST_TIME"/>
+		<result property="requestPayTime" column="REQUESTPAY_TIME"/>
+		<result property="payTime" column="PAY_TIME"/>
+		<result property="term" column="TERM"/>
+		<result property="termType" column="TERM_TYPE"/>
+		<result property="termDate" column="TERM_DATE"/>
+		<result property="termTypeCn" column="TERM_TYPE"/>
+		<result property="rateCycle" column="RATE_CYCLE"/>
+		<result property="rateCycleCn" column="RATE_CYCLE"/>
+		<result property="rebackType" column="REBACK_TYPE"/>
+		<result property="rebackTypeCn" column="REBACK_TYPE"/>
+		<result property="fancingStatus" column="FANCING_STATUS"/>
+		<result property="fancingStatusCn" column="FANCING_STATUS"/>
+		<result property="loanBankPayee" column="LOAN_BANK_PAYEE"/>
+		<result property="loanBankName" column="LOAN_BANK_NAME"/>
+		<result property="loanBankNo" column="LOAN_BANK_NO"/>
+		<result property="bankType" column="BANK_TYPE"/>
+		<result property="bankTypeCn" column="BANK_TYPE"/>
+		<result property="bankNo" column="BANK_NO"/>
+		<result property="bankName" column="BANK_NAME"/>
+		<result property="loanType" column="LOAN_TYPE"/>
+		<result property="loanTypeCn" column="LOAN_TYPE"/>
+		<result property="loanToType" column="LOAN_TO_TYPE"/>
+		<result property="loanToTypeCn" column="LOAN_TO_TYPE"/>
+		<result property="remark" column="REMARK"/>
+		<result property="userNo" column="USER_NO"/>
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.credit.model.RateModel" id="rateModelResultMap">
+		<result property="pid" column="RATE_PID"/>
+		<result property="type" column="TYPE"/>
+		<result property="businessOrderNo" column="BUSINESS_ORDER_NO"/>
+		<result property="termRate" column="TERM_RATE"/>
+		<result property="overdueRate" column="OVERDUE_RATE"/>
+		<result property="expandRate" column="EXPAND_RATE"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					FO.PID AS PID,
+					FO.FANCING_ORDER_NO,
+					OPERATOR_PID,
+					CONTRACT_NO,
+					PARENT_ORDER_NO,
+					CREDIT_NO,
+					MENBER_PID,
+					MENBER_NAME,
+					MENBER_TYPE,
+					FANCING_FROM,
+					REQUEST_PRICE,
+					REPLY_PRICE,
+					REQUEST_REPLY_PRICE,
+					LOST_PRICE,
+					PREPAY_PRICE,
+					BUYER_PID,
+					BUYER_NAME,
+					REQUEST_TIME,
+					REQUESTPAY_TIME,
+					NOTE_PRICE,
+					NOTE_TYPE,
+					NOTE_DISPRICE,
+					PAY_TIME,
+					TERM,
+					TERM_TYPE,
+					TERM_DATE,
+					RATE_CYCLE,
+					REBACK_TYPE,
+					FANCING_STATUS,
+					LOAN_BANK_PAYEE,
+					LOAN_BANK_NAME,
+					LOAN_BANK_NO,
+					BANK_TYPE,
+					BANK_NO,
+					BANK_NAME,
+					LOAN_TYPE,LOAN_TO_TYPE,
+					FO.REMARK,
+					GROUP_CONCAT(USER_NO) AS USER_NO,
+					DR.PID AS RATE_PID,DR.BUSINESS_ORDER_NO,
+					DR.EXPAND_RATE,DR.OVERDUE_RATE,DR.TERM_RATE
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FO.FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%')</if>
+		<if test="menberType !=null and menberType !=''"> AND FO.MENBER_TYPE =#{menberType}</if>		
+		<if test="menberPid !=null and menberPid !=''"> AND MENBER_PID =#{menberPid}</if>
+		<if test="fancingStatus!=null and fancingStatus!=''"> AND  FANCING_STATUS=#{fancingStatus}</if>
+		<if test="status!=null and status!=''"> AND FANCING_STATUS IN 
+		 	<foreach collection="status" item="s"  open="(" separator="," close=")">#{s}</foreach> 
+		</if>		
+		<if test="userPid!=null and userPid!=''">AND  USER_PID  =#{userPid}</if>
+		<if test="fancingFrom!=null and fancingFrom!=''">AND  FANCING_FROM  =#{fancingFrom}</if>
+		<if test="contractNo !=null and contractNo !=''">AND  CONTRACT_NO  =#{contractNo}</if>
+		<if test="sqlParameter!=null and sqlParameter!=''">${sqlParameter}</if>
+		<if test="menberName!=null and menberName!=''"> AND MENBER_NAME LIKE ('%${menberName}%' )</if>
+		<if test="(requestDateFrom!=null and requestDateFrom!='') and (requestDateTo==null or requestDateTo == '') "> AND FO.CREATE_TIME &gt;= #{requestDateFrom}</if>
+		<if test="(requestDateFrom==null or requestDateFrom=='') and (requestDateTo!=null and requestDateTo != '') "> AND FO.CREATE_TIME &lt;  DATE_ADD( #{requestDateTo},INTERVAL 1 DAY)</if>
+		<if test="(requestDateFrom!=null and requestDateFrom!='') and (requestDateTo!=null and requestDateTo != '') "> AND FO.CREATE_TIME between #{requestDateFrom} and DATE_ADD( #{requestDateTo},INTERVAL 1 DAY)</if>
+		<if test="buyerName!=null and buyerName!=''"> AND BUYER_NAME LIKE ('%${buyerName}%')</if> 
+	</sql>
+	<!-- 联合融资单表和费率KPI表 -->
+	<sql id="JOINTABLESQL">
+				FROM  DM_FANCING_ORDER	FO	
+				LEFT JOIN DM_RATE DR ON FO.FANCING_ORDER_NO=DR.BUSINESS_ORDER_NO
+				LEFT JOIN (
+						SELECT	SU.USER_NO AS USER_NO,	SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,	SU.USER_PID AS USER_PID
+						FROM	SS_KPICUSTOMER SSK
+								JOIN SS_USER SU ON 	SSK.USER_PID = SU.USER_PID )
+						T_USER
+				ON T_USER.CUSTOMERSUB_PID=FO.MENBER_PID
+	
+	</sql>
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.FancingOrderQueryCondition">
+		<include refid="count"/>
+		FROM (
+		SELECT FO.FANCING_ORDER_NO
+		<include refid="JOINTABLESQL"/>
+		 <include refid="findByExample"/>
+		GROUP BY FO.FANCING_ORDER_NO
+		ORDER BY FO.CREATE_TIME DESC
+		) R
+	</select>
+	
+	<select id="findByCondition" resultMap="fancingEnityResultMap" parameterType="com.sinoservices.xascf.fancing.view.FancingOrderQueryCondition">
+		<include refid="select"/>
+		<include refid="JOINTABLESQL"/>
+		 <include refid="findByExample"/>
+		GROUP BY FO.FANCING_ORDER_NO
+		 ORDER BY FO.CREATE_TIME DESC
+	</select>
+	
+	<!-- 获取可进行尾款申请的 预付款申请单信息 -->
+	<select id="getBalancePaymentList" resultMap="fancingEnityResultMap" parameterType="com.sinoservices.xascf.fancing.view.FancingOrderQueryCondition">
+		<include refid="select"/>
+		<include refid="JOINTABLESQL"/>
+		<include refid="findByExample"/>
+		AND LOAN_TYPE='2'
+		AND FANCING_STATUS='60'
+		AND LOST_PRICE>0
+		GROUP BY FO.FANCING_ORDER_NO
+		ORDER BY FO.CREATE_TIME DESC
+	</select>
+	
+	<select id="getFancingOrderItemByOrderNo" resultMap="fancingEnityResultMap" parameterType="String">
+		<include refid="select"/>
+		<include refid="JOINTABLESQL"/>
+			WHERE FO.FANCING_ORDER_NO=#{_parameter}
+			GROUP BY FO.FANCING_ORDER_NO
+	</select>
+	<select id="getFancingOrderItemByRequestPid" resultMap="fancingEnityResultMap" parameterType="String">
+			<include refid="select"/>
+			<include refid="JOINTABLESQL"/>
+				WHERE FO.MENBER_PID=#{_parameter}
+		GROUP BY FO.FANCING_ORDER_NO
+	</select>
+	
+</mapper>

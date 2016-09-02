@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.agfancing.mapper.AgFancingCustomerMapper">
+	<resultMap type="com.sinoservices.xascf.agfancing.model.AgFancingCustomerModel" id="agFancingResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="customerPid" column="CUSTOMER_PID"/>
+		<result property="customerName" column="CUSTOMER_NAME"/>
+		<result property="customerType" column="CUSTOMER_TYPE"/>
+		<result property="address" column="ADDRESS"/>
+		<result property="linkMan" column="LINKMAN"/>
+		<result property="mobile" column="MOBILE"/>
+		<result property="tel" column="TEL"/>
+		<result property="email" column="EMAIL"/>
+		<result property="limitAmount" column="LIMIT_AMOUNT"/>
+		<result property="lowestRate" column="LOWEST_RATE"/>
+		<result property="highestRate" column="HIGHEST_RATE"/>
+		<result property="startDate" column="START_DATE"/>
+		<result property="endDate" column="END_DATE"/>
+		<result property="qualification" column="QUALIFICATION"/>
+		<result property="approvalDesc" column="APPROVAL_DESC"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.agfancing.view.AgFancingCustomerEntity" id="agFancingEntityResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="customerPid" column="CUSTOMER_PID"/>
+		<result property="loginName" column="LOGIN_NAME"/>
+		<result property="customerName" column="CUSTOMER_NAME"/>
+		<result property="customerType" column="CUSTOMER_TYPE"/>
+		<result property="customerStatus" column="CUSTOMER_STATUS"/>
+		<result property="address" column="ADDRESS"/>
+		<result property="linkMan" column="LINKMAN"/>
+		<result property="mobile" column="MOBILE"/>
+		<result property="tel" column="TEL"/>
+		<result property="email" column="EMAIL"/>
+		<result property="limitAmount" column="LIMIT_AMOUNT"/>
+		<result property="lowestRate" column="LOWEST_RATE"/>
+		<result property="highestRate" column="HIGHEST_RATE"/>
+		<result property="startDate" column="START_DATE"/>
+		<result property="endDate" column="END_DATE"/>
+		<result property="qualification" column="QUALIFICATION"/>
+		<result property="approvalDesc" column="APPROVAL_DESC"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					CUSTOMER_PID,
+					CUSTOMER_NAME,
+					CUSTOMER_TYPE,
+					ADDRESS,
+					LINKMAN,
+					MOBILE,
+					TEL,
+					EMAIL,
+					LIMIT_AMOUNT,
+					LOWEST_RATE,
+					HIGHEST_RATE,
+					START_DATE,
+					END_DATE,
+					QUALIFICATION,
+					APPROVAL_DESC,
+					REC_STATUS,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER
+		]]>
+	</sql>
+	
+	<sql id="selectNew">
+		<![CDATA[
+			SELECT 
+					A.ID,
+					A.PID,
+					A.CUSTOMER_PID,
+					B.LOGIN_NAME,
+					A.CUSTOMER_NAME,
+					A.CUSTOMER_TYPE,
+					B.CUSTOMER_STATUS,
+					A.ADDRESS,
+					A.LINKMAN,
+					A.MOBILE,
+					A.TEL,
+					A.EMAIL,
+					A.LIMIT_AMOUNT,
+					A.LOWEST_RATE,
+					A.HIGHEST_RATE,
+					A.START_DATE,
+					A.END_DATE,
+					A.QUALIFICATION,
+					A.APPROVAL_DESC,
+					A.REC_STATUS,
+					A.REC_VER,
+					A.CREATE_TIME,
+					A.CREATOR,
+					A.MODIFY_TIME,
+					A.MODIFIER
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="pid!=null and pid!=''"> AND PID = #{pid} </if>
+		<if test="customerPid!=null and customerPid !=''"> AND CUSTOMER_PID like ('%${customerPid}%') </if>
+		<if test="customerName !=null and customerName !=''"> AND CUSTMOER_NAME like ('%${customerName}%') </if>
+		<if test="customerType !=null and customerType !=''"> AND CUSTOMER_TYPE=#{customerType}</if>
+		<if test="linkMan !=null and linkMan !=''"> AND LINKMAN like ('%${linkMan}%') </if>
+		<if test="mobile!=null and mobile!=''"> AND MOBILE LIKE ('%${mobile}%' )</if>
+		<if test="email!=null and email!=''"> AND EMAIL LIKE ('%${email}%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS =#{recStatus}</if>
+		<if test="limitAmount!=null and limitAmount!=''"> AND LIMIT_AMOUNT like('%${limitAmount}%') </if>
+		<if test="startDate!=null and startDate!=''"> <![CDATA[ AND START_DATE >= #{startDate} ]]></if>
+		<if test="endDate!=null and endDate!=''"> <![CDATA[ AND END_DATE >= #{endDate} ]]> </if>
+		<if test="lowestRate!=null and lowestRate!=''"><![CDATA[ AND LOWEST_RATE >= ${lowestRate} ]]></if>
+		<if test="highestRate !=null and highestRate != ''"><![CDATA[ AND HIGHEST_RATE<=${highestRate}]]> </if>
+	</sql>
+	
+	<select id="getAgFancingPageCount" resultType="int" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingCustomerModel">
+		<include refid="count"/>
+		FROM DM_AGFANCING_CUSTOMER A
+		LEFT JOIN SS_CUSTOMER B ON A.CUSTOMER_PID=B.CUSTOMER_PID
+		WHERE 1=1
+		<if test="pid!=null and pid!=''"> AND A.PID = #{pid} </if>
+		<if test="customerPid!=null and customerPid !=''"> AND A.CUSTOMER_PID like ('%${customerPid}%') </if>
+		<if test="customerName!=null and customerName !=''"> AND A.CUSTOMER_NAME like ('%${customerName}%') </if>
+		<if test="customerType !=null and customerType !=''"> AND A.CUSTOMER_TYPE=#{customerType}</if>
+		<if test="customerStatus !=null and customerStatus !=''"> AND B.CUSTOMER_STATUS=#{customerStatus}</if>
+		<if test="unCustomerStatus != null and unCustomerStatus != ''"> AND B.CUSTOMER_STATUS!=#{unCustomerStatus}</if>
+		<if test="linkMan !=null and linkMan !=''"> AND A.LINKMAN like ('%${linkMan}%') </if>
+		<if test="mobile!=null and mobile!=''"> AND A.MOBILE LIKE ('%${mobile}%' )</if>
+		<if test="email!=null and email!=''"> AND A.EMAIL LIKE ('%${email}%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND A.REC_STATUS =#{recStatus}</if>
+		<if test="limitAmount!=null and limitAmount!=''"> AND A.LIMIT_AMOUNT like('%${limitAmount}%') </if>
+		<if test="startDate!=null and startDate!=''"> <![CDATA[ AND A.START_DATE >= #{startDate} ]]></if>
+		<if test="endDate!=null and endDate!=''"> <![CDATA[ AND A.END_DATE >= #{endDate} ]]> </if>
+		<if test="lowestRate!=null and lowestRate!=''"><![CDATA[ AND A.LOWEST_RATE >= ${lowestRate} ]]></if>
+		<if test="highestRate !=null and highestRate != ''"><![CDATA[ AND A.HIGHEST_RATE<=${highestRate}]]> </if>
+	</select>
+	
+	<select id="getAgFancingPage" resultMap="agFancingEntityResultMap" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingCustomerModel">
+		<include refid="selectNew"/>
+		FROM DM_AGFANCING_CUSTOMER A
+		LEFT JOIN SS_CUSTOMER B ON A.CUSTOMER_PID=B.CUSTOMER_PID
+		WHERE 1=1
+		<if test="pid!=null and pid!=''"> AND A.PID = #{pid} </if>
+		<if test="customerPid!=null and customerPid !=''"> AND A.CUSTOMER_PID like ('%${customerPid}%') </if>
+		<if test="customerName!=null and customerName !=''"> AND A.CUSTOMER_NAME like ('%${customerName}%') </if>
+		<if test="customerType !=null and customerType !=''"> AND A.CUSTOMER_TYPE=#{customerType}</if>
+		<if test="customerStatus !=null and customerStatus !=''"> AND B.CUSTOMER_STATUS=#{customerStatus}</if>
+		<if test="unCustomerStatus != null and unCustomerStatus != ''"> AND B.CUSTOMER_STATUS!=#{unCustomerStatus}</if>
+		<if test="linkMan !=null and linkMan !=''"> AND A.LINKMAN like ('%${linkMan}%') </if>
+		<if test="mobile!=null and mobile!=''"> AND A.MOBILE LIKE ('%${mobile}%' )</if>
+		<if test="email!=null and email!=''"> AND A.EMAIL LIKE ('%${email}%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND A.REC_STATUS =#{recStatus}</if>
+		<if test="limitAmount!=null and limitAmount!=''"> AND A.LIMIT_AMOUNT like('%${limitAmount}%') </if>
+		<if test="startDate!=null and startDate!=''"> <![CDATA[ AND A.START_DATE >= #{startDate} ]]></if>
+		<if test="endDate!=null and endDate!=''"> <![CDATA[ AND A.END_DATE >= #{endDate} ]]> </if>
+		<if test="lowestRate!=null and lowestRate!=''"><![CDATA[ AND A.LOWEST_RATE >= ${lowestRate} ]]></if>
+		<if test="highestRate !=null and highestRate != ''"><![CDATA[ AND A.HIGHEST_RATE<=${highestRate}]]> </if>
+	</select>
+	
+	<!-- 不分页 -->
+	<select id="getAgFancingList" resultMap="agFancingResultMap" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingCustomerModel">
+		<include refid="select"/>
+		FROM DM_AGFANCING_CUSTOMER
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingCustomerModel">
+		INSERT INTO DM_AGFANCING_CUSTOMER (
+				PID,
+				CUSTOMER_PID,
+				CUSTOMER_NAME,
+				CUSTOMER_TYPE,
+				ADDRESS,
+				LINKMAN,
+				MOBILE,
+				TEL,
+				EMAIL,
+				LIMIT_AMOUNT,
+				LOWEST_RATE,
+				HIGHEST_RATE,
+				START_DATE,
+				END_DATE,
+				QUALIFICATION,
+				APPROVAL_DESC,
+				REC_STATUS,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER
+		) VALUES (
+			   #{pid},
+			   #{customerPid},
+			   #{customerName},
+			   #{customerType},
+			   #{address},
+			   #{linkMan},
+			   #{mobile},
+			   #{tel},
+			   #{email},
+			   #{limitAmount},
+			   #{lowestRate},
+			   #{highestRate},
+			   #{startDate},
+			   #{endDate},
+			   #{qualification},
+			   #{approvalDesc},
+			   1,
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   SYSDATE(),
+			   #{modifier}
+		)
+	</insert>
+	
+  	<delete id="delete" parameterType="String">
+  		DELETE FROM DM_AGFANCING_CUSTOMER WHERE CUSTOMER_PID IN
+		<foreach item="pid" collection="list" open="(" separator="," close=")">
+			#{pid}
+		</foreach>
+ 	 </delete>
+	
+	<update id="update" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingCustomerModel">
+		UPDATE DM_AGFANCING_CUSTOMER SET
+			<if test="customerName!=null and customerName!=''">CUSTOMER_NAME=#{customerName},</if>
+			<if test="customerType!=null and customerType!=''">CUSTOMER_TYPE=#{customerType},</if>
+			<if test="address!=null and address!=''">ADDRESS=#{address},</if>
+			<if test="linkMan!=null and linkMan!=''">LINKMAN=#{linkMan},</if>
+			<if test="mobile!=null and mobile!=''">MOBILE=#{mobile},</if>
+			<if test="tel!=null and tel!=''">TEL=#{tel},</if>
+			<if test="email!=null and email!=''">EMAIL=#{email},</if>
+			<if test="limitAmount!=null and limitAmount!=''">LIMIT_AMOUNT=#{limitAmount},</if>
+			<if test="lowestRate!=null and lowestRate!=''">LOWEST_RATE=#{lowestRate},</if>
+			<if test="highestRate!=null and highestRate!=''">HIGHEST_RATE=#{highestRate},</if>
+			<if test="startDate!=null and startDate!=''">START_DATE=#{startDate},</if>
+			<if test="endDate!=null and endDate!=''">END_DATE=#{endDate},</if>
+			<if test="qualification!=null and qualification!=''">QUALIFICATION=#{qualification},</if>
+			<if test="approvalDesc!=null and approvalDesc!=''">APPROVAL_DESC=#{approvalDesc},</if>
+			REC_VER=REC_VER+1,
+			MODIFY_TIME=SYSDATE()
+			WHERE PID=#{pid} 
+	</update>
+</mapper>

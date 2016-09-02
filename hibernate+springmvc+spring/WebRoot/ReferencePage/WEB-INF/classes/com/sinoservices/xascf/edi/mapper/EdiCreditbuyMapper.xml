@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.edi.mapper.EdiCreditbuyMapper">
+	<resultMap type="com.sinoservices.xascf.edi.model.EdiCreditbuyModel" id="EdiCreditbuyModel">
+		<result property="creditbuyId" column="CREDITBUY_ID"/>
+		<result property="creditApplyId" column="CREDIT_APPLY_ID"/>
+		<result property="billCycle" column="BILL_CYCLE"/>
+		<result property="businessPercent" column="BUSINESS_PERCENT"/>
+		<result property="billType" column="BILL_TYPE"/>	
+		<result property="isPrepay" column="IS_PREPAY"/> 
+		<result property="preBillType" column="PRE_BILL_TYPE"/> 	
+		<result property="customerName" column="CUSTOMER_NAME"/>
+		<result property="corporate" column="CORPORATE"/> 
+		<result property="registeredFund" column="REGISTERED_FUND"/>
+		<result property="businesslicenseno" column="BUSINESSLICENSENO"/>
+		<result property="organizationCode" column="ORGANIZATION_CODE"/>
+		<result property="taxNo" column="TAX_NO"/>
+		<result property="registeredTime" column="REGISTERED_TIME"/> 
+		<result property="tel" column="TEL"/>  
+		<result property="fax" column="FAX"/>  
+		<result property="email" column="EMAIL"/>  
+		<result property="addressCn" column="ADDRESS_CN"/>  
+		<result property="mainbusiness" column="MAINBUSINESS"/>  
+		<result property="businessScope" column="BUSINESS_SCOPE"/>  
+	</resultMap>  
+	
+	<sql id="select"> 
+		  SELECT 
+		  	CREDITBUY_ID,			
+	        CREDIT_APPLY_ID, 
+	        BILL_CYCLE,
+	        BUSINESS_PERCENT,		
+			BILL_TYPE,
+			IS_PREPAY,
+			PRE_BILL_TYPE,		
+			CUSTOMER_NAME,
+			CORPORATE,	
+			REGISTERED_FUND,			
+			BUSINESSLICENSENO,		
+			ORGANIZATION_CODE,				
+			TAX_NO,			
+			REGISTERED_TIME,			
+			TEL,
+			FAX,
+			EMAIL,
+			ADDRESS_CN,
+			MAINBUSINESS,
+			BUSINESS_SCOPE,
+			APPERRINFO
+	</sql>
+	
+	<!-- 查询  -->
+	<select id="getEdiCreditbuyByCondition" resultMap="EdiCreditbuyModel" parameterType="com.sinoservices.xascf.edi.model.EdiCreditbuyModel">
+		<include refid="select"/>  
+		FROM  EDI_CREDITBUY
+		<include refid="findByExample"/> 
+	</select>
+	
+	<sql id="findByExample">
+		WHERE  1=1
+		<if test="creditbuyId !=null and  creditbuyId !=''">AND CREDITBUY_ID LIKE ('%${creditbuyId}%')</if>
+		<if test="creditApplyId !=null and creditApplyId != ''">AND CREDIT_APPLY_ID LIKE ('%${creditApplyId}%')</if>
+	</sql>
+
+	
+</mapper>

@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.FancingOrderMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.model.FancingOrderModel" id="fancingOrderModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="parentOrderNo" column="PARENT_ORDER_NO"/>
+		<result property="operatorPid" column="OPERATOR_PID"/>
+		<result property="contractNo" column="CONTRACT_NO"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="menberPid" column="MENBER_PID"/>
+		<result property="menberName" column="MENBER_NAME"/>
+		<result property="menberType" column="MENBER_TYPE"/>
+		<result property="buyerPid" column="BUYER_PID"/>
+		<result property="buyerName" column="BUYER_NAME"/>
+		<result property="fancingFrom" column="FANCING_FROM"/>
+		<result property="requestPrice" column="REQUEST_PRICE"/>
+		<result property="noteType" column="NOTE_TYPE"/>
+		<result property="notePrice" column="NOTE_PRICE"/>
+		<result property="noteDisprice" column="NOTE_DISPRICE"/>
+		<result property="replyPrice" column="REPLY_PRICE"/>
+		<result property="requestTime" column="REQUEST_TIME"/>
+		<result property="requestPayTime" column="REQUESTPAY_TIME"/>
+		<result property="payTime" column="PAY_TIME"/>
+		<result property="term" column="TERM"/>
+		<result property="termType" column="TERM_TYPE"/>
+		<result property="termDate" column="TERM_DATE"/>
+		<result property="rateCycle" column="RATE_CYCLE"/>
+		<result property="rebackType" column="REBACK_TYPE"/>
+		<result property="fancingStatus" column="FANCING_STATUS"/>
+		<result property="loanBankPayee" column="LOAN_BANK_PAYEE"/>
+		<result property="loanBankName" column="LOAN_BANK_NAME"/>
+		<result property="loanBankNo" column="LOAN_BANK_NO"/>
+		<result property="bankType" column="BANK_TYPE"/>
+		<result property="bankNo" column="BANK_NO"/>
+		<result property="bankName" column="BANK_NAME"/>
+		<result property="loanType" column="LOAN_TYPE"/>
+		<result property="loanToType" column="LOAN_TO_TYPE"/>
+		<result property="requestReplyPrice" column="REQUEST_REPLY_PRICE"/>
+		<result property="lostPrice" column="LOST_PRICE"/>
+		<result property="prepayPrice" column="PREPAY_PRICE"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.fancing.model.FancingStatusModel" id="fancingStatusResultMap">
+		<result property="status" column="STATUS"/>
+		<result property="count" column="STATUSCOUNT"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					PID,
+					FANCING_ORDER_NO,
+					PARENT_ORDER_NO,
+					OPERATOR_PID,
+					CONTRACT_NO,
+					CREDIT_NO,
+					MENBER_PID,
+					MENBER_NAME,
+					MENBER_TYPE,
+					BUYER_PID,
+					BUYER_NAME,
+					FANCING_FROM,
+					REQUEST_PRICE,
+					NOTE_PRICE,
+					NOTE_TYPE,
+					NOTE_DISPRICE,
+					REPLY_PRICE,
+					REQUEST_REPLY_PRICE,
+					LOST_PRICE,
+					PREPAY_PRICE,
+					REQUEST_TIME,
+					REQUESTPAY_TIME,
+					PAY_TIME,
+					TERM,
+					TERM_TYPE,
+					TERM_DATE,
+					RATE_CYCLE,
+					REBACK_TYPE,
+					FANCING_STATUS,
+					LOAN_BANK_PAYEE,
+					LOAN_BANK_NAME,
+					LOAN_BANK_NO,
+					BANK_TYPE,
+					BANK_NO,
+					BANK_NAME,
+					LOAN_TYPE,
+					LOAN_TO_TYPE,
+					REMARK
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO LIKE ('%{fancingOrderNo}%' )</if>
+		<if test="parentOrderNo!=null and parentOrderNo!=''"> AND PARENT_ORDER_NO LIKE ('%{parentOrderNo}%' )</if>
+		<if test="operatorPid !=null and operatorPid !=''"> AND OPERATOR_PID LIKE ('%{operatorPid}%' )</if>
+		<if test="contractNo!=null and contractNo!=''"> AND CONTRACT_NO LIKE ('%{contractNo}%' )</if>
+		<if test="creditNo!=null and creditNo!=''"> AND CREDIT_NO LIKE ('%{creditNo}%' )</if>
+		<if test="menberPid!=null and menberPid!=''"> AND MENBER_PID = #{menberPid}</if>
+		<if test="menberName!=null and menberName!=''"> AND MENBER_NAME LIKE ('%{menberName}%' )</if>
+		<if test="menberType!=null and menberType!=''"> AND MENBER_TYPE LIKE ('%{menberType}%' )</if>
+		<if test="buyerPid!=null and buyerPid!=''"> AND BUYER_PID LIKE ('%{buyerPid}%' )</if>
+		<if test="buyerName!=null and buyerName!=''"> AND BUYER_NAME LIKE ('%{buyerName}%' )</if>
+		<if test="fancingFrom!=null and fancingFrom!=''"> AND FANCING_FROM LIKE ('%{fancingFrom}%' )</if>
+		<if test="requestPrice!=null and requestPrice!=''"> AND REQUEST_PRICE LIKE ('%{requestPrice}%' )</if>
+		<if test="replyPrice!=null and replyPrice!=''"> AND REPLY_PRICE LIKE ('%{replyPrice}%' )</if>
+		<if test="requestTime!=null and requestTime!=''"> AND REQUEST_TIME LIKE ('%{requestTime}%' )</if>
+		<if test="payTime!=null and payTime!=''"> AND PAY_TIME LIKE ('%{payTime}%' )</if>
+		<if test="term!=null and term!=''"> AND TERM LIKE ('%{term}%' )</if>
+		<if test="termType!=null and termType!=''"> AND TERM_TYPE LIKE ('%{termType}%' )</if>
+		<if test="rateCycle!=null and rateCycle!=''"> AND RATE_CYCLE LIKE ('%{rateCycle}%' )</if>
+		<if test="rebackType!=null and rebackType!=''"> AND REBACK_TYPE LIKE ('%{rebackType}%' )</if>
+		<if test="fancingStatus!=null and fancingStatus!=''"> AND FANCING_STATUS LIKE ('%${fancingStatus}%' )</if>
+		<if test="bankType!=null and bankType!=''"> AND BANK_TYPE LIKE ('%{bankType}%' )</if>
+		<if test="bankNo!=null and bankNo!=''"> AND BANK_NO LIKE ('%{bankNo}%' )</if>
+		<if test="loanType!=null and loanType!=''"> AND LOAN_TYPE LIKE ('%{loanType}%' )</if>
+		<if test="loanToType!=null and loanToType!=''"> AND LOAN_TO_TYPE LIKE ('%{loanToType}%' )</if>
+	</sql>
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.model.FancingOrderModel">
+		<include refid="count"/>
+		FROM   DM_FANCING_ORDER
+		<include refid="findByExample"/>
+		AND FANCING_STATUS ='60'
+		AND FANCING_PID NOT IN(
+			SELECT a.PID FROM DM_FANCING_ORDER a ,LM_PRODUCT_FINANCING b
+			WHERE
+			 a.PID=b.REL_FANCING_PID
+			 AND a.REC_STATUS='1'
+			 AND b.REC_STATUS='1'
+			 <if test="relProductPid!=null and relProductPid!=''"> AND b.REL_PRODUCT_PID!=#{relProductPid}</if>
+		)
+	</select>
+	
+	<select id="findByCondition" resultMap="fancingOrderModelResultMap" parameterType="com.sinoservices.xascf.fancing.model.FancingOrderModel">
+		<include refid="select"/>
+		FROM  DM_FANCING_ORDER
+		<include refid="findByExample"/>
+		ORDER BY CREATE_TIME DESC
+	</select>
+	<select id="getList" resultMap="fancingOrderModelResultMap" parameterType="com.sinoservices.xascf.fancing.model.FancingOrderModel">
+		<include refid="select"/>
+		FROM   DM_FANCING_ORDER
+		<include refid="findByExample"/>
+		AND FANCING_STATUS ='60'
+		AND FANCING_PID NOT IN(
+			SELECT a.PID FROM DM_FANCING_ORDER a ,LM_PRODUCT_FINANCING b
+			WHERE
+			 a.PID=b.REL_FANCING_PID
+			 AND a.REC_STATUS='1'
+			 AND b.REC_STATUS='1'
+			 <if test="relProductPid!=null and relProductPid!=''"> AND b.REL_PRODUCT_PID!=#{relProductPid}</if>
+			 
+		)
+	</select>
+	
+	<select id="getNoPageListByCondition" resultMap="fancingOrderModelResultMap" parameterType="com.sinoservices.xascf.fancing.model.FancingOrderModel">
+		<include refid="select"/>
+			FROM DM_FANCING_ORDER
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getToReturnListInTenDay" resultMap="fancingOrderModelResultMap">
+		<include refid="select"/>
+		FROM DM_FANCING_ORDER FO 
+			WHERE FANCING_STATUS ='60'
+			AND TERM_DATE &gt; CURDATE() 
+			AND TERM_DATE &lt;= DATE_ADD(CURDATE(),INTERVAL 9 DAY)
+	</select>
+	
+	
+	
+	<select id="getModleByOrderNo" resultMap="fancingOrderModelResultMap" parameterType="String">
+	<include refid="select"/>
+		FROM  DM_FANCING_ORDER
+		WHERE FANCING_ORDER_NO=#{_parameter}
+	
+	
+	</select>
+	<insert id="insert" parameterType="com.sinoservices.xascf.fancing.model.FancingOrderModel">
+		INSERT INTO DM_FANCING_ORDER (
+				PID,
+				FANCING_ORDER_NO,
+				PARENT_ORDER_NO,
+				OPERATOR_PID,
+				CONTRACT_NO,
+				CREDIT_NO,
+				MENBER_PID,
+				MENBER_NAME,
+				MENBER_TYPE,
+				BUYER_PID,
+				BUYER_NAME,
+				FANCING_FROM,
+				REQUEST_PRICE,
+				REPLY_PRICE,
+				REQUEST_REPLY_PRICE,
+				LOST_PRICE,
+				NOTE_PRICE,
+				NOTE_TYPE,
+				NOTE_DISPRICE,
+				PREPAY_PRICE,
+				REQUEST_TIME,
+				REQUESTPAY_TIME,
+				PAY_TIME,
+				TERM,
+				TERM_TYPE,
+				TERM_DATE,
+				RATE_CYCLE,
+				REBACK_TYPE,
+				FANCING_STATUS,
+				LOAN_BANK_PAYEE,
+				LOAN_BANK_NAME,
+				LOAN_BANK_NO,
+				BANK_TYPE,
+				BANK_NO,
+				BANK_NAME,
+				LOAN_TYPE,
+				LOAN_TO_TYPE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{fancingOrderNo},
+			   #{parentOrderNo},
+			   #{operatorPid},
+			   #{contractNo},
+			   #{creditNo},
+			   #{menberPid},
+			   #{menberName},
+			   #{menberType},
+			   #{buyerPid},
+			   #{buyerName},
+			   #{fancingFrom},
+			   #{requestPrice},
+			   #{replyPrice},
+			   #{requestReplyPrice},
+			   #{lostPrice},
+			   #{notePrice},
+			   #{noteType},
+			   #{noteDisprice},
+			   #{prepayPrice},
+			   #{requestTime},
+			   #{requestPayTime},
+			   #{payTime},
+			   #{term},
+			   #{termType},
+			   #{termDate},
+			   #{rateCycle},
+			   #{rebackType},
+			   #{fancingStatus},
+			   #{loanBankPayee},
+			   #{loanBankName},
+			   #{loanBankNo},
+			   #{bankType},
+			   #{bankNo},
+			   #{bankName},
+			   #{loanType},
+			   #{loanToType},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   0
+		)
+	</insert>
+	
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+		INSERT INTO DM_FANCING_ORDER (
+				PID,
+				FANCING_ORDER_NO,
+				PARENT_ORDER_NO,
+				OPERATOR_PID,
+				CONTRACT_NO,
+				CREDIT_NO,
+				MENBER_PID,
+				MENBER_NAME,
+				MENBER_TYPE,
+				BUYER_PID,
+				BUYER_NAME,
+				FANCING_FROM,
+				REQUEST_PRICE,
+				REPLY_PRICE,
+				REQUEST_REPLY_PRICE,
+				LOST_PRICE,
+				NOTE_PRICE,
+				NOTE_TYPE,
+				NOTE_DISPRICE,
+				PREPAY_PRICE,
+				REQUEST_TIME,
+				REQUESTPAY_TIME,
+				PAY_TIME,
+				TERM,
+				TERM_TYPE,
+				TERM_DATE,
+				RATE_CYCLE,
+				REBACK_TYPE,
+				FANCING_STATUS,
+				LOAN_BANK_PAYEE,
+				LOAN_BANK_NAME,
+				LOAN_BANK_NO,
+				BANK_TYPE,
+				BANK_NO,
+				BANK_NAME,
+				LOAN_TYPE,
+				LOAN_TO_TYPE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES
+  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (  
+	           #{item.pid},
+			   #{item.fancingOrderNo},
+			   #{item.parentOrderNo},
+			   #{item.operatorPid},
+			   #{item.contractNo},
+			   #{item.creditNo},
+			   #{item.menberPid},
+			   #{item.menberName},
+			   #{item.menberType},
+			   #{item.buyerPid},
+			   #{item.buyerName},
+			   #{item.fancingFrom},
+			   #{item.requestPrice},
+			   #{item.replyPrice},
+			   #{item.requestReplyPrice},
+			   #{item.lostPrice},
+			   #{item.notePrice},
+			   #{item.noteType},
+			   #{item.noteDisprice},
+			   #{item.prepayPrice},
+			   #{item.requestTime},
+			   #{item.requestPayTime},
+			   #{item.payTime},
+			   #{item.term},
+			   #{item.termType},
+			   #{item.termDate},
+			   #{item.rateCycle},
+			   #{item.rebackType},
+			   #{item.fancingStatus},
+			   #{item.loanBankPayee},
+			   #{item.loanBankName},
+			   #{item.loanBankNo},
+			   #{item.bankType},
+			   #{item.bankNo},
+			   #{item.bankName},
+			   #{item.loanType},
+			   #{item.loanToType},
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   0
+			 )  
+	    </foreach>  
+  </insert>  
+	
+	<update id="update" parameterType="com.sinoservices.xascf.fancing.model.FancingOrderModel">
+		UPDATE DM_FANCING_ORDER SET
+			<if test="fancingOrderNo !=null and fancingOrderNo !=''">	FANCING_ORDER_NO = #{fancingOrderNo},</if>
+			<if test="parentOrderNo !=null and parentOrderNo !=''">	PARENT_ORDER_NO = #{parentOrderNo},</if>
+			<if test="operatorPid !=null and operatorPid !=''">	OPERATOR_PID = #{operatorPid},</if>
+			<if test="contractNo !=null and contractNo !=''">	CONTRACT_NO = #{contractNo},</if>
+			<if test="creditNo !=null and creditNo !=''">	CREDIT_NO = #{creditNo},</if>
+			<if test="menberPid !=null and menberPid !=''">	MENBER_PID = #{menberPid},</if>
+			<if test="menberName !=null and menberName !=''">	MENBER_NAME = #{menberName},</if>
+			<if test="menberType !=null and menberType !=''">	MENBER_TYPE = #{menberType},</if>
+			<if test="buyerPid !=null and buyerPid !=''">	BUYER_PID = #{buyerPid},</if>
+			<if test="buyerName !=null and buyerName !=''">	BUYER_NAME = #{buyerName},</if>
+			<if test="fancingFrom !=null and fancingFrom !=''">	FANCING_FROM = #{fancingFrom},</if>
+			<if test="requestPrice !=null and requestPrice !=''">	REQUEST_PRICE = #{requestPrice},</if>
+			<if test="replyPrice !=null and replyPrice !=''">	REPLY_PRICE = #{replyPrice},</if>
+			<if test="requestReplyPrice !=null and requestReplyPrice !=''">	REQUEST_REPLY_PRICE = #{requestReplyPrice},</if>
+			<if test="lostPrice !=null and lostPrice !=''">	LOST_PRICE = #{lostPrice},</if>
+			<if test="noteType !=null and noteType !=''">	NOTE_TYPE = #{noteType},</if>
+			<if test="notePrice !=null and notePrice !=''">	NOTE_PRICE = #{notePrice},</if>
+			<if test="noteDisprice !=null and noteDisprice !=''">	NOTE_DISPRICE = #{noteDisprice},</if>
+			<if test="prepayPrice !=null and prepayPrice !=''">	PREPAY_PRICE = #{prepayPrice},</if>
+			<if test="requestTime !=null and requestTime !=''">	REQUEST_TIME = #{requestTime},</if>
+			<if test="requestPayTime !=null and requestPayTime !=''">	REQUESTPAY_TIME = #{requestPayTime},</if>
+			<if test="payTime !=null and payTime !=''">	PAY_TIME = #{payTime},</if>
+			<if test="term !=null and term !=''">	TERM = #{term},</if>
+			<if test="termType !=null and termType !=''">	TERM_TYPE = #{termType},</if>
+			<if test="termDate !=null and termDate !=''">	TERM_DATE = #{termDate},</if>
+			<if test="rateCycle !=null and rateCycle !=''">	RATE_CYCLE = #{rateCycle},</if>
+			<if test="rebackType !=null and rebackType !=''">	REBACK_TYPE = #{rebackType},</if>
+			<if test="fancingStatus !=null and fancingStatus !=''">	FANCING_STATUS = #{fancingStatus},</if>
+			<if test="loanBankPayee !=null and loanBankPayee !=''">	LOAN_BANK_PAYEE = #{loanBankPayee},</if>
+			<if test="loanBankName !=null and loanBankName !=''">	LOAN_BANK_NAME = #{loanBankName},</if>
+			<if test="loanBankNo !=null and loanBankNo !=''">	LOAN_BANK_NO = #{loanBankNo},</if>
+			<if test="bankType !=null and bankType !=''">	BANK_TYPE = #{bankType},</if>
+			<if test="bankNo !=null and bankNo !=''">	BANK_NO = #{bankNo},</if>
+			<if test="bankName !=null and bankName !=''">	BANK_NAME = #{bankName},</if>
+			<if test="loanType !=null and loanType !=''">	LOAN_TYPE = #{loanType},</if>
+			<if test="loanToType !=null and loanToType !=''">	LOAN_TO_TYPE = #{loanToType},</if>
+			<if test="remark !=null and remark !=''">	REMARK = #{remark},</if>
+			<if test="modifier !=null and modifier !=''">	MODIFIER = #{modifier},</if>
+		MODIFY_TIME=SYSDATE(),
+		REC_VER = REC_VER+1
+		WHERE PID=#{pid}
+	</update>
+	<!-- 根据单号修改预付申请单的申请金额 -->
+	<update id="updateLostPrice" parameterType="com.sinoservices.xascf.fancing.model.FancingOrderModel">
+		UPDATE DM_FANCING_ORDER SET LOST_PRICE=#{lostPrice},
+				MODIFIER = #{modifier},
+				MODIFY_TIME=SYSDATE(),
+				REC_VER = REC_VER+1
+		WHERE FANCING_ORDER_NO = #{fancingOrderNo}
+	</update>
+	<!-- 批量修改融资状态 -->
+	<update id="updateStatusByOrderNoList" parameterType="java.util.List">
+		UPDATE DM_FANCING_ORDER 
+		<trim prefix="set" suffixOverrides=","> 
+	          <!-- 更新的字段集合 --> 
+	          <trim prefix="FANCING_STATUS =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.fancingStatus!=null">  
+	                      when (FANCING_ORDER_NO=#{i.fancingOrderNo}) then #{i.fancingStatus}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	           <trim prefix="Modifier =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                     <if test="i.modifier!=null">  
+	                      when (FANCING_ORDER_NO=#{i.fancingOrderNo}) then #{i.modifier}  
+	                     </if>  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Modify_Time =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (FANCING_ORDER_NO=#{i.fancingOrderNo}) then SYSDATE()  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Rec_Ver =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (FANCING_ORDER_NO=#{i.fancingOrderNo}) then Rec_Ver+1  
+	              </foreach>  
+	           </trim>
+         </trim>   
+         where   
+         <foreach collection="list" separator="or" item="i" index="index" > 
+         <if test="i.fancingOrderNo!=null">  
+          (FANCING_ORDER_NO=#{i.fancingOrderNo}) 
+           </if>   
+      	</foreach> 
+	</update>
+	
+	<delete id="deleteByOrderNo" parameterType="String">
+	   DELETE FROM DM_FANCING_ORDER
+	  WHERE FANCING_ORDER_NO=#{_parameter}
+	</delete>
+	
+	<!-- 获取某个用户放款单状态对应的数量 -->
+	<select id="getFinanceStatusCount" resultMap="fancingStatusResultMap" parameterType="String">
+		SELECT FANCING_STATUS AS STATUS,COUNT(FANCING_STATUS) AS STATUSCOUNT
+		FROM DM_FANCING_ORDER
+		WHERE  MENBER_PID=#{_parameter}
+		GROUP BY FANCING_STATUS
+	</select>
+	
+	<!-- 获取某个理财产品的所有融资交易单数量 -->
+	<select id="getFinancialCount" resultType="int" parameterType="String">
+		<include refid="count"/>
+		FROM  DM_FANCING_ORDER a,LM_PRODUCT_FINANCING b
+		WHERE 
+			1=1
+			AND a.PID=b.REL_FANCING_PID
+			AND b.REL_PRODUCT_PID=#{_parameter}
+			AND a.REC_STATUS='1'
+	</select>
+	<!-- 获取某个理财产品的所有融资交易单 -->
+	<select id="getFinancialList" resultMap="fancingOrderModelResultMap" parameterType="com.sinoservices.xascf.fancing.model.FancingOrderModel">
+		<include refid="select"/>
+		FROM  DM_FANCING_ORDER a,LM_PRODUCT_FINANCING b
+		WHERE 
+			1=1
+			AND a.PID=b.REL_FANCING_PID
+			AND b.REL_PRODUCT_PID=#{_parameter}
+			AND a.REC_STATUS='1'
+	</select>
+</mapper>

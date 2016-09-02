@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.edi.mapper.EdiFancingOrderMapper">
+	<resultMap type="com.sinoservices.xascf.edi.model.EdiFancingOrderModel" id="EdiFancingOrderModel">
+		<result property="fancingOrderId" column="FANCING_ORDER_ID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="contractNo" column="CONTRACT_NO"/>
+		<result property="menberPid" column="MENBER_PID"/>
+		<result property="menberName" column="MENBER_NAME"/>	
+		<result property="buyerPid" column="BUYER_PID"/> 
+		<result property="buyerName" column="BUYER_NAME"/> 	
+		<result property="requestPrice" column="REQUEST_PRICE"/>
+		<result property="requestpayTime" column="REQUESTPAY_TIME"/> 
+		<result property="loanType" column="LOAN_TYPE"/> 
+		<result property="loanTo" column="LOAN_TO"/> 
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATETIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFYTIME"/>
+		<result property="ediFlag" column="EDIFLAG"/> 
+		<result property="apperrInfo" column="APPERRINFO"/>  
+		
+	</resultMap>  
+	
+	<sql id="select"> 
+		  SELECT 
+		  	FANCING_ORDER_ID,			
+	        FANCING_ORDER_NO, 
+	        CONTRACT_NO,
+	        MENBER_PID,		
+			MENBER_NAME,
+			BUYER_PID,
+			BUYER_NAME,		
+			REQUEST_PRICE,
+			REQUESTPAY_TIME,	
+			LOAN_TYPE,	
+			LOAN_TO,	
+			CREATOR,			
+			CREATETIME,		
+			MODIFIER,				
+			MODIFYTIME,			
+			EDIFLAG,			
+			APPERRINFO
+	</sql>
+	
+	<!-- 查询  -->
+	<select id="getEdiFancingOrderByCondition" resultMap="EdiFancingOrderModel" parameterType="com.sinoservices.xascf.edi.model.EdiFancingOrderModel">
+		<include refid="select"/>  
+		FROM  EDI_FANCING_ORDER
+		<include refid="findByExample"/> 
+	</select>
+	
+	<sql id="findByExample">
+		WHERE  1=1
+		<if test="fancingOrderId !=null and  fancingOrderId !=''">AND FANCING_ORDER_ID LIKE ('%${fancingOrderId}%')</if>
+		<if test="ediFlag !=null and ediFlag != ''">AND EDIFLAG LIKE ('%${ediFlag}%')</if>
+	</sql>
+
+	<update id="update" parameterType="com.sinoservices.xascf.edi.model.EdiFancingOrderModel">
+		UPDATE EDI_CREDIT_APPLY  
+		<set>   
+			<if test="ediFlag != null and ediFlag != ''">EDIFLAG = #{ediFlag},</if>
+			<if test="apperrInfo != null and apperrInfo != ''">APPERRINFO = #{apperrInfo},</if>
+ 
+			<if test="creator != null and creator != ''">CREATOR = #{creator},</if>
+			<if test="createTime != null and createTime != ''">CREATETIME = #{createTime},</if>
+			<if test="modifier != null and modifier != ''">MODIFIER = #{modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''">MODIFYTIME = #{modifyTime},</if>
+		</set>
+			WHERE 
+			FANCING_ORDER_ID = #{fancingOrderId} 
+	</update>
+	
+	<update id="batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+        	UPDATE EDI_CREDIT_APPLY
+            <set>
+				<if test="item.ediFlag != null and item.ediFlag != ''">EDIFLAG = #{item.ediFlag},</if>
+				<if test="item.apperrInfo != null and item.apperrInfo != ''">APPERRINFO = #{item.apperrInfo},</if>
+				MODIFIER = 'SYSTEM',
+				MODIFYTIME = SYSDATE()         	
+            </set>
+            where FANCING_ORDER_NO = #{item.fancingOrderNo}
+         </foreach>
+	</update>
+	
+	
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.information.mapper.CreditBlackListMapper">
+	
+	<resultMap type="com.sinoservices.xascf.information.model.CreditBlackListModel" id="creditBlackListModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="blackListPid" column="BLACK_LIST_PID"/>
+		<result property="customerPid" column="CUSTOMER_PID"/>
+		<result property="customerName" column="CUSTOMER_NAME"/>
+		<result property="customerType" column="CUSTOMER_TYPE"/>
+		<result property="reason" column="REASON"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="createTimeStr" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+		  SELECT 
+			ID,
+			BLACK_LIST_PID,
+			CUSTOMER_PID,
+			CUSTOMER_NAME,
+			CUSTOMER_TYPE,
+			REASON,
+			CREATOR,
+			date_format(CREATE_TIME, '%Y-%m-%d %H:%i:%s') as CREATE_TIME,
+			MODIFIER,
+			MODIFY_TIME,
+			REC_VER,
+			REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="blackListPid !=null and blackListPid !=''"> AND BLACK_LIST_PID LIKE ('%${blackListPid}%')</if>
+		<if test="customerPid !=null and customerPid !=''"> AND CUSTOMER_PID LIKE ('%${customerPid}%')</if>
+		<if test="customerName !=null and customerName !=''"> AND CUSTOMER_NAME LIKE ('%${customerName}%' )</if>
+		<if test="customerType !=null and customerType !=''"> AND CUSTOMER_TYPE LIKE ('%${customerType}%')</if>
+		<if test="reason !=null and reason !=''"> AND REASON LIKE ('%${reason}%')</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%')</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%${createTime}%')</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%')</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%${modifyTime}%')</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%${recVer}%')</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%')</if>
+	</sql> 
+
+	<select id="findByCondition" resultMap="creditBlackListModelResultMap" parameterType="com.sinoservices.xascf.information.model.CreditBlackListModel">
+		<include refid="select"/>
+		FROM  IM_CREDIT_BLACK_LIST BL 
+		<include refid="findByExample"/>
+	</select>  
+	
+	<select id="getBlackListByPid" resultMap="creditBlackListModelResultMap" parameterType="java.lang.String">
+		<include refid="select"/>
+		FROM  IM_CREDIT_BLACK_LIST BL 
+			WHERE BL.BLACK_LIST_PID=#{blackListPid}
+    </select>
+	
+	
+	<!-- count-->
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.information.model.CreditBlackListModel">
+		<include refid="count"/>
+		FROM  IM_CREDIT_BLACK_LIST BL 
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO IM_CREDIT_BLACK_LIST (
+				ID,
+				BLACK_LIST_PID,
+				CUSTOMER_PID,
+				CUSTOMER_NAME,
+				CUSTOMER_TYPE,
+				REASON,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{blackListPid},
+			   #{customerPid},
+			   #{customerName},
+			   #{customerType},
+			   #{reason},
+			   #{creator},
+			   #{createTime},
+			   #{modifier},
+			   #{modifyTime},
+			   #{recVer},
+			   #{recStatus}
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE IM_CREDIT_BLACK_LIST SET
+			<if test="customerPid !=null and customerPid !=''"> CUSTOMER_PID = #{customerPid},</if>
+			<if test="customerName !=null and customerName !=''">	CUSTOMER_NAME = #{customerName},</if>
+			<if test="customerType !=null and customerType !=''">	CUSTOMER_TYPE = #{customerType},</if>
+			<if test="reason !=null and reason !=''">	CUSTOMER_TYPE = #{reason},</if>
+			<if test="recStatus !=null and recStatus !=''">	REC_STATUS = #{recStatus},</if>
+				Rec_Ver = Rec_Ver+1,
+		  		MODIFY_TIME=SYSDATE(),
+		  		MODIFIER=#{modifier} 		
+		WHERE BLACK_LIST_PID=#{blackListPid}	
+	</update>
+	
+	<delete id="deleteByPids" parameterType="java.util.List">
+        UPDATE IM_CREDIT_BLACK_LIST  SET
+        	REC_STATUS = '1',
+		  	MODIFY_TIME=SYSDATE()
+        WHERE 
+        <choose>
+             <when test="null!=list and list.size!=0">
+                BLACK_LIST_PID IN
+                <foreach collection="list" item="blackListPid" index="index" open="(" separator="," close=")">
+                    #{blackListPid}
+                </foreach>
+            </when>
+            <otherwise>
+               1 != 1
+            </otherwise>
+        </choose>
+    </delete>
+</mapper>

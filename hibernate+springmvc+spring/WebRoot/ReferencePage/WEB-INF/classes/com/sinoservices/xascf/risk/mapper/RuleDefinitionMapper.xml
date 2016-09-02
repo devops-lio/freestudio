@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.risk.mapper.RuleDefinitionMapper">
+	<resultMap type="com.sinoservices.xascf.risk.model.RuleDefinitionModel" id="ruleDefinitionResultMap">
+		<result property="id" column="ID"/>
+		<result property="rulePid" column="RULE_PID"/>
+		<result property="ruleNo" column="RULE_NO"/>
+		<result property="ruleName" column="RULE_NAME"/>
+		<result property="description" column="DESCRIPTION"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,RULE_PID,RULE_NO,RULE_NAME,DESCRIPTION,REC_VER,CREATE_TIME,
+					CREATOR,MODIFY_TIME,MODIFIER,REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="rulePid!=null and rulePid!=''"> AND RULE_PID =${rulePid}</if>
+		<if test="ruleNo!=null and ruleNo!=''"> AND RULE_NO LIKE ('%${ruleNo}%')</if>
+		<if test="ruleName!=null and ruleName!=''"> AND RULE_NAME LIKE ('%${ruleName}%')</if>
+		 AND REC_STATUS=0
+		 ORDER BY CREATE_TIME DESC
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.risk.view.RuleDefinitionQueryConditionView">
+		<include refid="count"/>
+		FROM  RM_RULE_DEFINITION
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="ruleDefinitionResultMap" parameterType="com.sinoservices.xascf.risk.view.RuleDefinitionQueryConditionView">
+		<include refid="select"/>
+		FROM  RM_RULE_DEFINITION
+		<include refid="findByExample"/>
+	</select>
+	
+	<!-- 新增 -->
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.sinoservices.xascf.risk.model.RuleDefinitionModel">
+		INSERT INTO RM_RULE_DEFINITION(
+		RULE_PID,
+		RULE_NO,
+		RULE_NAME,
+		DESCRIPTION,
+		MODIFY_TIME,
+		MODIFIER,
+		CREATE_TIME,
+		CREATOR,
+		REC_VER,
+		REC_STATUS
+		) VALUES(
+		#{rulePid},
+		#{ruleNo},
+		#{ruleName},
+		#{description},
+		SYSDATE(),
+		#{modifier},
+		SYSDATE(),
+		#{creator},1,0
+		)
+	</insert>
+	
+	
+	<!-- 修改 -->
+	<update id="updateByModel" parameterType="com.sinoservices.xascf.risk.model.RuleDefinitionModel">
+		UPDATE RM_RULE_DEFINITION SET
+		<if test="ruleNo!=null and ruleNo!=''"> RULE_NO=#{ruleNo},</if>
+		<if test="ruleName!=null and ruleName!=''"> RULE_NAME=#{ruleName},</if>
+		<if test="description !=null and description !=''">	DESCRIPTION = #{description},</if>
+		<if test="recStatus!=null and recStatus!=''">	REC_STATUS = #{recStatus},</if>
+				Modify_Time = SYSDATE(),
+				Modifier =#{modifier},
+				Rec_Ver=Rec_Ver+1 
+				
+		WHERE RULE_PID=#{rulePid}	
+	</update>
+	
+	
+	<select id="getByPid" resultMap="ruleDefinitionResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  RM_RULE_DEFINITION
+		WHERE RULE_PID=#{rulePid}	
+	</select>
+	
+	<select id="getRuleListByParams" resultMap="ruleDefinitionResultMap" parameterType="com.sinoservices.xascf.risk.view.RuleDefinitionQueryConditionView">
+		<include refid="select"/>
+		FROM  RM_RULE_DEFINITION
+		<include refid="findByExample"/>
+	</select>
+
+</mapper>

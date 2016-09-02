@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.edi.mapper.EdiShipBillDetailMapper">
+	<resultMap type="com.sinoservices.xascf.edi.model.EdiShipBillDetailModel" id="EdiShipBillDetailModel">
+		<result property="shipBillDetailId" column="SHIP_BILL_DETAIL_ID"/>
+		<result property="shipBillId" column="SHIP_BILL_ID"/>
+		<result property="shipBillNo" column="SHIP_BILL_NO"/>
+		<result property="shipNo" column="SHIP_NO"/>
+		<result property="startPalce" column="START_PALCE"/>
+		<result property="toPlace" column="TO_PLACE"/>
+		<result property="consigneeName" column="CONSIGNEE_NAME"/>
+		<result property="serviceType" column="SERVICE_TYPE"/>
+		<result property="goodsName" column="GOODS_NAME"/>
+		<result property="goodsNum" column="GOODS_NUM"/>
+		<result property="goodsValume" column="GOODS_VALUME"/>
+		<result property="deliveryFee" column="DELIVERY_FEE"/>
+		<result property="operationFee" column="OPERATION_FEE"/>
+		<result property="insuranceFee" column="INSURANCE_FEE"/>
+		<result property="delivertoFee" column="DELIVERTO_FEE"/>
+		<result property="shipFee" column="SHIP_FEE"/>
+		<result property="shipPrice" column="SHIP_PRICE"/>
+		<result property="allPrice" column="ALL_PRICE"/>
+	</resultMap>  
+	
+	<sql id="select"> 
+		  SELECT 
+				SHIP_BILL_DETAIL_ID,
+				SHIP_BILL_ID,
+				SHIP_BILL_NO,
+				SHIP_NO,
+				START_PALCE,
+				TO_PLACE,
+				CONSIGNEE_NAME,
+				SERVICE_TYPE,
+				GOODS_NAME,
+				GOODS_NUM,
+				GOODS_VALUME,
+				DELIVERY_FEE,
+				OPERATION_FEE,
+				INSURANCE_FEE,
+				DELIVERTO_FEE,
+				SHIP_FEE,
+				SHIP_PRICE,
+				ALL_PRICE
+	</sql>
+	
+	<!-- 查询  -->
+	<select id="getEdiShipBillDetailByCondition" resultMap="EdiShipBillDetailModel" parameterType="com.sinoservices.xascf.edi.model.EdiShipBillDetailModel">
+		<include refid="select"/>  
+		FROM  EDI_SHIPBILLDETAIL
+		<include refid="findByExample"/> 
+	</select>
+	
+	<sql id="findByExample">
+		WHERE  1=1
+		<if test="shipBillDetailId !=null and  shipBillDetailId !=''">AND SHIPBILLDETAIL_ID = #{shipBillDetailId}</if>
+		<if test="shipBillId !=null and shipBillId != ''">AND SHIP_BILL_ID = #{shipBillId}</if>
+	</sql>
+
+</mapper>

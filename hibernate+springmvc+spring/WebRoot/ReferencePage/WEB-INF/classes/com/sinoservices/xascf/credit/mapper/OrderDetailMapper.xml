@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.OrderDetailMapper">
+	<resultMap type="com.sinoservices.xascf.credit.model.OrderDetailModel" id="dmOrderDetailModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="orderPid" column="ORDER_PID"/>
+		<result property="orderNo" column="ORDER_NO"/>
+		<result property="goodsName" column="GOODS_NAME"/>
+		<result property="goodsPackage" column="GOODS_PACKAGE"/>
+		<result property="goodsNum" column="GOODS_NUM"/>
+		<result property="goodsWeight" column="GOODS_WEIGHT"/>
+		<result property="goodsVolume" column="GOODS_VOLUME"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					ORDER_PID,
+					ORDER_NO,
+					GOODS_NAME,
+					GOODS_PACKAGE,
+					GOODS_NUM,
+					GOODS_WEIGHT,
+					GOODS_VOLUME,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="orderPid!=null and orderPid!=''"> AND ORDER_PID LIKE ('%${orderPid}%' )</if>
+		<if test="orderNo!=null and orderNo!=''"> AND ORDER_NO LIKE ('%${orderNo}%' )</if>
+		<if test="goodsName!=null and goodsName!=''"> AND GOODS_NAME LIKE ('%${goodsName}%' )</if>
+		<if test="goodsPackage!=null and goodsPackage!=''"> AND GOODS_PACKAGE LIKE ('%${goodsPackage}%' )</if>
+		<if test="goodsNum!=null and goodsNum!=''"> AND GOODS_NUM LIKE ('%${goodsNum}%' )</if>
+		<if test="goodsWeight!=null and goodsWeight!=''"> AND GOODS_WEIGHT LIKE ('%${goodsWeight}%' )</if>
+		<if test="goodsVolume!=null and goodsVolume!=''"> AND GOODS_VOLUME LIKE ('%${goodsVolume}%' )</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.credit.model.OrderDetailModel">
+		<include refid="count"/>
+		FROM  DM_ORDER_DETAIL
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="findByCondition" resultMap="dmOrderDetailModelResultMap" parameterType="com.sinoservices.xascf.credit.model.OrderDetailModel">
+		<include refid="select"/>
+		FROM  DM_ORDER_DETAIL
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.credit.model.OrderDetailModel">
+		INSERT INTO DM_ORDER_DETAIL (
+				PID,
+				ORDER_PID,
+				ORDER_NO,
+				GOODS_NAME,
+				GOODS_PACKAGE,
+				GOODS_NUM,
+				GOODS_WEIGHT,
+				GOODS_VOLUME,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{orderPid},
+			   #{orderNo},
+			   #{goodsName},
+			   #{goodsPackage},
+			   #{goodsNum},
+			   #{goodsWeight},
+			   #{goodsVolume},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			  1
+		)
+	</insert>
+	<!-- 插入list -->
+	<insert id="insertByList" parameterType="java.util.List">
+		INSERT INTO DM_ORDER_DETAIL (
+				PID,
+				ORDER_PID,
+				ORDER_NO,
+				GOODS_NAME,
+				GOODS_PACKAGE,
+				GOODS_NUM,
+				GOODS_WEIGHT,
+				GOODS_VOLUME,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES 
+			 <foreach collection="list" item="item" index="index"  separator=",">  
+			  ( #{item.pid},
+			   #{item.orderPid},
+			   #{item.orderNo},
+			   #{item.goodsName},
+			   #{item.goodsPackage},
+			   #{item.goodsNum},
+			   #{item.goodsWeight},
+			   #{item.goodsVolume},
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			  1)
+			</foreach>
+	</insert>
+	<!-- 根据订单号获取融资运单列表 -->
+	<select id="getPageByOrderNo" resultMap="dmOrderDetailModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_ORDER_DETAIL
+			WHERE ORDER_NO=#{_parameter}
+	</select>
+	<delete id="deleteByOrderNo" parameterType="String">
+      DELETE FROM DM_ORDER_DETAIL WHERE ORDER_NO=#{_parameter}
+  
+  </delete>
+	<update id="update" parameterType="com.sinoservices.xascf.credit.model.OrderDetailModel">
+		UPDATE DM_ORDER_DETAIL SET
+				ORDER_PID = #{orderPid},
+				ORDER_NO = #{orderNo},
+				GOODS_NAME = #{goodsName},
+				GOODS_PACKAGE = #{goodsPackage},
+				GOODS_NUM = #{goodsNum},
+				GOODS_WEIGHT = #{goodsWeight},
+				GOODS_VOLUME = #{goodsVolume},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus}
+				WHERE PID = #{pid}
+	</update>
+</mapper>

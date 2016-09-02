@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.CreditGuaranteeMapper">
+	<resultMap type="com.sinoservices.xascf.credit.view.CreditGuaranteeItem" id="creditGuaranteeItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="guaranteeCompanyName" column="GUARANTEE_NAME"/>
+		<result property="guaranteeAddress" column="GUARANTEE_ADDRESS"/>
+		<result property="guaranteeCapital" column="GUARANTEE_CAPITAL"/>
+		<result property="guaranteeContacts" column="GUARANTEE_CONTACTS"/>
+		<result property="tel" column="TEL"/>
+		<result property="mobile" column="MOBILE"/>
+		<result property="email" column="EMAIL"/>
+		<result property="guaranteeBusiness" column="GUARANTEE_BUSINESS"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="creditNo" column="CREDIT_NO"/>
+		<result property="guaranteeProtocolName" column="GUARANTEE_PROTOCOL_NAME"/>
+		<result property="guaranteeProtocolUrl" column="GUARANTEE_PROTOCOL_URL"/>
+		
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					GUARANTEE_NAME,
+					GUARANTEE_ADDRESS,
+					GUARANTEE_BUSINESS_URL,
+					GUARANTEE_CAPITAL,
+					GUARANTEE_CONTACTS,
+					TEL,
+					MOBILE,
+					EMAIL,
+					GUARANTEE_BUSINESS,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="pid!=null and pid!=''"> AND PID LIKE ('%'||'pid'||'%' )</if>
+		<if test="guaranteeName!=null and guaranteeName!=''"> AND GUARANTEE_NAME LIKE ('%'||'guaranteeName'||'%' )</if>
+		<if test="guaranteeAddress!=null and guaranteeAddress!=''"> AND GUARANTEE_ADDRESS LIKE ('%'||'guaranteeAddress'||'%' )</if>
+		<if test="guaranteeBusinessUrl!=null and guaranteeBusinessUrl!=''"> AND GUARANTEE_BUSINESS_URL LIKE ('%'||'guaranteeBusinessUrl'||'%' )</if>
+		<if test="guaranteeCapital!=null and guaranteeCapital!=''"> AND GUARANTEE_CAPITAL LIKE ('%'||'guaranteeCapital'||'%' )</if>
+		<if test="guaranteeContacts!=null and guaranteeContacts!=''"> AND GUARANTEE_CONTACTS LIKE ('%'||'guaranteeContacts'||'%' )</if>
+		<if test="tel!=null and tel!=''"> AND TEL LIKE ('%'||'tel'||'%' )</if>
+		<if test="mobile!=null and mobile!=''"> AND MOBILE LIKE ('%'||'mobile'||'%' )</if>
+		<if test="email!=null and email!=''"> AND EMAIL LIKE ('%'||'email'||'%' )</if>
+		<if test="guaranteeBusiness!=null and guaranteeBusiness!=''"> AND GUARANTEE_BUSINESS LIKE ('%'||'guaranteeBusiness'||'%' )</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.model.CreditGuaranteeModel">
+		<include refid="count"/>
+		FROM  DM_CREDIT_GUARANTEE
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="creditGuaranteeItemResultMap" parameterType="com.sinoservices.xascf.credit.model.CreditGuaranteeModel">
+		<include refid="select"/>
+		FROM  DM_CREDIT_GUARANTEE
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_CREDIT_GUARANTEE (
+				ID,
+				PID,
+				GUARANTEE_NAME,
+				GUARANTEE_ADDRESS,
+				GUARANTEE_BUSINESS_URL,
+				GUARANTEE_CAPITAL,
+				GUARANTEE_CONTACTS,
+				TEL,
+				MOBILE,
+				EMAIL,
+				GUARANTEE_BUSINESS,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS,
+		) VALUES (
+			   #{id},
+			   #{pid},
+			   #{guaranteeName},
+			   #{guaranteeAddress},
+			   #{guaranteeBusinessUrl},
+			   #{guaranteeCapital},
+			   #{guaranteeContacts},
+			   #{tel},
+			   #{mobile},
+			   #{email},
+			   #{guaranteeBusiness},
+			   #{remark},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus},
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE DM_CREDIT_GUARANTEE SET
+				ID = #{id},
+				PID = #{pid},
+				GUARANTEE_NAME = #{guaranteeName},
+				GUARANTEE_ADDRESS = #{guaranteeAddress},
+				GUARANTEE_BUSINESS_URL = #{guaranteeBusinessUrl},
+				GUARANTEE_CAPITAL = #{guaranteeCapital},
+				GUARANTEE_CONTACTS = #{guaranteeContacts},
+				TEL = #{tel},
+				MOBILE = #{mobile},
+				EMAIL = #{email},
+				GUARANTEE_BUSINESS = #{guaranteeBusiness},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus},
+	</update>
+	
+	<!-- 根据creditNo删除 -->
+	<delete id="deleteByCreditNo" parameterType="String">
+		DELETE FROM  DM_CREDIT_GUARANTEE 
+		WHERE
+			1=1
+			AND PID in ( SELECT GUARANTEE_COMPANY_PID from DM_CREDIT_GUARANTEE_REL  where CREDIT_NO=#{_parameter})
+			AND REC_STATUS='1'
+	</delete>
+	
+	<!-- 插入list -->
+	<insert id="insertList" parameterType="java.util.List">
+		INSERT INTO DM_CREDIT_GUARANTEE (
+				PID,
+				GUARANTEE_NAME,
+				GUARANTEE_ADDRESS,
+				GUARANTEE_CAPITAL,
+				GUARANTEE_CONTACTS,
+				TEL,
+				MOBILE,
+				EMAIL,
+				GUARANTEE_BUSINESS,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES 
+			<foreach collection="list" item="item" index="index" separator=",">
+			  ( #{item.pid},
+			   #{item.guaranteeCompanyName},
+			   #{item.guaranteeAddress},
+			   #{item.guaranteeCapital},
+			   #{item.guaranteeContacts},
+			   #{item.tel},
+			   #{item.mobile},
+			   #{item.email},
+			   #{item.guaranteeBusiness},
+			   #{item.remark},
+			   1,
+			   #{item.createTime},
+			   #{item.creator},
+			   #{item.modifyTime},
+			   #{item.modifier},
+			   1)
+			</foreach>
+	</insert>
+	
+	<!-- 根据creditNo查找所有的担保 -->
+	<select id="findByNo" resultMap="creditGuaranteeItemResultMap" parameterType="String">
+		SELECT 
+			a.ID,
+			a.PID,
+			a.GUARANTEE_NAME,
+			a.GUARANTEE_ADDRESS,
+			a.GUARANTEE_CAPITAL,
+			a.GUARANTEE_CONTACTS,
+			a.TEL,
+			a.MOBILE,
+			a.EMAIL,
+			a.GUARANTEE_BUSINESS,
+			a.REMARK,
+			a.REC_VER,
+			a.CREATE_TIME,
+			a.CREATOR,
+			a.MODIFY_TIME,
+			a.MODIFIER,
+			a.REC_STATUS,
+			b.CREDIT_NO,b.GUARANTEE_PROTOCOL_URL,
+			b.GUARANTEE_PROTOCOL_NAME
+		FROM DM_CREDIT_GUARANTEE a,DM_CREDIT_GUARANTEE_REL b
+		WHERE 
+			1=1
+			AND b.CREDIT_NO=#{_parameter}
+			AND a.PID=b.GUARANTEE_COMPANY_PID
+			AND a.REC_STATUS='1'
+			AND b.REC_STATUS='1'
+		
+	</select>
+</mapper>

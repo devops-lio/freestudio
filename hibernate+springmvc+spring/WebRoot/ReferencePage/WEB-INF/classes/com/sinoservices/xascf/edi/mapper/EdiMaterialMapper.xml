@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.edi.mapper.EdiMaterialMapper">
+	<resultMap type="com.sinoservices.xascf.edi.model.EdiMaterialModel" id="EdiMaterialModel">
+		<result property="materialId" column="MATERIAL_ID"/>
+		<result property="customerId" column="CUSTOMER_ID"/>
+		<result property="interfaceType" column="INTERFACE_TYPE"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileFlag" column="FILE_FLAG"/>	
+		<result property="fileUrl" column="FILE_URL"/> 
+		<result property="fileType" column="FILE_TYPE"/> 	
+		<result property="effectiveTime" column="EFFECTIVE_TIME"/>
+		<result property="materialPid" column="MATERIAL_PID"/> 
+	</resultMap>  
+	
+	<sql id="select"> 
+		  SELECT 
+		  	MATERIAL_ID,			
+	        CUSTOMER_ID, 
+	        INTERFACE_TYPE,
+	        FILE_NAME,		
+			FILE_FLAG,
+			FILE_URL,
+			FILE_TYPE,		
+			EFFECTIVE_TIME,
+			MATERIAL_PID
+	</sql>
+	
+	<!-- 查询  -->
+	<select id="getEdiMaterialByCondition" resultMap="EdiMaterialModel" parameterType="com.sinoservices.xascf.edi.model.EdiMaterialModel">
+		<include refid="select"/>  
+		FROM  EDI_MATERIAL
+		<include refid="findByExample"/> 
+	</select>
+	
+	<sql id="findByExample">
+		WHERE  1=1
+		<if test="materialId !=null and  materialId !=''">AND MATERIAL_ID LIKE ('%${materialId}%')</if>
+		<if test="customerId !=null and customerId != ''">AND CUSTOMER_ID LIKE ('%${customerId}%')</if>
+		<if test="interfaceType !=null and interfaceType != ''">AND INTERFACE_TYPE LIKE ('%${interfaceType}%')</if>
+	</sql>
+
+</mapper>

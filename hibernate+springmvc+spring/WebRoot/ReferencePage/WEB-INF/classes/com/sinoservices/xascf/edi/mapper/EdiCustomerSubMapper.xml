@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.edi.mapper.EdiCustomerSubMapper">
+
+	<resultMap type="com.sinoservices.xascf.edi.model.EdiCustomerSubModel" id="EdiCustomerSubModel">
+		<result property="customerSubId" column="CUSTOMER_SUB_ID"/>
+		<result property="customerId" column="CUSTOMER_ID"/>
+		<result property="customerName" column="CUSTOMER_NAME"/>
+		<result property="businesslicenseno" column="BUSINESSLICENSENO"/>
+		<result property="organizationCode" column="ORGANIZATION_CODE"/>
+		<result property="taxNo" column="TAX_NO"/> 
+		<result property="mainbusiness" column="MAINBUSINESS"/> 	
+		<result property="accountlicenseno" column="ACCOUNTLICENSENO"/>
+		<result property="roadmanagementNo" column="ROADMANAGEMENT_NO"/> 
+		<result property="corporate" column="CORPORATE"/>
+		<result property="registeredFund" column="REGISTERED_FUND"/>
+		<result property="scribedMoney" column="SCRIBED_MONEY"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="registeredTime" column="REGISTERED_TIME"/> 
+		<result property="industry" column="INDUSTRY"/>  
+		<result property="companyLevel" column="COMPANY_LEVEL"/>  
+		<result property="tel" column="TEL"/>  
+		<result property="fax" column="FAX"/>  
+		<result property="registeredAddress" column="REGISTERED_ADDRESS"/>  
+		<result property="officeAddress" column="OFFICE_ADDRESS"/>  
+		<result property="postalCode" column="POSTAL_CODE"/>  
+		<result property="email" column="EMAIL"/>  
+		<result property="remark" column="REMARK"/>  
+		
+	</resultMap>  
+	
+	<sql id="select"> 
+		  SELECT 
+		  	CUSTOMER_SUB_ID,			
+	        CUSTOMER_ID, 
+	        CUSTOMER_NAME,
+	        BUSINESSLICENSENO,		
+			ORGANIZATION_CODE,
+			TAX_NO,
+			MAINBUSINESS,		
+			ACCOUNTLICENSENO,
+			ROADMANAGEMENT_NO,	
+			CORPORATE,			
+			REGISTERED_FUND,		
+			SCRIBED_MONEY,				
+			CURRENCY,			
+			REGISTERED_TIME,			
+			INDUSTRY,			
+			COMPANY_LEVEL,			
+			TEL,			
+			FAX,			
+			REGISTERED_ADDRESS,			
+			OFFICE_ADDRESS,			
+			POSTAL_CODE,			
+			EMAIL,			
+			REMARK
+	</sql>
+	
+	<!-- 查询  -->
+	<select id="getEdiCustomerSubByCondition" resultMap="EdiCustomerSubModel" parameterType="com.sinoservices.xascf.edi.model.EdiCustomerSubModel">
+		<include refid="select"/>  
+		FROM  EDI_CUSTOMER_SUB
+		<include refid="findByExample"/> 
+	</select>
+	
+	<sql id="findByExample">
+		WHERE  1=1
+		<if test="customerId !=null and  customerId !=''">AND CUSTOMER_ID LIKE ('%${customerId}%')</if>
+		<if test="customerSubId !=null and customerSubId != ''">AND CUSTOMER_SUB_ID LIKE ('%${customerSubId}%')</if>
+	</sql>
+	
+</mapper>

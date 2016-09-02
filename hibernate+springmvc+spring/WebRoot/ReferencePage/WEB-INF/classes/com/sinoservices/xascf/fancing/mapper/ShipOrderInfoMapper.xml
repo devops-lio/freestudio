@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.ShipOrderInfoMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.view.ShipOrderInfoItem" id="shipOrderInfoItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="shipOrderPid" column="SHIP_ORDER_PID"/>
+		<result property="fancingOrderNo" column="FANCING_ORDERNO"/>
+		<result property="shipNo" column="SHIP_NO"/>
+		<result property="fancingMaterialNo" column="FANCING_MATERIAL_NO"/>
+		<result property="shipDate" column="SHIP_DATE"/>
+		<result property="shipConsigneePid" column="SHIP_CONSIGNEE_PID"/>
+		<result property="shipConsigneeName" column="SHIP_CONSIGNEE_NAME"/>
+		<result property="shipPrice" column="SHIP_PRICE"/>
+		<result property="shipName" column="SHIP_NAME"/>
+		<result property="shipNum" column="SHIP_NUM"/>
+		<result property="shipFrom" column="SHIP_FROM"/>
+		<result property="shipTo" column="SHIP_TO"/>
+		<result property="shipClient" column="SHIP_CLIENT"/>
+		<result property="shipCarNo" column="SHIP_CAR_NO"/>
+		<result property="shipStatus" column="SHIP_STATUS"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="createTimeStr" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+		  SELECT 
+			ID,
+			SHIP_ORDER_PID,
+			FANCING_ORDERNO,
+			SHIP_NO,
+			FANCING_MATERIAL_NO,
+			SHIP_DATE,
+			SHIP_PRICE,
+			SHIP_NAME,
+			SHIP_NUM,
+			SHIP_FROM,
+			SHIP_TO,
+			SHIP_CLIENT,
+			SHIP_CONSIGNEE_PID,
+			SHIP_CONSIGNEE_NAME,
+			SHIP_CAR_NO,
+			SHIP_STATUS,
+			REMARK,
+			REC_VER,
+			CREATE_TIME,
+			CREATOR,
+			MODIFY_TIME,
+			MODIFIER,
+			REC_STATUS
+		]]>
+	</sql>
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+	WHERE 1=1
+	<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+	<if test="shipOrderPid!=null and shipOrderPid!=''"> AND SHIP_ORDER_PID LIKE ('%'||'shipOrderPid'||'%' )</if>
+	<if test="shipNo!=null and shipNo!=''"> AND SHIP_NO LIKE ('%'||'shipNo'||'%' )</if>
+	<if test="fancingMaterialNo!=null and fancingMaterialNo!=''"> AND FANCING_MATERIAL_NO LIKE ('%'||'fancingMaterialNo'||'%' )</if>
+	<if test="shipDate!=null and shipDate!=''"> AND SHIP_DATE LIKE ('%'||'shipDate'||'%' )</if>
+	<if test="shipPrice!=null and shipPrice!=''"> AND SHIP_PRICE LIKE ('%'||'shipPrice'||'%' )</if>
+	<if test="shipFrom!=null and shipFrom!=''"> AND SHIP_FROM LIKE ('%'||'shipFrom'||'%' )</if>
+	<if test="shipTo!=null and shipTo!=''"> AND SHIP_TO LIKE ('%'||'shipTo'||'%' )</if>
+	<if test="shipClient!=null and shipClient!=''"> AND SHIP_CLIENT LIKE ('%'||'shipClient'||'%' )</if>
+	<if test="shipCarNo!=null and shipCarNo!=''"> AND SHIP_CAR_NO LIKE ('%'||'shipCarNo'||'%' )</if>
+	<if test="shipStatus!=null and shipStatus!=''"> AND SHIP_STATUS LIKE ('%'||'shipStatus'||'%' )</if>
+	<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+	<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+	<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+	<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+	<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+	<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+	<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.ShipOrderInfoCondition">
+		<include refid="count"/>
+		FROM  DM_SHIP_ORDER_INFO
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="shipOrderInfoItemResultMap" parameterType="com.sinoservices.xascf.fancing.view.ShipOrderInfoCondition">
+		<include refid="select"/>
+		FROM  DM_SHIP_ORDER_INFO
+		<include refid="findByExample"/>
+	</select>
+	<!-- 获取所有运单单号list -->
+	<select id="getShipNoList" resultType="String" >
+		SELECT SHIP_NO
+			FROM  DM_SHIP_ORDER_INFO
+	</select>
+	<!-- 根据融资单号获取融资运单列表 -->
+	<select id="getPageByOrderNo" resultMap="shipOrderInfoItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_SHIP_ORDER_INFO
+			WHERE FANCING_ORDERNO=#{_parameter}
+	
+	</select>
+	<update id="updateByModel" parameterType="com.sinoservices.xascf.fancing.model.ShipOrderInfoModel">
+		UPDATE DM_SHIP_ORDER_INFO SET
+				<if test="shipNo!=null and shipNo!=''"> SHIP_NO = #{shipNo},</if>
+				<if test="shipClient!=null and shipClient!=''"> SHIP_CLIENT = #{shipClient},</if>
+				<if test="shipConsigneePid!=null and shipConsigneePid!=''"> SHIP_CONSIGNEE_PID = #{shipConsigneePid},</if>
+				<if test="shipConsigneeName!=null and shipConsigneeName!=''"> SHIP_CONSIGNEE_NAME = #{shipConsigneeName},</if>
+				<if test="shipCarNo!=null and shipCarNo!=''"> SHIP_CAR_NO = #{shipCarNo},</if>
+				<if test="shipFrom!=null and shipFrom!=''"> SHIP_FROM = #{shipFrom},</if>
+				<if test="shipTo!=null and shipTo!=''"> SHIP_TO = #{shipTo},</if>
+				<if test="shipPrice!=null and shipPrice!=''"> SHIP_PRICE = #{shipPrice},</if>
+				<if test="shipName!=null and shipName!=''"> SHIP_NAME = #{shipName},</if>
+				<if test="shipNum!=null and shipNum!=''"> SHIP_NUM = #{shipNum},</if>
+				<if test="shipStatus!=null and shipStatus!=''"> SHIP_STATUS = #{shipStatus},</if>
+			 	REMARK = #{remark},
+				REC_VER = REC_VER+1,
+				MODIFY_TIME = #{modifyTime}
+			WHERE 1=1   
+			<if test="shipNo!=null and shipNo!=''"> AND SHIP_NO=  #{shipNo}</if>
+			<if test="shipOrderPid!=null and shipOrderPid!=''">AND SHIP_ORDER_PID = #{shipOrderPid}</if>
+	</update>		
+	<insert id="insert" parameterType="com.sinoservices.xascf.fancing.model.ShipOrderInfoModel">
+		INSERT INTO DM_SHIP_ORDER_INFO (
+				SHIP_ORDER_PID,FANCING_ORDERNO,	SHIP_NO,FANCING_MATERIAL_NO,SHIP_DATE,SHIP_PRICE,SHIP_NAME,	SHIP_NUM,SHIP_FROM,	SHIP_TO,SHIP_CLIENT,SHIP_CAR_NO,SHIP_STATUS,
+				REMARK,	REC_VER,CREATE_TIME,CREATOR,REC_STATUS
+		) VALUES (
+			   #{shipOrderPid},#{fancingOrderNo}, #{shipNo}, #{fancingMaterialNo}, #{shipDate},  #{shipPrice}, #{shipName}, #{shipNum}, #{shipFrom}, #{shipTo}, #{shipClient}, #{shipCarNo}, #{shipStatus},
+			   #{remark}, #{recVer}, SYSDATE(), #{creator}, #{recStatus}
+		)
+	</insert>
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO DM_SHIP_ORDER_INFO (
+				SHIP_ORDER_PID,FANCING_ORDERNO,	SHIP_NO,FANCING_MATERIAL_NO,SHIP_DATE,SHIP_PRICE,SHIP_NAME,	SHIP_NUM,
+				SHIP_FROM,SHIP_TO,SHIP_CONSIGNEE_PID,SHIP_CONSIGNEE_NAME,
+				SHIP_CLIENT,SHIP_CAR_NO,SHIP_STATUS,REMARK,	REC_VER,CREATE_TIME,CREATOR,REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( #{item.shipOrderPid}, #{item.fancingOrderNo},#{item.shipNo}, #{item.fancingMaterialNo}, #{item.shipDate},
+			   #{item.shipPrice}, #{item.shipName}, #{item.shipNum},   #{item.shipFrom},  #{item.shipTo},#{item.shipConsigneePid},#{item.shipConsigneeName},
+			    #{item.shipClient}, #{item.shipCarNo},
+			   #{item.shipStatus},  #{item.remark},  1, SYSDATE(), #{item.creator},  #{item.recStatus})  
+	    </foreach>  
+  </insert>  
+  <delete id="deleteByOrderNo" parameterType="String">
+      DELETE FROM DM_SHIP_ORDER_INFO WHERE FANCING_ORDERNO=#{_parameter}
+  
+  </delete>
+  
+  <update id="updateByPid" parameterType="com.sinoservices.xascf.fancing.model.ShipOrderInfoModel">
+		UPDATE DM_SHIP_ORDER_INFO SET
+			<if test="shipNo!=null and shipNo!=''">	SHIP_NO = #{shipNo},</if>
+			<if test="fancingMaterialNo!=null and fancingMaterialNo!=''">	FANCING_MATERIAL_NO = #{fancingMaterialNo},</if>
+			<if test="fancingOrderNo!=null and fancingOrderNo!=''">	FANCING_ORDERNO = #{fancingOrderNo},</if>
+			<if test="shipDate!=null and shipDate!=''">	SHIP_DATE = #{shipDate},</if>
+			<if test="shipPrice!=null and shipPrice!=''">	SHIP_PRICE = #{shipPrice},</if>
+			<if test="shipName!=null and shipName!=''">	SHIP_NAME = #{shipName},</if>
+			<if test="shipNum!=null and shipNum!=''">	SHIP_NUM = #{shipNum},</if>
+			<if test="shipFrom!=null and shipFrom!=''">	SHIP_FROM = #{shipFrom},</if>
+			<if test="shipTo!=null and shipTo!=''">	SHIP_TO = #{shipTo},</if>
+			<if test="shipClient!=null and shipClient!=''">	SHIP_CLIENT = #{shipClient},</if>
+			<if test="shipCarNo!=null and shipCarNo!=''">	SHIP_CAR_NO = #{shipCarNo},</if>
+			<if test="shipStatus!=null and shipStatus!=''">	SHIP_STATUS = #{shipStatus},</if>
+			<if test="remark!=null and remark!=''">	REMARK = #{remark},</if>
+			<if test="modifier!=null and modifier!=''">	MODIFIER = #{modifier},</if>
+			<if test="recStatus!=null and recStatus!=''">	REC_STATUS = #{recStatus},</if>
+			REC_VER = REC_VER+1,
+				MODIFY_TIME =  SYSDATE()
+		WHERE 	SHIP_ORDER_PID=	#{shipOrderPid}
+	</update>
+	<!-- 批量执行更新 -->
+	<update id="updateByList" parameterType="java.util.List">
+			UPDATE DM_SHIP_ORDER_INFO 
+			<trim prefix="set" suffixOverrides=","> 
+	          <!-- 更新的字段集合 --> 
+	          <trim prefix="SHIP_NO =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.shipNo!=null">  
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then #{i.shipNo}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="FANCING_MATERIAL_NO =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.fancingMaterialNo!=null">  
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then #{i.fancingMaterialNo}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="SHIP_DATE =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.shipDate!=null">  
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then #{i.shipDate}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="SHIP_PRICE =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.shipPrice!=null">  
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then #{i.shipPrice}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="SHIP_NAME =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.shipName!=null">  
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then #{i.shipName}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="SHIP_NUM =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.shipNum!=null">  
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then #{i.shipNum}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="SHIP_FROM =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.shipFrom!=null">  
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then #{i.shipFrom}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="SHIP_TO =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.shipTo!=null">  
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then #{i.shipTo}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="SHIP_CLIENT =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.shipClient!=null">  
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then #{i.shipClient}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="SHIP_CAR_NO =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.shipCarNo!=null">  
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then #{i.shipCarNo}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	          <trim prefix="SHIP_STATUS =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.shipStatus!=null">  
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then #{i.shipStatus}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	           <trim prefix="Modifier =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                     <if test="i.modifier!=null">  
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then #{i.modifier}  
+	                     </if>  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Modify_Time =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then SYSDATE()  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Rec_Ver =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (SHIP_ORDER_PID=#{i.shipOrderPid}) then Rec_Ver+1  
+	              </foreach>  
+	           </trim>
+         </trim>   
+         where   
+         <foreach collection="list" separator="or" item="i" index="index" > 
+         <if test="i.shipOrderPid!=null">  
+          (SHIP_ORDER_PID=#{i.shipOrderPid}) 
+           </if>   
+      	</foreach>  
+	
+	</update>
+</mapper>

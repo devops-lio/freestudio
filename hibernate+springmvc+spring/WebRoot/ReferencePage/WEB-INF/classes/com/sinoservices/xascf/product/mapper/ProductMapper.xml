@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.product.mapper.ProductMapper">
+	<resultMap type="com.sinoservices.xascf.product.model.ProductModel" id="productModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="productPid" column="PRODUCT_PID"/>
+		<result property="productNo" column="PRODUCT_NO"/>
+		<result property="name" column="NAME"/>
+		<result property="description" column="DESCRIPTION"/>
+		<result property="status" column="STATUS"/>
+		<result property="mostAmount" column="MOST_AMOUNT"/>
+		<result property="amount" column="AMOUNT"/>
+		<result property="actualAmount" column="ACTUAL_AMOUNT"/>
+		<result property="share" column="SHARE"/>
+		<result property="leastRate" column="LEAST_RATE"/>
+		<result property="leastCost" column="LEAST_COST"/>
+		<result property="publicTime" column="PUBLIC_TIME"/>
+		<result property="startTime" column="START_TIME"/>
+		<result property="endTime" column="END_TIME"/>
+		<result property="renewTerm" column="RENEW_TERM"/>
+		<result property="aunualRate" column="AUNUAL_RATE"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="redeemType" column="REDEEMTYPE"/>
+		<result property="surplus" column="SURPLUS"/>
+		<result property="isTask" column="IS_TASK"/>
+		<result property="minRate" column="MIN_RATE"/>
+		<result property="maxRate" column="MAX_RATE"/>
+		<result property="unitPrice" column="UNIT_PRICE"/>
+		
+		
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PRODUCT_PID,
+					PRODUCT_NO,
+					NAME,
+					DESCRIPTION,
+					STATUS,
+					MOST_AMOUNT,
+					AMOUNT,
+					ACTUAL_AMOUNT,
+					SHARE,
+					LEAST_RATE,
+					LEAST_COST,
+					PUBLIC_TIME,
+					START_TIME,
+					END_TIME,
+					RENEW_TERM,
+					AUNUAL_RATE,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS,
+					REDEEMTYPE,
+					SURPLUS,
+					IS_TASK,
+					MIN_RATE,
+					MAX_RATE,
+					UNIT_PRICE
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%${id}%' )</if>
+		<if test="productPid!=null and productPid!=''"> AND PRODUCT_PID LIKE ('%${productPid}%' )</if>
+		<if test="productNo!=null and productNo!=''"> AND PRODUCT_NO LIKE ('%${productNo}%' )</if>
+		<if test="name!=null and name!=''"> AND NAME LIKE ('%${name}%' )</if>
+		<if test="description!=null and description!=''"> AND DESCRIPTION LIKE ('%${description}%' )</if>
+		<if test="status!=null and status!=''"> AND STATUS =${status}</if>
+		<if test="mostAmount!=null and mostAmount!=''"> AND MOST_AMOUNT =${mostAmount}</if>
+		<if test="amount!=null and amount!=''"> AND AMOUNT =${amount}%' </if>
+		<if test="actualAmount!=null and actualAmount!=''"> AND ACTUAL_AMOUNT =${actualAmount}</if>
+		<if test="share!=null and share!=''"> AND SHARE=${share}</if>
+		<if test="leastRate!=null and leastRate!=''"> AND LEAST_RATE =${leastRate}</if>
+		<if test="leastCost!=null and leastCost!=''"> AND LEAST_COST =${leastCost}</if>
+		<if test="publicTime!=null and publicTime!=''"> AND PUBLIC_TIME =${publicTime}</if>
+		<if test="startTime!=null and startTime!=''"> AND START_TIME =${startTime}</if>
+		<if test="endTime!=null and endTime!=''"> AND END_TIME =#{endTime}</if>
+		<if test="renewTerm!=null and renewTerm!=''"> AND RENEW_TERM =${renewTerm}</if>
+		<if test="aunualRate!=null and aunualRate!=''"> AND AUNUAL_RATE =${aunualRate}</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%${recVer}%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%${createTime}%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%${modifyTime}%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%' )</if>
+		<if test="redeemType!=null and redeemType!=''"> AND REDEEMTYPE LIKE ('%${redeemType}%' )</if>
+		<if test="surplus!=null and surplus!=''"> AND SURPLUS = ${surplus} </if>
+		<if test="isTask!=null and isTask!=''"> AND IS_TASK = '${isTask}'</if>
+		<if test="minRate!=null and minRate!=''"> AND MIN_RATE = ${minRate} </if>
+		<if test="maxRate!=null and maxRate!=''"> AND MAX_RATE = '${maxRate}'</if>
+		<if test="unitPrice!=null and unitPrice!=''"> AND UNIT_PRICE = '${unitPrice}'</if>
+		
+	</sql>
+	
+	<!-- 根据条件查找数量 -->
+	<select id="countByCondition" resultType="int" parameterType="com.sinoservices.xascf.product.view.ProductQueryConditionView">
+		<include refid="count"/>
+		FROM  LM_PRODUCT
+		<include refid="findByExample"/>
+	</select>
+	
+	<!-- 根据条件查找 -->
+	<select id="findByCondition" resultMap="productModelResultMap" parameterType="com.sinoservices.xascf.product.view.ProductQueryConditionView">
+		<include refid="select"/>
+		FROM  LM_PRODUCT
+		<include refid="findByExample"/>
+	</select>
+	
+	<!-- 新增理财产品 -->
+	<insert id="insert">
+		INSERT INTO LM_PRODUCT (
+				ID,
+				PRODUCT_PID,
+				PRODUCT_NO,
+				NAME,
+				DESCRIPTION,
+				STATUS,
+				MOST_AMOUNT,
+				AMOUNT,
+				ACTUAL_AMOUNT,
+				SHARE,
+				LEAST_RATE,
+				LEAST_COST,
+				PUBLIC_TIME,
+				START_TIME,
+				END_TIME,
+				RENEW_TERM,
+				AUNUAL_RATE,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS,
+				REDEEMTYPE,
+				SURPLUS,
+				IS_TASK,
+				MIN_RATE,
+				MAX_RATE,
+				UNIT_PRICE
+				
+		) VALUES (
+			   #{id},
+			   #{productPid},
+			   #{productNo},
+			   #{name},
+			   #{description},
+			   #{status},
+			   #{mostAmount},
+			   #{amount},
+			   #{actualAmount},
+			   #{share},
+			   #{leastRate},
+			   #{leastCost},
+			   #{publicTime},
+			   #{startTime},
+			   #{endTime},
+			   #{renewTerm},
+			   #{aunualRate},
+			   #{recVer},
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus},
+			   #{redeemType},
+			   #{surplus},
+			   #{isTask},
+			   #{minRate},
+			   #{maxRate},
+			   #{unitPrice}
+			   
+			   
+			   
+			   
+		);
+	</insert>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="com.sinoservices.xascf.product.model.ProductModel">
+		UPDATE LM_PRODUCT
+		<set> 	
+			<if test="id != null and id != '' "> ID = ${id}, </if> 
+			<if test="productPid != null and productPid != '' "> PRODUCT_PID = '${productPid}', </if> 
+			<if test="productNo != null and productNo != '' "> PRODUCT_NO = '${productNo}', </if> 
+			<if test="name != null and name != '' "> NAME = '${name}', </if> 
+			<if test="description != null and description != '' "> DESCRIPTION = '${description}', </if> 
+			<if test="status != null and status != '' "> STATUS = '${status}', </if> 
+			<if test="mostAmount != null and mostAmount != '' "> MOST_AMOUNT = ${mostAmount}, </if> 
+			<if test="amount != null and amount != '' "> AMOUNT = ${amount}, </if> 
+			<if test="actualAmount != null and actualAmount != '' "> ACTUAL_AMOUNT = ${actualAmount}, </if> 
+			<if test="share != null and share != '' "> SHARE = ${share}, </if> 
+			<if test="leastRate != null and leastRate != '' "> LEAST_RATE = ${leastRate}, </if> 
+			<if test="leastCost != null and leastCost != '' "> LEAST_COST = ${leastCost}, </if> 
+			<if test="startTime != null and startTime != '' "> START_TIME = '${startTime}', </if> 
+			<if test="endTime != null and endTime != '' "> END_TIME = '${endTime}', </if> 
+			<if test="renewTerm != null and renewTerm != '' "> RENEW_TERM = '${renewTerm}', </if> 
+			<if test="aunualRate != null and aunualRate != '' "> AUNUAL_RATE = ${aunualRate}, </if> 
+			<if test="recVer != null and recVer != '' "> REC_VER = '${recVer}', </if> 
+			<if test="createTime != null and createTime != '' "> CREATE_TIME = '${createTime}', </if> 
+			<if test="creator != null and creator != '' "> CREATOR = '${creator}', </if> 
+			<if test="modifyTime != null and modifyTime != '' "> MODIFY_TIME = '${modifyTime}', </if> 
+			<if test="modifier != null and modifier != '' "> MODIFIER = '${modifier}', </if> 
+			<if test="recStatus != null and recStatus != '' "> REC_STATUS = '${recStatus}', </if> 
+			<if test="redeemType != null and redeemType != '' "> REDEEMTYPE = '${redeemType}', </if> 
+			<if test="surplus != null and surplus != '' "> SURPLUS = '${surplus}', </if> 
+			<if test="isTask != null and isTask != '' "> IS_TASK = '${isTask}', </if> 
+			<if test="minRate != null and minRate != '' "> MIN_RATE = '${minRate}', </if> 
+			<if test="maxRate != null and maxRate != '' "> MAX_RATE = '${maxRate}', </if> 
+			<if test="unitPrice != null and unitPrice != '' "> UNIT_PRICE = '${unitPrice}', </if> 
+			<if test="publicTime != null and publicTime != '' "> PUBLIC_TIME=#{publicTime} </if> 
+		</set>
+		WHERE
+			1=1
+			AND PRODUCT_PID='${productPid}'
+			AND REC_STATUS="1"
+			
+	</update>
+	
+	<!-- 根据pid查找  编辑 -->
+	<select id="findByPid" resultMap="productModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  LM_PRODUCT
+		WHERE
+			1=1
+			AND PRODUCT_PID = #{_parameter}
+			AND REC_STATUS="1"
+	</select>
+	
+	<!-- 根据pid删除 -->
+    <update id="deleteById" parameterType="String">
+    	UPDATE LM_PRODUCT
+    	 SET 
+    	 	REC_STATUS='0'
+    	 WHERE 1=1
+    	  AND PRODUCT_PID=#{_parameter}
+    </update>
+    
+    <!-- 改变状态 -->
+    <update id="publish" parameterType="com.sinoservices.xascf.product.model.ProductModel">
+    	UPDATE LM_PRODUCT
+    	 <set> 
+    	 	<if test="publicTime != null and publicTime != '' "> PUBLIC_TIME=#{publicTime}, </if> 
+    	 	STATUS=${status}
+    	 </set> 	
+    	 WHERE 1=1
+    	  AND PRODUCT_PID=#{productPid}
+    	  AND REC_STATUS="1"
+    </update>
+    
+    <!-- 根据名称查找 -->
+	<select id="findByName" resultMap="productModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  LM_PRODUCT
+		WHERE
+			1=1
+			AND NAME = #{_parameter}
+			AND REC_STATUS="1"
+	</select>
+	
+	<!-- 获取所有的发布期的未加入任务的理财产品 -->
+	<select id="getProduct" resultMap="productModelResultMap">
+		<include refid="select"/>
+		FROM  LM_PRODUCT
+		WHERE
+			1=1
+			AND IS_TASK = '0'
+			AND STATUS='2'
+			AND REC_STATUS="1"
+	</select>
+	
+	<!-- 根据条件查找 -->
+	<select id="getListCondition" resultMap="productModelResultMap" parameterType="com.sinoservices.xascf.product.view.ProductQueryConditionView">
+		<include refid="select"/>
+		FROM  LM_PRODUCT
+		<include refid="findByExample"/>
+	</select>
+</mapper>

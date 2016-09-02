@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.bill.mapper.BillMapper">
+	<resultMap type="com.sinoservices.xascf.bill.view.FancingBillItem" id="fancingBillItemResultMap">
+		<result property="menberPid" column="MENBER_PID"/>
+		<result property="pid" column="PID"/>
+		<result property="menberName" column="MEMBER_NAME"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="billType" column="BILL_TYPE"/>
+		<result property="billTypeEn" column="BILL_TYPE"/>
+		<result property="billNo" column="BILL_NO"/>
+		<result property="billPno" column="BILL_PNO"/>
+		<result property="startDate" column="START_DATE"/>
+		<result property="rebackDate" column="REBACK_DATE"/>
+		<result property="latestTime" column="LATEST_TIME"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="createTimeStr" column="CREATE_TIME"/>
+		<result property="repayTime" column="REPAYMENT_TIME"/>
+		<result property="billPrice" column="BILL_PRICE"/>
+		<result property="backPrice" column="BACK_PRICE"/>
+		<result property="remainingPrice" column="REMAINING_PRICE"/>
+		<result property="billStatus" column="BILL_STATUS"/>
+		<result property="remark" column="REMARK"/>
+		<result property="rate" column="RATE"/>
+		<result property="delayDate" column="DELAY_DATE"/>
+		<result property="delayMulpitle" column="DELAY_MULPITLE"/>
+		<result property="rateCycle" column="RATE_CYCLE"/>
+		<result property="buyerPid" column="BUYER_PID"/>
+		<result property="buyerName" column="BUYER_NAME"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					FB.MENBER_PID,FB.PID,
+					FB.FANCING_ORDER_NO,
+					FB.BILL_TYPE,
+					FO.BUYER_PID,
+					FO.BUYER_NAME,
+					FB.BILL_NO,FB.BILL_PNO,
+					FB.BILL_STATUS,
+					FB.BILL_PRICE,
+					IFNULL(BRR.REPAYMENT_PRICE, 0) AS BACK_PRICE,
+					(BILL_PRICE - (IFNULL(BRR.REPAYMENT_PRICE, 0))) AS REMAINING_PRICE,
+					FB.REBACK_DATE,	BR.REPAYMENT_TIME,
+					FB.START_DATE,FB.LATEST_TIME,
+					SC.MEMBER_NAME,
+					FB.CREATE_TIME AS CREATE_TIME,
+					FB.REMARK
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="menberPid!=null and menberPid!=''"> AND FB.MENBER_PID = #{menberPid} </if>
+		<if test="pid !=null and pid !=''"> AND FB.PID = #{pid} </if>
+		<if test="fancingBillNo !=null and fancingBillNo !=''"> AND FB.BILL_NO LIKE ('%${fancingBillNo}%')</if>
+		<if test="fancingBillPno !=null and fancingBillPno !=''"> AND FB.BILL_PNO = #{fancingBillPno}</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FB.FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%' )</if>
+		<if test="memberName!=null and memberName!=''"> AND SC.MEMBER_NAME LIKE ('%${memberName}%' )</if>
+		<if test="(createTimeFrom!=null and createTimeFrom!='') and (createTimeTo==null or createTimeTo == '') "> AND  FB.REBACK_DATE &gt;= #{createTimeFrom}</if>
+		<if test="(createTimeFrom==null or createTimeFrom=='') and (createTimeTo!=null and createTimeTo != '') "> AND  FB.REBACK_DATE &lt;  DATE_ADD( #{createTimeTo},INTERVAL 1 DAY)</if>
+		<if test="(createTimeFrom!=null and createTimeFrom!='') and (createTimeTo!=null and createTimeTo != '') "> AND  FB.REBACK_DATE between #{createTimeFrom} and DATE_ADD( #{createTimeTo},INTERVAL 1 DAY)</if> 
+		<if test="billTypes!=null and billTypes!=''"> AND FB.BILL_TYPE in
+			<foreach collection="billTypes" item="type"  open="(" separator="," close=")">  
+		        	#{type} 
+			</foreach> 
+		</if>
+		<if test="billStatuses!=null and billStatuses.length!=0"> AND FB.BILL_STATUS in
+			<foreach collection="billStatuses" item="type"  open="(" separator="," close=")">  
+		        	#{type} 
+			</foreach> 
+		</if>
+		<if test="recStatus!=null and recStatus!=''"> AND FB.REC_STATUS =#{recStatus}</if>
+		<if test="billStatus!=null and billStatus!=''"> AND FB.BILL_STATUS = #{billStatus} </if>
+		<if test="billType!=null and billType!=''"> AND FB.BILL_TYPE = #{billType} </if>
+		<if test="rebackDate !=null and rebackDate != ''"> AND  FB.REBACK_DATE &lt;  DATE_ADD( #{rebackDate},INTERVAL 1 DAY)</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.bill.view.FancingBillCondition">
+		SELECT COUNT(1) 
+		FROM (
+		<include refid="select"/>
+		FROM
+				DM_FANCING_BILL FB
+			LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO = FB.BILL_NO
+			 LEFT JOIN DM_FANCING_ORDER FO ON FO.FANCING_ORDER_NO=FB.FANCING_ORDER_NO
+			LEFT JOIN SS_CUSTOMER SC ON FB.MENBER_PID = SC.MEMBER_PID
+			LEFT JOIN 
+				(SELECT SUM(BR.REPAYMENT_PRICE) AS REPAYMENT_PRICE,BR.BILL_NO
+					FROM DM_BILLREBACK_RECORD BR
+						GROUP BY BR.BILL_NO)
+				 BRR ON BRR.BILL_NO = FB.BILL_NO
+				 <include refid="findByExample"/>
+				 GROUP BY FB.BILL_NO
+				 ORDER BY  FB.BILL_NO )TT
+	</select>
+	<select id="findByCondition" resultMap="fancingBillItemResultMap" parameterType="com.sinoservices.xascf.bill.view.FancingBillCondition">
+		<include refid="select"/>
+		FROM
+			DM_FANCING_BILL FB
+		LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO = FB.BILL_NO
+		 LEFT JOIN DM_FANCING_ORDER FO ON FO.FANCING_ORDER_NO=FB.FANCING_ORDER_NO
+		LEFT JOIN SS_CUSTOMER SC ON FB.MENBER_PID = SC.MEMBER_PID
+		LEFT JOIN 
+			(SELECT SUM(BR.REPAYMENT_PRICE) AS REPAYMENT_PRICE,BR.BILL_NO
+				FROM DM_BILLREBACK_RECORD BR
+					GROUP BY BR.BILL_NO)
+			 BRR ON BRR.BILL_NO = FB.BILL_NO
+		<include refid="findByExample"/>
+		GROUP BY FB.BILL_NO
+		<if test="sortMode==null or sortMode==''">ORDER BY FB.BILL_NO </if>
+		<if test="sortMode=='1'.toString()">ORDER BY FB.BILL_STATUS='20',FB.REBACK_DATE </if>
+	</select>
+	<!-- 再融资账单列表 -->
+	<select id="getFancingByCondition" resultMap="fancingBillItemResultMap" parameterType="com.sinoservices.xascf.bill.view.FancingBillCondition">
+		SELECT 
+					FB.MENBER_PID,FB.PID,
+					FB.FANCING_ORDER_NO,
+					FB.BILL_TYPE,
+					FB.BILL_NO,FB.BILL_PNO,
+					FB.BILL_STATUS,
+					FB.BILL_PRICE,
+					IFNULL(BRR.REPAYMENT_PRICE, 0) AS BACK_PRICE,
+					(BILL_PRICE - (IFNULL(BRR.REPAYMENT_PRICE, 0))) AS REMAINING_PRICE,
+					FB.REBACK_DATE,	BR.REPAYMENT_TIME,
+					FB.START_DATE,FB.LATEST_TIME,
+					SC.MEMBER_NAME,
+					FB.CREATE_TIME AS CREATE_TIME,
+					FB.REMARK
+		FROM
+			DM_FANCING_BILL FB
+		LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO = FB.BILL_NO
+		LEFT JOIN SS_CUSTOMER SC ON FB.MENBER_PID = SC.MEMBER_PID
+		LEFT JOIN 
+			(SELECT SUM(BR.REPAYMENT_PRICE) AS REPAYMENT_PRICE,BR.BILL_NO
+				FROM DM_BILLREBACK_RECORD BR
+					GROUP BY BR.BILL_NO)
+			 BRR ON BRR.BILL_NO = FB.BILL_NO
+		<include refid="findByExample"/>
+		AND FB.BILL_NO NOT IN(SELECT DAB.BILL_NO FROM DM_AGFANCING_BILL DAB WHERE 1=1 AND DAB.REC_STATUS='1')
+		AND FB.BILL_STATUS!='20'
+		GROUP BY BILL_NO
+		ORDER BY  FB.BILL_NO
+	</select>
+	<select id="getItemByBillNo" resultMap="fancingBillItemResultMap" parameterType="String">
+		SELECT 
+				FB.BILL_NO,FB.BILL_PNO,FB.PID,
+				FB.FANCING_ORDER_NO,
+				FB.BILL_TYPE,
+				BILL_PRICE,
+				FB.CREATE_TIME,FB.START_DATE,
+				FB.REBACK_DATE,
+				IFNULL(SUM(BR.REPAYMENT_PRICE),0) as BACK_PRICE,
+				BILL_PRICE -(IFNULL(SUM(BR.REPAYMENT_PRICE),0)) as REMAINING_PRICE,
+				FB.MENBER_PID,
+				FB.TERM,
+				FC.RATE,
+				FC.DELAY_DATE,
+				FC.DELAY_MULPITLE,
+				FC.COMPOUND_TYPE AS RATE_CYCLE,
+				SC.MEMBER_NAME
+			FROM	DM_FANCING_BILL FB
+			LEFT JOIN DM_FANCING_ORDER FO ON FB.FANCING_ORDER_NO= FO.FANCING_ORDER_NO
+			LEFT JOIN DM_FANCING_CONTRACT FC ON FO.CONTRACT_NO = FC.CONTRACT_NO
+			LEFT JOIN SS_CUSTOMER SC ON FB.MENBER_PID=SC.MEMBER_PID
+			LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO=FB.BILL_NO and BR.FANCING_ORDER_NO=FB.FANCING_ORDER_NO
+		WHERE FB.BILL_NO = #{_parameter}
+		</select>
+		
+	<select id="getItemListByBillNo" resultMap="fancingBillItemResultMap" parameterType="java.util.List">
+		SELECT 
+				FB.BILL_NO,FB.BILL_PNO,FB.PID,
+				FB.FANCING_ORDER_NO,
+				FB.BILL_TYPE,
+				BILL_PRICE,
+				FB.CREATE_TIME,FB.START_DATE,
+				FB.REBACK_DATE,
+				IFNULL(SUM(BR.REPAYMENT_PRICE),0) as BACK_PRICE,
+				BILL_PRICE -(IFNULL(SUM(BR.REPAYMENT_PRICE),0)) as REMAINING_PRICE,
+				FB.MENBER_PID,
+				FB.TERM,
+				FC.RATE,
+				FC.DELAY_DATE,
+				FC.DELAY_MULPITLE,
+				FC.COMPOUND_TYPE AS RATE_CYCLE,
+				SC.MEMBER_NAME
+			FROM	DM_FANCING_BILL FB
+			LEFT JOIN DM_FANCING_ORDER FO ON FB.FANCING_ORDER_NO= FO.FANCING_ORDER_NO
+			LEFT JOIN DM_FANCING_CONTRACT FC ON FO.CONTRACT_NO = FC.CONTRACT_NO
+			LEFT JOIN SS_CUSTOMER SC ON FB.MENBER_PID=SC.MEMBER_PID
+			LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO=FB.BILL_NO and BR.FANCING_ORDER_NO=FB.FANCING_ORDER_NO
+		WHERE 1=1
+		<if test="list !=null and list !=''"> AND FB.BILL_NO in
+			<foreach collection="list" item="bno"  open="(" separator="," close=")">  
+		        	#{bno} 
+			</foreach> 
+		</if>
+		GROUP BY FB.BILL_NO
+	</select>
+	<select id="getItemByExample" resultMap="fancingBillItemResultMap" parameterType="com.sinoservices.xascf.bill.view.FancingBillCondition">
+		SELECT 
+					FB.MENBER_PID,FB.PID,
+					FB.FANCING_ORDER_NO,
+					FB.BILL_TYPE,
+					FB.BILL_NO,FB.BILL_PNO,
+					FB.BILL_STATUS,
+					FB.BILL_PRICE,
+					FB.REBACK_DATE,	
+					FB.START_DATE,FB.LATEST_TIME,
+					FB.CREATE_TIME AS CREATE_TIME,
+					FB.REMARK
+			FROM	DM_FANCING_BILL FB
+		<include refid="findByExample"/>
+		LIMIT 1
+	</select>
+	<sql id="findByBill">
+		WHERE 1=1
+		<if test="billTypes!=null and billTypes!=''">
+			AND FB.BILL_TYPE in
+			<foreach collection="billTypes" item="i"  open="(" separator="," close=")">  
+				<if test="i!=null">
+		        	#{i}
+		    	</if>  
+			</foreach> 
+		</if>
+		<if test="billStatuses!=null and billStatuses!=''"> 
+			AND FB.BILL_STATUS not in 
+			<foreach collection="billStatuses" item="i"  open="(" separator="," close=")">  
+				<if test="i!=null">
+		        	#{i}
+		    	</if>  
+			</foreach> 
+		</if>
+		<if test="rateCycle!=null and rateCycle!=''"> AND FC.COMPOUND_TYPE =#{rateCycle}</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FB.FANCING_ORDER_NO =#{fancingOrderNo}</if>
+	</sql>
+	<!-- 联合还款记录表查询所有未还请款项的本金账单用于账单利息计算 -->
+	<select id="getAllBillAndRecord" resultMap="fancingBillItemResultMap" parameterType="com.sinoservices.xascf.bill.view.FancingBillCondition">
+			SELECT 
+				FB.BILL_NO,FB.BILL_PNO,
+				FB.FANCING_ORDER_NO,
+				FB.BILL_TYPE,
+				BILL_PRICE,
+				FB.CREATE_TIME,FB.START_DATE,
+				FB.REBACK_DATE,
+				IFNULL(SUM(BR.REPAYMENT_PRICE),0) as BACK_PRICE,
+				BILL_PRICE -(IFNULL(SUM(BR.REPAYMENT_PRICE),0)) as REMAINING_PRICE,
+				FB.MENBER_PID,
+				FB.TERM,
+				FC.RATE,
+				FC.DELAY_DATE,
+				FC.DELAY_MULPITLE,
+				FC.COMPOUND_TYPE AS RATE_CYCLE,
+				SC.MEMBER_NAME
+			FROM	DM_FANCING_BILL FB
+			LEFT JOIN DM_FANCING_ORDER FO ON FB.FANCING_ORDER_NO= FO.FANCING_ORDER_NO
+			LEFT JOIN DM_FANCING_CONTRACT FC ON FO.CONTRACT_NO = FC.CONTRACT_NO
+			LEFT JOIN SS_CUSTOMER SC ON FB.MENBER_PID=SC.MEMBER_PID
+			LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO=FB.BILL_NO and BR.FANCING_ORDER_NO=FB.FANCING_ORDER_NO
+			<include refid="findByBill"/>
+			GROUP BY BR.BILL_NO,FB.BILL_NO
+		 	HAVING REMAINING_PRICE &gt; 0;
+	</select>
+	<!-- 根据账单号查询最近一次利息账单 -->
+	<select id="getBeforeBillItemByOrderNo" resultMap="fancingBillItemResultMap" parameterType="String">
+		SELECT 
+					FB.BILL_NO,
+					FB.BILL_PNO,
+					FB.BILL_TYPE,
+					FB.FANCING_ORDER_NO,
+					FB.BILL_PRICE,
+					FB.REMARK AS REMARK,
+					FB.REBACK_DATE,
+					FB.START_DATE AS START_DATE
+				FROM	DM_FANCING_BILL FB
+			WHERE 1=1
+			AND FB.BILL_PNO=#{_parameter}
+			AND BILL_TYPE=2
+			ORDER BY FB.CREATE_TIME DESC
+			LIMIT 1
+	</select>
+	<insert id="insert" parameterType="com.sinoservices.xascf.bill.model.FancingBillModel">
+		INSERT INTO DM_FANCING_BILL (
+				PID,
+				BILL_NO,
+				BILL_PNO,
+				FANCING_ORDER_NO,
+				BILL_PRICE,
+				REBACK_DATE,
+				BILL_STATUS,
+				BILL_TYPE,
+				TERM,
+				MENBER_PID,
+				RATE_CYCLE,
+				REBACK_TYPE,
+				LATEST_TIME,
+				START_DATE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{billNo},
+			   #{billPno},
+			   #{fancingOrderNo},
+			   #{billPrice},
+			   #{rebackDate},
+			   #{billStatus},
+			   #{billType},
+			   #{term},
+			   #{menberPid},
+			   #{rateCycle},
+			   #{rebackType},
+			   #{latestTime},
+			   #{startDate},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			  0
+		)
+	</insert>
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO DM_FANCING_BILL (
+				PID,
+				BILL_NO,
+				BILL_PNO,
+				FANCING_ORDER_NO,
+				BILL_PRICE,
+				REBACK_DATE,
+				BILL_STATUS,
+				BILL_TYPE,
+				TERM,
+				MENBER_PID,
+				RATE_CYCLE,
+				REBACK_TYPE,
+				LATEST_TIME,
+				START_DATE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (  #{item.pid},
+			   #{item.billNo},
+			   #{item.billPno},
+			   #{item.fancingOrderNo},
+			   #{item.billPrice},
+			   #{item.rebackDate},
+			   #{item.billStatus},
+			   #{item.billType},
+			   #{item.term},
+			   #{item.menberPid},
+			   #{item.rateCycle},
+			   #{item.rebackType},
+			   #{item.latestTime},
+			   #{item.startDate},
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   SYSDATE(),
+			   #{item.modifier},
+			  0)  
+	    </foreach>  
+  </insert>  
+  <delete id="deleteByBillNo" parameterType="String">
+  		DELETE FROM DM_FANCING_BILL WHERE  	BILL_NO=#{_parameter} 
+  </delete>
+	<update id="updateStatusByBillNo" parameterType="com.sinoservices.xascf.bill.model.FancingBillModel">
+		UPDATE DM_FANCING_BILL SET
+			<if test="billStatus!=null and billStatus!=''"> 	BILL_STATUS=#{billStatus},</if>
+			<if test="rebackDate !=null and rebackDate !=''"> 	REBACK_DATE=#{rebackDate},</if>
+			<if test="latestTime !=null and latestTime !=''"> 	LATEST_TIME=#{latestTime},</if>
+				REC_VER=REC_VER+1,
+				MODIFY_TIME=SYSDATE()
+		WHERE 	BILL_NO=#{billNo} 
+	</update>
+	<update id="updateStatusByList" parameterType="java.util.List">
+		UPDATE DM_FANCING_BILL 
+		<trim prefix="set" suffixOverrides=","> 
+	          <!-- 更新的字段集合 --> 
+	          <trim prefix="BILL_STATUS =case" suffix="end,">  
+	              <foreach collection="list" item="i"  index="index">  
+	                     <if test="i.billStatus!=null">  
+	                      when (BILL_NO=#{i.billNo}) then #{i.billStatus}  
+	                     </if>  
+	              </foreach>  
+	           </trim>  
+	           <trim prefix="Modifier =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                     <if test="i.modifier!=null">  
+	                      when (BILL_NO=#{i.billNo}) then #{i.modifier}  
+	                     </if>  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Modify_Time =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (BILL_NO=#{i.billNo}) then SYSDATE()  
+	              </foreach>  
+	           </trim>
+	           <trim prefix="Rec_Ver =case"  suffix="end,"  >  
+	              <foreach collection="list" item="i" index="index">   
+	                      when (BILL_NO=#{i.billNo}) then Rec_Ver+1  
+	              </foreach>  
+	           </trim>
+         </trim>   
+         where   
+         <foreach collection="list" separator="or" item="i" index="index" > 
+         <if test="i.billNo!=null">  
+          (BILL_NO=#{i.billNo})
+           </if>   
+      	</foreach> 
+	</update>
+	<select id="getAllDelayItem" resultMap="fancingBillItemResultMap">
+		SELECT 
+					FB.BILL_NO,
+					FB.FANCING_ORDER_NO,
+					FB.BILL_TYPE,
+					BILL_PRICE,
+					FB.CREATE_TIME,
+					FB.REBACK_DATE
+			FROM	DM_FANCING_BILL FB
+			WHERE 1=1
+			 AND BILL_TYPE=1 
+			AND date_format(LATEST_TIME, '%y-%m-%d') &lt; date_format(now(), '%y-%m-%d')
+	</select>
+	<!-- 获取账单信息统计 - 本月应还利息，最迟还款日，本月应还本金，最近到期日 -->
+	<select id="getBillStatByCondition" resultMap="fancingBillItemResultMap" parameterType="com.sinoservices.xascf.bill.view.FancingBillCondition">
+		SELECT
+			R.MENBER_PID,
+			R.REBACK_DATE,
+			R.FANCING_ORDER_NO,
+			R.BILL_NO,
+			R.BILL_PNO,
+			R.BILL_TYPE,
+			SUM(R.REMAINING_PRICE) AS REMAINING_PRICE,
+			MIN(R.LATEST_TIME) AS LATEST_TIME
+		FROM
+			(
+			<include refid="select"/>
+			FROM
+				DM_FANCING_BILL FB
+			LEFT JOIN DM_BILLREBACK_RECORD BR ON BR.BILL_NO = FB.BILL_NO
+			 LEFT JOIN DM_FANCING_ORDER FO ON FO.FANCING_ORDER_NO=FB.FANCING_ORDER_NO
+			LEFT JOIN SS_CUSTOMER SC ON FB.MENBER_PID = SC.MEMBER_PID
+			LEFT JOIN 
+				(SELECT SUM(BR.REPAYMENT_PRICE) AS REPAYMENT_PRICE,BR.BILL_NO
+					FROM DM_BILLREBACK_RECORD BR
+						GROUP BY BR.BILL_NO)
+				 BRR ON BRR.BILL_NO = FB.BILL_NO
+			<include refid="findByExample"/>
+			ORDER BY  FB.REBACK_DATE
+			) R
+		GROUP BY
+			R.MENBER_PID, R.BILL_TYPE
+	</select>
+</mapper>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.bill.mapper.BillrebackRecordMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.view.BillrebackRecordItem" id="billrebackRecordItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="billRebackPid" column="BILL_REBACK_PID"/>
+		<result property="fancingBillNo" column="FANCING_BILL_NO"/>
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="bankTransactionNo" column="BANK_TRANSACTION_NO"/>
+		<result property="rebackType" column="REBACK_TYPE"/>
+		<result property="rebackFunction" column="REBACK_FUNCTION"/>
+		<result property="rebackPrice" column="REBACK_PRICE"/>
+		<result property="rebackDatetime" column="REBACK_DATETIME"/>
+		<result property="rebackOwerPid" column="REBACK_OWER_PID"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					BILL_REBACK_PID,
+					FANCING_BILL_NO,
+					FANCING_ORDER_NO,
+					BANK_TRANSACTION_NO,
+					REBACK_TYPE,
+					REBACK_FUNCTION,
+					REBACK_PRICE,
+					REBACK_DATETIME,
+					REBACK_OWER_PID
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="fancingBillNo!=null and fancingBillNo!=''"> AND FANCING_BILL_NO LIKE ('%${fancingBillNo}%' )</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%' )</if>
+		<if test="bankTransactionNo!=null and bankTransactionNo!=''"> AND BANK_TRANSACTION_NO LIKE ('%${bankTransactionNo}%' )</if>
+		<if test="rebackType!=null and rebackType!=''"> AND REBACK_TYPE LIKE ('%${rebackType}%' )</if>
+		<if test="rebackFunction!=null and rebackFunction!=''"> AND REBACK_FUNCTION LIKE ('%${rebackFunction}%' )</if>
+		<if test="rebackOwerPid!=null and rebackOwerPid!=''"> AND REBACK_OWER_PID LIKE ('%${rebackOwerPid}%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.bill.model.BillrebackRecordModel">
+		<include refid="count"/>
+		FROM  DM_BILLREBACK_RECORD
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="billrebackRecordItemResultMap" parameterType="com.sinoservices.xascf.bill.model.BillrebackRecordModel">
+		<include refid="select"/>
+		FROM  DM_BILLREBACK_RECORD
+		<include refid="findByExample"/>
+	</select>
+	<!-- 根据融资单号查询上期利息还款情况 -->
+	<select id="getByOrderNo" resultMap="billrebackRecordItemResultMap" parameterType="String">
+		SELECT 
+					BILL_REBACK_PID,
+					BANK_TRANSACTION_NO,
+					REBACK_TYPE,
+					REBACK_FUNCTION,
+					(FB.BILL_PRICE)-(SUM(BR.REBACK_PRICE)) AS REBACK_PRICE,
+					REBACK_DATETIME,
+					REBACK_OWER_PID
+		FROM
+			DM_FANCING_BILL FB
+		JOIN DM_BILLREBACK_RECORD BR ON FB.FANCING_BILL_NO=BR.FANCING_BILL_NO
+		WHERE
+			1 = 1
+		AND FB.BILL_TYPE != 1
+		AND date_format(BR.CREATE_TIME, '%Y-%m') = date_format(DATE_SUB(now(), INTERVAL 1 MONTH), '%Y-%m')
+		AND FB.FANCING_ORDER_NO=#{_parameter}		
+	</select>
+	<!-- 根据账单号查询利息还款记录 -->
+	<select id="getByBillNo" resultMap="billrebackRecordItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  DM_BILLREBACK_RECORD
+		WHERE 1=1 AND FANCING_BILL_NO=#{_parameter}		
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.bill.model.BillrebackRecordModel">
+		INSERT INTO DM_BILLREBACK_RECORD (
+				BILL_REBACK_PID,
+				FANCING_BILL_NO,
+				FANCING_ORDER_NO,
+				BANK_TRANSACTION_NO,
+				REBACK_TYPE,
+				REBACK_FUNCTION,
+				REBACK_PRICE,
+				REBACK_DATETIME,
+				REBACK_OWER_PID,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES (
+			   #{billRebackPid},
+			   #{fancingBillNo},
+			   #{fancingOrderNo},
+			   #{bankTransactionNo},
+			   #{rebackType},
+			   #{rebackFunction},
+			   #{rebackPrice},
+			   #{rebackDatetime},
+			   #{rebackOwerPid},
+			   #{remark},
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   1
+		)
+	</insert>
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO DM_BILLREBACK_RECORD (
+				PID,
+				BILL_NO,
+				FANCING_ORDER_NO,
+				REPAYMENT_PRICE,
+				REPAYMENT_TIME,
+				REPAYMENT_NO,
+				REPAYMENT_TYPE,
+				REPAY_METHOD,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( #{item.pid},
+			   #{item.billNo},
+			   #{item.fancingOrderNo},
+			   #{item.repaymentPrice},
+			   #{item.repaymentTime},
+			   #{item.reprymentNo},
+			   #{item.repaymentType},
+			   #{item.repayMethod},
+			   #{item.modifier},
+			   SYSDATE(),
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   0)  
+	    </foreach>  
+  </insert>  
+   <delete id="deleteByBillNo" parameterType="String">
+  		DELETE FROM DM_BILLREBACK_RECORD WHERE  	BILL_NO=#{_parameter} 
+  </delete>
+</mapper>

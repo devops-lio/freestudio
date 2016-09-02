@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.MaterialContractMapper">
+	<resultMap type="com.sinoservices.xascf.credit.view.ContractMaterialDefineItem" id="ContractMaterialItemResultMap">
+		<result property="pid" column="PID"/>
+		<result property="code" column="CODE"/>
+		<result property="parentCode" column="PARENT_CODE"/>
+		<result property="materialType" column="MATERIAL_TYPE"/>
+		<result property="typeName" column="TYPE_NAME"/>
+		<result property="isRequired" column="IS_REQUIRED"/> 
+		<result property="orderNo" column="ORDER_NO"/> 
+		<result property="id" column="ID"/>
+		<result property="busnessPid" column="BUSNESS_PID"/> 
+		<result property="contractPid" column="CONTRACT_PID"/> 
+		<result property="materialPid" column="MATERIAL_PID"/> 
+		<result property="effectiveTime" column="EFFECTIVE_TIME"/> 
+		<result property="fileName" column="FILE_NAME"/>  
+		<result property="fileUrl" column="FILE_URL"/>  
+		<result property="fileFalg" column="FILE_FALG"/>   
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					MATERIAL_DEFINE_PID,
+					BOND_TYPE,
+					BUSNESS_PID,CONTRACT_PID,
+					IS_EFFECTIVE,
+					EFFECTIVE_TIME_END,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	<!-- 需要上传的合同材料文件 -->
+    <select id="getListByEditMaterial" resultMap="ContractMaterialItemResultMap" parameterType="com.sinoservices.xascf.credit.view.ContractMaterialDefineItem">
+    	   SELECT
+			   A.ID,
+			   A.PID,
+			   A.CODE,
+			   A.PARENT_CODE,
+			   A.MATERIAL_TYPE,
+			   A.TYPE_NAME,
+			   A.IS_REQUIRED,
+			   F.BUSNESS_PID,
+			   F.CONTRACT_PID,
+			   F.BOND_TYPE,
+			   F.MATERIAL_PID,
+			   F.EFFECTIVE_TIME,
+			   F.FILE_NAME,
+			   DATE_FORMAT(F.CREATE_TIME, '%Y-%m-%d') AS CREATE_TIME,
+			   F.FILE_URL,
+			   F.FILE_FALG
+  			FROM
+   			SS_MATERIAL_DEFINE A  LEFT JOIN 
+   			(
+   				 SELECT
+     				D.PID AS CONTRACT_MATERIAL_PID,
+		 			D.CREATE_TIME AS CREATE_TIME,
+		 			D.BUSNESS_PID AS BUSNESS_PID,
+		 			D.CONTRACT_PID AS CONTRACT_PID,
+		 			D.BOND_TYPE AS BOND_TYPE,
+     				D.MATERIAL_DEFINE_PID AS MATERIAL_PID,
+     				D.EFFECTIVE_TIME_END AS EFFECTIVE_TIME,
+     				GROUP_CONCAT(E.FILE_NAME, '') AS FILE_NAME,
+     				GROUP_CONCAT(E.FILE_URL, '') AS FILE_URL,
+     				GROUP_CONCAT(E.FILE_FALG, '') AS FILE_FALG
+    			FROM
+     			DM_MATERIAL_CONTRACT D,
+     			DM_MATERIAL_CONTRACT_DETAIL E
+    			WHERE
+     				1 = 1
+    				AND D.PID = E.CONTRACT_MATERIAL_PID
+    				<if test="busnessPid !=null and busnessPid !=''"> AND D.BUSNESS_PID = #{busnessPid}</if>
+    				<if test="contractPid !=null and contractPid !=''"> AND D.CONTRACT_PID = #{contractPid}</if>
+    				<if test="bondType !=null and bondType !=''"> AND D.BOND_TYPE = #{bondType}</if>
+    				AND D.REC_STATUS = '1'
+    				AND E.REC_STATUS = '1'
+    				GROUP BY
+     				E.CONTRACT_MATERIAL_PID
+   			) F ON  A.PID = F.MATERIAL_PID
+  			WHERE
+   			1 = 1 
+			<if test="parentCode !=null and parentCode !=''">AND A.PARENT_CODE = #{parentCode} </if>
+  			AND A.REC_STATUS = '1'
+    </select>
+	<!-- 批量执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    	INSERT INTO DM_MATERIAL_CONTRACT (
+				PID,
+				MATERIAL_DEFINE_PID,
+				BOND_TYPE,
+				BUSNESS_PID,
+				CONTRACT_PID,
+				IS_EFFECTIVE,
+				EFFECTIVE_TIME_END,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				REC_STATUS
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (  #{item.pid},
+			   #{item.materialDefinePid},
+			   #{item.bondType},
+			   #{item.busnessPid},
+			   #{item.contractPid},
+			   #{item.isEffective},
+			   #{item.effectiveTimeEnd},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   1)  
+	    </foreach>  
+  </insert>  
+	<delete id="deleteByModel" parameterType="com.sinoservices.xascf.credit.model.MaterialContractModel">
+		DELETE FROM DM_MATERIAL_CONTRACT WHERE CONTRACT_PID=#{contractPid}  AND BUSNESS_PID=#{busnessPid}
+	</delete>
+</mapper>

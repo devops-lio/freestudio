@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+  	
+	<!-- <import resource="classpath:parent/context-dbcp.xml"/> -->
+	<import resource="classpath:parent/context-jdbc.xml"/>
+	<import resource="classpath:parent/context-tx.xml"/>
+	<import resource="classpath:parent/context-mybatis.xml"/>
+	<import resource="classpath:xascf/context-*.xml"/>
+	
+	<context:component-scan base-package="com.sinoservices.xascf"
+							name-generator="com.sinoservices.xframework.core.support.CustomBeanNameGenerator" />
+	
+	<!-- 多语言的加载  -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <!-- 默认为中文 -->
+        <property name="defaultLocale">
+            <bean class="java.util.Locale">
+                <constructor-arg><value>zh</value></constructor-arg>
+                <constructor-arg><value>CN</value></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+    
+    <!-- spring 国际化配置 -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">                
+        <property name="basenames">   
+            <list>
+                <value>i18n.xascf.error.xascf</value>
+                <value>i18n.xascf.info.xascf</value>
+                <value>i18n.xascf.ui.xascf</value>
+                <value>i18n.xascf.validation.xascf</value>
+            </list>
+        </property>               
+    </bean>
+    
+    <bean name="Environment" class="com.sinoservices.xframework.core.Environment">
+		<constructor-arg index="0" value="${module.name}"></constructor-arg>
+		<constructor-arg index="1" value="${module.version}"></constructor-arg>
+		<constructor-arg index="2">
+		<map>
+			<entry key="loginPage" value="xascf/jsp/login.jsp"></entry>
+			<entry key="homePage" value="xascf/jsp/index.jsp"></entry>
+			<entry key="servletProvider" value="com.sinoservices.xframework.core.web.dispatches.SpringDispatcher"></entry>
+		</map>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="ruleFactory" class="com.sinoservices.xascf.common.services.impl.RuleFactoryImpl">
+		<property name="serialNoMapper" ref="serialNoMapper"/>
+	</bean>
+	
+	<!-- 编号生成接口注入 -->
+	<bean name="numberGenerator" class="com.sinoservices.components.nogenerator.NumberGeneratorImpl">
+		<!-- 这里需要配置自己实现RuleFactory接口的类-->
+		<property name="ruleFactory" ref="ruleFactory"/>
+	</bean>
+	<!-- facade接口发布 -->
+	<bean name="InterfacePublisher" class="com.sinoservices.xframework.core.modular.InterfacePublisher">
+		<property name="interfaces">
+			<set>
+				<value>com.sinoservices.xascf.facade.loan.FancingLoanFacade</value>
+				<value>com.sinoservices.xascf.facade.credit.TestFacade</value>
+				<value>com.sinoservices.xascf.facade.credit.CreditApplyFacade</value>
+				<value>com.sinoservices.xascf.facade.bill.FancingBillFacade</value>
+				<value>com.sinoservices.xascf.facade.customer.CustomerFacade</value>
+				<value>com.sinoservices.xascf.credit.services.MaterialHistoryManager</value>
+				<value>com.sinoservices.xascf.facade.system.BasicDataFacade</value>
+				<value>com.sinoservices.xascf.facade.agfancing.AgFancingFacade</value>
+			</set>
+		</property>
+	</bean>
+	<bean name="xascfWebService" class="com.sinoservices.xascf.webservice.services.impl.XascfWebServiceImpl">
+	</bean> 
+</beans>

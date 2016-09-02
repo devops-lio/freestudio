@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.customer.mapper.CompanyBankMapper">  
+	<resultMap type="com.sinoservices.xascf.customer.view.CompanyBankQueryItemView" id="CompanyBankQueryItemMap">
+		<result property="id" column="ID"/> 
+		<result property="companybankPid" column="COMPANYBANK_PID"/>
+		<result property="customerPid" column="CUSTOMER_PID"/>
+		<result property="bank" column="BANK"/>
+		<result property="bankholder" column="BANKHOLDER"/>
+		<result property="bankName" column="BANK_NAME"/>
+		<result property="bankNo" column="BANK_NO"/>
+		<result property="bankType" column="BANK_TYPE"/>
+		<result property="bankProperty" column="BANK_PROPERTY"/> 
+		<result property="isManage" column="IS_MANAGE"/>
+		<result property="agreementName" column="AGREEMENT_NAME"/>
+		<result property="agreementUrl" column="AGREEMENT_URL"/>
+		<result property="agreementType" column="AGREEMENT_TYPE"/> 
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.customer.view.CustmoerBankItem" id="CompanyBankModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="companybankPid" column="COMPANYBANK_PID"/>
+		<result property="customerPid" column="CUSTOMER_PID"/>
+		<result property="bank" column="BANK"/>
+		<result property="bankholder" column="BANKHOLDER"/>
+		<result property="bankName" column="BANK_NAME"/>
+		<result property="bankNo" column="BANK_NO"/>
+		<result property="bankType" column="BANK_TYPE"/>
+		<result property="bankProperty" column="BANK_PROPERTY"/>
+		<result property="isManage" column="IS_MANAGE"/>
+		<result property="agreementName" column="AGREEMENT_NAME"/>
+		<result property="agreementUrl" column="AGREEMENT_URL"/>
+		<result property="agreementType" column="AGREEMENT_TYPE"/> 
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<resultMap type="com.sinoservices.xascf.customer.model.CompanyBankModel" id="CompanyBankModelResultView">
+		<result property="id" column="ID"/>
+		<result property="companybankPid" column="COMPANYBANK_PID"/>
+		<result property="customerPid" column="CUSTOMER_PID"/>
+		<result property="bank" column="BANK"/>
+		<result property="bankholder" column="BANKHOLDER"/>
+		<result property="bankName" column="BANK_NAME"/>
+		<result property="bankNo" column="BANK_NO"/>
+		<result property="bankType" column="BANK_TYPE"/>
+		<result property="bankProperty" column="BANK_PROPERTY"/>
+		<result property="isManage" column="IS_MANAGE"/>
+		
+		<result property="agreementName" column="AGREEMENT_NAME"/>
+		<result property="agreementUrl" column="AGREEMENT_URL"/>
+		<result property="agreementType" column="AGREEMENT_TYPE"/> 
+		
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="selectbank"> 
+			SELECT 
+					ID,
+					COMPANYBANK_PID,
+					CUSTOMER_PID,
+					BANK,
+					BANKHOLDER,
+					BANK_NAME,
+					BANK_NO,
+					BANK_TYPE,
+					BANK_PROPERTY,
+					IS_MANAGE,
+					AGREEMENT_NAME,
+					AGREEMENT_URL,
+					AGREEMENT_TYPE,
+					CREATOR,
+					CREATE_TIME,
+					MODIFIER,
+					MODIFY_TIME,
+					REC_VER,
+					REC_STATUS 
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	
+	<sql id="findByExample">
+		WHERE 1=1   
+		<if test="bank!=null and bank!=''"> AND BANK LIKE ('%${bank}%' )</if>
+		<if test="bankName!=null and bankName!=''"> AND BANK_NAME LIKE ('%${bankName}%' )</if>
+		<if test="bankNo!=null and bankNo!=''"> AND BANK_NO =#{bankNo}</if> 
+		<if test="customerPid !=null and customerPid !=''">AND CUSTOMER_PID = #{customerPid}</if>
+		<if test="bankType!=null and bankType!=''"> AND BANK_TYPE =#{bankType}</if>
+		<if test="bankProperty!=null and bankProperty!=''"> AND BANK_PROPERTY =#{bankProperty}</if>
+		<if test="agreementName != null and agreementName != ''">AND AGREEMENT_NAME LIKE ('%${agreementName}%' )</if> 
+		<if test="agreementUrl != null and agreementUrl != ''">AND AGREEMENT_URL LIKE ('%${agreementUrl}%' )</if> 
+		<if test="agreementType != null and agreementType != ''">AND AGREEMENT_TYPE LIKE ('%${agreementType}%' )</if>  
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%' )</if>
+	</sql>
+	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.customer.view.CompanyBankQueryConditionView">
+		<include refid="count"/>
+		FROM  SS_COMPANY_BANK 
+		<include refid="findByExample"/>
+		AND REC_STATUS = '1'
+	</select>
+	
+	<select id="getByBankPage" resultMap="CompanyBankQueryItemMap" parameterType="com.sinoservices.xascf.customer.view.CompanyBankQueryConditionView">
+		<include refid="selectbank"/>
+		FROM  SS_COMPANY_BANK  
+		<include refid="findByExample"/>
+		AND REC_STATUS = '1'
+	</select>
+	<!-- 根据银行账号查询 -->
+	<select id="getItemByBankNo" resultMap="CompanyBankModelResultView" parameterType="String">
+	<include refid="selectbank"/>
+		FROM  SS_COMPANY_BANK 
+	WHERE BANK_NO=#{_parameter}
+	
+	</select>
+	
+	<!-- 企业银行管理信息查看 -->
+	<select id="findCompanyBankByPid" resultMap="CompanyBankModelResultView" parameterType="String">
+		<include refid="selectbank"/>
+		FROM  SS_COMPANY_BANK 
+		<include refid="findByExample"/>
+	</select>
+	
+	<!-- 融资发起时通过会员pid和类型回去监管账户信息 -->
+	<select id="findSubCompanyBankByPid" resultMap="CompanyBankModelResultMap" 
+	parameterType="com.sinoservices.xascf.customer.view.CompanyBankQueryConditionView">
+		<include refid="selectbank"/>
+		FROM  SS_COMPANY_BANK 
+		WHERE 1=1 
+		<if test="customerPid !=null and customerPid !=''">AND CUSTOMER_PID = #{customerPid}</if>
+		<if test="bankType!=null and bankType!=''"> AND BANK_TYPE =#{bankType}</if>
+		<if test="bankProperty!=null and bankProperty!=''"> AND BANK_PROPERTY =#{bankProperty}</if>  
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS ='1'</if>
+		LIMIT 1
+	</select>
+	
+	
+	
+	<!-- 银行账户分页查询 -->
+	<select id="getPageByBankCondition"  resultMap="CompanyBankModelResultView" 
+	parameterType="com.sinoservices.xascf.customer.view.CompanyBankQueryConditionView">
+		<include refid="selectbank"/>
+		FROM SS_COMPANY_BANK 
+		<include refid="findByBank"/>
+		AND REC_STATUS = '1'
+	</select> 
+	
+	<select id="getCountByBankCondition" resultType="int" 
+		parameterType="com.sinoservices.xascf.customer.view.CompanyBankQueryConditionView">
+		<include refid="count"/>
+		FROM  SS_COMPANY_BANK 
+		<include refid="findByBank"/>
+		AND REC_STATUS = '1'
+	</select>
+	
+	<sql id="findByBank">
+	WHERE 1=1  
+		AND CUSTOMER_PID = #{customerPid} 
+	</sql>
+	
+	<select id="getFirstBankByCondition"  resultMap="CompanyBankModelResultView" 
+			parameterType="com.sinoservices.xascf.customer.view.CompanyBankQueryConditionView">
+		<include refid="selectbank"/>
+		FROM SS_COMPANY_BANK 
+		WHERE REC_STATUS = '1'
+		<if test="customerPid !=null and customerPid !=''">AND CUSTOMER_PID = #{customerPid}</if>
+		<if test="bankType!=null and bankType!=''"> AND BANK_TYPE =#{bankType}</if>
+		<if test="bankProperty!=null and bankProperty!=''"> AND BANK_PROPERTY =#{bankProperty}</if>  
+		ORDER BY CREATE_TIME
+		LIMIT 1
+	</select> 
+	
+	
+	<insert id="insert">
+		INSERT INTO SS_COMPANY_BANK (
+				ID,
+				COMPANYBANK_PID,
+				CUSTOMER_PID,
+				BANK,
+				BANK_NAME,
+				BANKHOLDER,
+				BANK_NO,
+				BANK_TYPE,
+				BANK_PROPERTY,
+				IS_MANAGE,
+				AGREEMENT_NAME,
+				AGREEMENT_URL,
+				AGREEMENT_TYPE,
+				CREATOR,
+				CREATE_TIME,
+				MODIFIER,
+				MODIFY_TIME,
+				REC_VER,
+				REC_STATUS
+		) VALUES (
+			   #{id},
+			   #{companybankPid},
+			   #{customerPid},
+			   #{bank},
+			   #{bankName},
+			   #{bankholder},
+			   #{bankNo},
+			   #{bankType},
+			   #{bankProperty},
+			   #{isManage},
+			   #{agreementName},
+			   #{agreementUrl},
+			   #{agreementType}, 
+			   #{creator},
+			   #{createTime},
+			   #{modifier},
+			   #{modifyTime},
+			   #{recVer},
+			   #{recStatus}
+		);
+	</insert>
+	
+	
+	<!-- 企业银行帐号批量执行插入 -->
+	<insert id="addByBankList" parameterType="java.util.List">  
+	    <selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey>  
+	    	INSERT INTO SS_COMPANY_BANK (
+				COMPANYBANK_PID,
+				CUSTOMER_PID,
+				BANK,
+				BANK_NAME,
+				BANKHOLDER,
+				BANK_NO,
+				BANK_TYPE,
+				BANK_PROPERTY,
+				IS_MANAGE,
+				AGREEMENT_NAME,
+				AGREEMENT_URL,
+				AGREEMENT_TYPE,
+				CREATOR,
+				CREATE_TIME
+				)VALUES
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( 	  #{item.companybankPid}, 
+				  #{item.customerPid}, 
+				  #{item.bank}, 
+				  #{item.bankName},
+				  #{item.bankholder},
+				  #{item.bankNo},   
+				  #{item.bankType},  
+				  #{item.bankProperty}, 
+				  #{item.isManage},
+				  #{item.agreementName}, 
+				  #{item.agreementUrl}, 
+				  #{item.agreementType},  
+				  #{item.creator}, 
+				  #{item.createTime}
+				  	)
+	    </foreach>  
+  </insert>  
+	
+	<update id="updateByPid" parameterType="com.sinoservices.xascf.customer.model.CompanyBankModel">
+		UPDATE SS_COMPANY_BANK SET
+		<if test="customerPid !=null and customerPid !=''">		CUSTOMER_PID = #{customerPid},</if>
+		<if test="bank !=null and bank !=''">		BANK = #{bank},</if>
+		<if test="bankName !=null and bankName !=''">		BANK_NAME = #{bankName},</if>
+		<if test="bankholder !=null and bankholder !=''">		BANKHOLDER = #{bankholder},</if>
+		<if test="bankNo !=null and bankNo !=''">		BANK_NO = #{bankNo},</if>
+		<if test="bankType !=null and bankType !=''">		BANK_TYPE = #{bankType},</if>
+		<if test="bankProperty !=null and bankProperty !=''">		BANK_PROPERTY = #{bankProperty},</if>
+		<if test="isManage !=null and isManage !=''">		IS_MANAGE = #{isManage},</if>
+		<if test="agreementName !=null and agreementName !=''">		AGREEMENT_NAME = #{agreementName},</if>
+		<if test="agreementUrl !=null and agreementUrl !=''">		AGREEMENT_URL = #{agreementUrl},</if>
+		<if test="agreementType !=null and agreementType !=''">		AGREEMENT_TYPE = #{agreementType}, </if>
+		<if test="modifier !=null and modifier !=''">		MODIFIER = #{modifier},</if>
+		<if test="recStatus !=null and recStatus !=''">		REC_STATUS = #{recStatus}</if>
+				MODIFY_TIME = SYSDATE(),
+				REC_VER = REC_VER
+		WHERE COMPANYBANK_PID=#{companybankPid}
+	</update>
+	
+	<delete id= "delete" parameterType="String">
+		DELETE 
+		FROM SS_COMPANY_BANK 
+		WHERE CUSTOMER_PID = #{customerPid}  
+	</delete>
+</mapper>

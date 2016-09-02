@@ -1,0 +1,48 @@
+<configuration>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date %-5level [%thread] [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="file_normal" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${catalina.home}/logs/normal_%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>31</MaxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %date %-5level [%thread] [%file:%line] %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+    
+     <appender name="file—error"
+         class="ch.qos.logback.core.rolling.RollingFileAppender">
+         <filter class="ch.qos.logback.classic.filter.LevelFilter">
+              <level>ERROR</level>
+             <onMatch>ACCEPT</onMatch>
+              <onMismatch>DENY </onMismatch>
+         </filter>
+         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+             <FileNamePattern>${catalina.home}/logs/error_%d{yyyy-MM-dd}.log</FileNamePattern>
+             <MaxHistory>30</MaxHistory>
+         </rollingPolicy>
+        <encoder>
+            <pattern> %date %-5level [%thread] [%file:%line] %msg%n</pattern>
+         </encoder>
+     </appender>
+    
+	<root level="debug">
+		<appender-ref ref="STDOUT" />
+	  	<appender-ref ref="file—error" />
+	</root>
+	
+    <logger name="com.sinoservices.xascf">
+        <level value="INFO"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="file_normal"/>
+    </logger>
+</configuration>

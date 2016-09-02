@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.customer.mapper.MaterialDefineMapper"> 
+	<resultMap type="com.sinoservices.xascf.customer.model.MaterialDefineModel" id="MaterialDefineResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="code" column="CODE"/>
+		<result property="parentCode" column="PARENT_CODE"/>
+		<result property="materialType" column="MATERIAL_TYPE"/>
+		<result property="materialWeights" column="MATERIAL_WEIGHTS"/> 
+		<result property="typeName" column="TYPE_NAME"/>
+		<result property="isRequired" column="IS_REQUIRED"/> 
+		<result property="orderNo" column="ORDER_NO"/> 
+		<result property="mark" column="MARK"/>  
+		
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/> 
+	</resultMap> 
+
+	<resultMap type="com.sinoservices.xascf.customer.view.MaterialDefineItem" id="MaterialDefineItemViewMap">  
+		<result property="pid" column="PID"/>
+		<result property="code" column="CODE"/>
+		<result property="parentCode" column="PARENT_CODE"/>
+		<result property="materialType" column="MATERIAL_TYPE"/>
+		<result property="materialWeights" column="MATERIAL_WEIGHTS"/>
+		<result property="typeName" column="TYPE_NAME"/>
+		<result property="isRequired" column="IS_REQUIRED"/> 
+		<result property="orderNo" column="ORDER_NO"/> 
+		
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>  
+		
+		<result property="id" column="ID"/>
+		<result property="customermatPid" column="CUSTOMERMAT_PID"/> 
+		<result property="memberNo" column="MEMBER_NO"/> 
+		<result property="materialPid" column="MATERIAL_PID"/> 
+		<result property="effectiveTime" column="EFFECTIVE_TIME"/> 
+		<result property="filename" column="FILENAME"/>  
+		<result property="fileName" column="FILE_NAME"/>  
+		
+		<result property="fileUrl" column="FILE_URL"/>  
+		
+		<result property="fileFalg" column="FILE_FALG"/>   
+		<result property="status" column="STATUS"/>
+	</resultMap> 
+	
+	<resultMap type="com.sinoservices.xascf.risk.view.MaterialDefineWithChildren" id="materialDefineWithChildren">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="code" column="CODE"/>
+		<result property="parentCode" column="PARENT_CODE"/>
+		<result property="materialType" column="MATERIAL_TYPE"/>
+		<result property="materialWeights" column="MATERIAL_WEIGHTS"/> 
+		<result property="typeName" column="TYPE_NAME"/>
+		<result property="isRequired" column="IS_REQUIRED"/> 
+		<result property="orderNo" column="ORDER_NO"/> 
+		<result property="mark" column="MARK"/>  
+		
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/> 
+		<collection property="children" column="CODE" ofType="com.sinoservices.xascf.risk.view.MaterialDefineWithChildren" select="select-children"/>	
+	</resultMap> 
+	
+	<select id="select-children" parameterType="String" resultMap="materialDefineWithChildren">
+       SELECT 
+			 ID,
+			 PID,
+			 CODE,
+			 PARENT_CODE,
+			 MATERIAL_TYPE,
+			 TYPE_NAME,
+			 MATERIAL_WEIGHTS,
+			 IS_REQUIRED, 
+			 ORDER_NO,
+			 CREATOR,
+			 CREATE_TIME,
+			 MODIFIER,
+			 MODIFY_TIME,
+			 REC_VER,
+			 REC_STATUS
+        FROM  SS_MATERIAL_DEFINE
+         WHERE PARENT_CODE =#{code}
+    </select> 
+	
+	
+	<sql id="select"> 
+		  SELECT 
+			 ID,
+			 PID,
+			 CODE,
+			 PARENT_CODE,
+			 MATERIAL_TYPE,
+			 TYPE_NAME,
+			 MATERIAL_WEIGHTS,
+			 IS_REQUIRED, 
+			 ORDER_NO,
+			 CREATOR,
+			 CREATE_TIME,
+			 MODIFIER,
+			 MODIFY_TIME,
+			 REC_VER,
+			 REC_STATUS
+	</sql>
+	
+	<sql id="selectMaterial">
+		SELECT 
+			PID,
+			CODE,
+			PARENT_CODE,
+			MATERIAL_TYPE,
+			TYPE_NAME,
+			IS_REQUIRED,
+			REC_STATUS
+	</sql>
+	
+	<sql id="count"> 
+	    	SELECT COUNT(1)  
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="code !=null and code !=''"> AND CODE =#{code}</if>
+		<if test="parentCode !=null and parentCode !=''"> AND PARENT_CODE =#{parentCode}</if>
+		<if test="materialType !=null and materialType !=''"> AND MATERIAL_TYPE =#{materialType}</if>
+		<if test="typeName !=null and typeName !=''"> AND TYPE_NAME =#{typeName}</if>
+	</sql>
+	
+	<sql id="findByExampleWithParent">
+		WHERE 1=1
+		<if test="code !=null and code !=''"> AND CODE LIKE ('%${code}%')</if>
+		<if test="parentCode !=null and parentCode !=''"> AND PARENT_CODE =#{parentCode}</if>
+		<if test="parentCode ==null or parentCode ==''"> AND PARENT_CODE NOT IN (SELECT SS.CODE FROM SS_MATERIAL_DEFINE SS)</if>
+		<if test="materialType !=null and materialType !=''"> AND MATERIAL_TYPE =#{materialType}</if>
+		<if test="typeName !=null and typeName !=''"> AND TYPE_NAME LIKE ('%${typeName}%')</if>
+		ORDER BY ORDER_NO
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.customer.view.MaterialDefineCondition">
+		<include refid="count"/>
+		FROM  SS_MATERIAL_DEFINE
+		<include refid="findByExampleWithParent"/>
+	</select>
+	
+	<select id="getPage" resultMap="MaterialDefineResultMap" parameterType="com.sinoservices.xascf.customer.view.MaterialDefineCondition">
+		<include refid="select"/>
+		FROM  SS_MATERIAL_DEFINE
+		<include refid="findByExampleWithParent"/>
+	</select> 
+	
+	
+	<!-- 需要上传的会员材料文件 -->
+	<select id="getListByMaterial" resultMap="MaterialDefineItemViewMap" parameterType="java.lang.String">
+    	SELECT 
+    		ID,
+			PID,
+			CODE,
+			PARENT_CODE,
+			MATERIAL_TYPE,
+			TYPE_NAME,
+			IS_REQUIRED
+		FROM SS_MATERIAL_DEFINE 
+		WHERE 
+		PARENT_CODE IN (
+		SELECT CODE 
+		FROM SS_MATERIAL_DEFINE
+		WHERE 
+		CODE = '001'
+		)  
+		AND REC_STATUS = '1'
+		ORDER BY ORDER_NO
+    </select>
+    
+    <select id="getListByEditMaterial" resultMap="MaterialDefineItemViewMap" parameterType="java.lang.String">
+    	   SELECT
+			   A.ID,
+			   A.PID,
+			   A.CODE,
+			   A.PARENT_CODE,
+			   A.MATERIAL_TYPE,
+			   A.TYPE_NAME,
+			   A.IS_REQUIRED,
+			   F.CUSTOMERMAT_PID,
+			   F.MEMBER_NO,
+			   F.MATERIAL_PID,
+			   F.EFFECTIVE_TIME,
+			   F.FILE_NAME,
+			   DATE_FORMAT(F.CREATE_TIME, '%Y-%m-%d') AS CREATE_TIME,
+			   F.FILE_URL,
+			   F.FILE_FALG
+  			FROM
+   			SS_MATERIAL_DEFINE A  LEFT JOIN 
+   			(
+   				 SELECT
+     				D.CUSTOMERMAT_PID AS CUSTOMERMAT_PID,
+		 			D.CREATE_TIME AS CREATE_TIME,
+		 			D.MEMBER_NO AS MEMBER_NO,
+     				D.MATERIAL_PID AS MATERIAL_PID,
+     				D.EFFECTIVE_TIME AS EFFECTIVE_TIME,
+     				GROUP_CONCAT(E.FILE_NAME, '') AS FILE_NAME,
+     				GROUP_CONCAT(E.FILE_URL, '') AS FILE_URL,
+     				GROUP_CONCAT(E.FILE_FALG, '') AS FILE_FALG
+    			FROM
+     			SS_CUSTOMER_MATERIAL D,
+     			SS_CUSTOMER_MATERIAL_DETAIL E
+    			WHERE
+     				1 = 1
+    				AND D.CUSTOMERMAT_PID = E.MATERIAL_PID
+    				AND D.MEMBER_NO = #{memberNo}
+    				AND D.REC_STATUS = '1'
+    				AND E.REC_STATUS = '1'
+    				GROUP BY
+     				E.MATERIAL_PID
+   			) F ON  A.PID = F.MATERIAL_PID
+  			WHERE
+   			1 = 1 
+			AND A.PARENT_CODE = '001' 
+  			AND A.REC_STATUS = '1'
+  			ORDER BY A.ORDER_NO
+    </select>
+    
+    <select id="getListMaterialByMemberNo" resultMap="MaterialDefineItemViewMap" parameterType="java.lang.String">
+		SELECT
+			A.ID,
+			A.PID,
+			A.CODE,
+			A.PARENT_CODE,
+			A.MATERIAL_TYPE,
+			A.TYPE_NAME,
+			A.IS_REQUIRED,
+			B.CUSTOMERMAT_PID,
+			B.MEMBER_NO,
+			B.MATERIAL_PID,
+			B.EFFECTIVE_TIME,
+			E.FILE_NAME,
+			E.FILE_URL,
+			E.FILE_FALG
+		FROM
+			SS_CUSTOMER_MATERIAL B 
+			INNER JOIN SS_MATERIAL_DEFINE A ON A.PID = B.MATERIAL_PID
+			INNER JOIN SS_CUSTOMER_MATERIAL_DETAIL E ON B.CUSTOMERMAT_PID = E.MATERIAL_PID
+		WHERE
+			1 = 1
+		AND B.MEMBER_NO = #{memberNo}
+		AND A.REC_STATUS = '1'
+		AND B.REC_STATUS = '1'  
+		ORDER BY A.ORDER_NO
+	</select>
+	
+	<select id="getListMaterialByCreditNo" resultMap="MaterialDefineItemViewMap" parameterType="java.lang.String">
+		SELECT
+			A.ID,
+			A.PID,
+			A.CODE,
+			A.PARENT_CODE,
+			A.MATERIAL_TYPE,
+			A.TYPE_NAME,
+			A.IS_REQUIRED,
+			B.PID,
+			B.CREDIT_NO,
+			B.MATERIAL_DEFINE_PID,
+			E.FILE_NAME,
+			E.FILE_URL
+		FROM
+			DM_MATERIAL_CREDIT B 
+			INNER JOIN SS_MATERIAL_DEFINE A ON A.PID = B.MATERIAL_DEFINE_PID
+			INNER JOIN DM_MATERIAL_CREDIT_DETAIL E ON B.PID = E.CREDIT_MATERIAL_PID
+		WHERE
+			1 = 1
+		AND B.CREDIT_NO = #{creditNo}
+		AND A.REC_STATUS = '1'
+		AND B.REC_STATUS = '1'	
+		ORDER BY A.ORDER_NO
+	</select>
+    
+    <!-- 授信需要的材料 -->
+    <select id="findCreditMaterial" resultMap="MaterialDefineResultMap" >
+    	SELECT *
+    	FROM SS_MATERIAL_DEFINE
+    	WHERE
+    		1=1
+    		AND PARENT_CODE='002'
+    		AND REC_STATUS='1'
+    		ORDER BY ORDER_NO
+    </select>
+    
+    <!-- 获取叶子节点的材料定义 -->
+    <select id="getLeafMaterialDefine" resultMap="MaterialDefineResultMap" parameterType="com.sinoservices.xascf.customer.view.MaterialDefineCondition">
+		<include refid="select"/>
+    	FROM SS_MATERIAL_DEFINE S
+    	WHERE S.CODE NOT IN  (SELECT SS.PARENT_CODE FROM SS_MATERIAL_DEFINE SS)
+    </select>
+    
+    <!-- 获取叶子节点的材料定义 -->
+    <select id="getCountLeafMaterialDefine" resultType="int" parameterType="com.sinoservices.xascf.customer.view.MaterialDefineCondition">
+		<include refid="count"/> 
+    	FROM SS_MATERIAL_DEFINE S
+    	WHERE S.CODE NOT IN  (SELECT SS.PARENT_CODE FROM SS_MATERIAL_DEFINE SS)
+    </select>
+    
+    <!-- 获取树形结构的材料定义 -->
+    <select id="getTreeModel" resultMap="materialDefineWithChildren" parameterType="String">
+		<include refid="select"/>
+		FROM  SS_MATERIAL_DEFINE
+		WHERE 1=1  AND MATERIAL_TYPE= #{materialType}
+		AND PARENT_CODE NOT IN (SELECT SS.CODE FROM SS_MATERIAL_DEFINE SS)
+	</select>
+	
+		
+	<!-- 新增 -->
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.sinoservices.xascf.customer.model.MaterialDefineModel">
+		INSERT INTO SS_MATERIAL_DEFINE(
+			PID,
+			CODE,
+			PARENT_CODE,
+			MATERIAL_TYPE,
+			TYPE_NAME,
+			MATERIAL_WEIGHTS,
+			IS_REQUIRED,
+			ORDER_NO,
+			CREATE_TIME,
+			CREATOR,
+			MODIFIER,
+			MODIFY_TIME,
+			REC_VER,
+			REC_STATUS
+		) VALUES(
+			#{pid},
+			#{code},
+			#{parentCode},
+			#{materialType},
+			#{typeName},
+			#{materialWeights},
+			#{isRequired},
+			#{orderNo},
+			SYSDATE(),
+			#{creator},
+			#{modifier},SYSDATE(),1,1
+		)
+	</insert>
+	
+	
+	<!-- 修改 -->
+	<update id="updateByModel" parameterType="com.sinoservices.xascf.customer.model.MaterialDefineModel">
+		UPDATE SS_MATERIAL_DEFINE SET
+		<if test="typeName !=null and typeName !=''">	TYPE_NAME = #{typeName},</if>
+		<if test="isRequired !=null and isRequired !=''">	IS_REQUIRED = #{isRequired},</if>
+		<if test="materialWeights !=null and materialWeights !=''">	MATERIAL_WEIGHTS = #{materialWeights},</if>
+		<if test="orderNo !=null and orderNo !=''">	ORDER_NO = #{orderNo},</if>
+		<if test="recStatus!=null and recStatus!=''">	REC_STATUS = #{recStatus},</if>
+				MODIFY_TIME = SYSDATE(),
+				MODIFIER =#{modifier},
+				Rec_Ver=Rec_Ver+1 
+		WHERE PID=#{pid}	
+	</update>
+	
+		<!-- 删除 -->
+	<delete id="deleteByPids" parameterType="java.util.List"> 
+		DELETE FROM SS_MATERIAL_DEFINE WHERE PID in
+		<foreach item="ids" collection="list" open="(" separator="," close=")">
+				#{ids}
+			</foreach>
+	</delete>
+    
+</mapper>

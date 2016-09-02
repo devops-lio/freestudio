@@ -1,0 +1,18 @@
+国际化资源文件：resources/i18n/[模块名]
+	
+	资源文件命名为：   
+	resource/i18n/[模块名]/ui/[模块名or子模块]_zh_CN.properties	
+	resource/i18n/[模块名]/error/[模块名or子模块]_zh_CN.properties	
+	resource/i18n/[模块名]/validation/[模块名or子模块]_zh_CN.properties	
+	resource/i18n/[模块名]/info/[模块名or子模块]_zh_CN.properties
+	
+	ui是指界面（JSP）显示信息	
+	error是指异常类的errorCode对应的提示信息	
+	validation是指校验模块使用的校验信息	
+	info是指Java代码写的提示信息
+	
+	message key的字义规范：
+	ui.模块名.[子模块名].页面.info=用户管理  
+							info：具体内容的描述	
+	error.模块名.编号=连接异常	
+	info.模块.子模块.key=操作成功

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.MaterialHistoryMapper">
+	<resultMap type="com.sinoservices.xascf.credit.view.MaterialHistoryItem" id="materialHistoryItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="materialDefinePid" column="MATERIAL_DEFINE_PID"/>
+		<result property="uploadTime" column="UPLOAD_TIME"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileRename" column="FILE_RENAME"/>
+		<result property="fileUrl" column="FILE_URL"/>
+		<result property="fileFlag" column="FILE_FALG"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+				PID,
+				MATERIAL_DEFINE_PID,
+				CREDIT_NO,
+				UPLOAD_TIME,
+				FILE_NAME,
+				FILE_RENAME,
+				FILE_URL,
+				FILE_FALG,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+					
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="pid!=null and pid!=''"> AND PID LIKE ('%'||'pid'||'%' )</if>
+		<if test="creditMaterialDetailPid!=null and creditMaterialDetailPid!=''"> AND CREDIT_MATERIAL_DETAIL_PID LIKE ('%'||'creditMaterialDetailPid'||'%' )</if>
+		<if test="uploadTime!=null and uploadTime!=''"> AND UPLOAD_TIME LIKE ('%'||'uploadTime'||'%' )</if>
+		<if test="fileName!=null and fileName!=''"> AND FILE_NAME LIKE ('%'||'fileName'||'%' )</if>
+		<if test="fileRename!=null and fileRename!=''"> AND FILE_RENAME LIKE ('%'||'fileRename'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.model.MaterialHistoryModel">
+		<include refid="count"/>
+		FROM  DM_MATERIAL_HISTORY
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="materialHistoryItemResultMap" parameterType="com.sinoservices.xascf.credit.model.MaterialHistoryModel">
+		<include refid="select"/>
+		FROM  DM_MATERIAL_HISTORY
+		<include refid="findByExample"/>
+	</select>
+	
+	
+	<!-- 新增历史记录 -->
+	<insert id="insert" parameterType="com.sinoservices.xascf.credit.model.MaterialHistoryModel">
+		INSERT INTO DM_MATERIAL_HISTORY (
+				PID,
+				MATERIAL_DEFINE_PID,
+				CREDIT_NO,
+				UPLOAD_TIME,
+				FILE_NAME,
+				FILE_RENAME,
+				FILE_URL,
+				FILE_FALG,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES (
+			   #{pid},
+			   #{materialDefinePid},
+			   #{creditNo},
+			   #{uploadTime},
+			   #{fileName},
+			   #{fileRename},
+			   #{fileUrl},
+			   #{fileFlag},
+			   1,
+			   #{createTime},
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   1
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE DM_MATERIAL_HISTORY SET
+				ID = #{id},
+				PID = #{pid},
+				CREDIT_MATERIAL_DETAIL_PID = #{creditMaterialDetailPid},
+				UPLOAD_TIME = #{uploadTime},
+				FILE_NAME = #{fileName},
+				FILE_RENAME = #{fileRename},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus},
+	</update>
+	
+	<!-- 更新历史上传材料记录 -->
+	<update id="updateByFlag" parameterType="com.sinoservices.xascf.credit.view.UpdateCreditMaterailHistory">
+		UPDATE DM_MATERIAL_HISTORY SET
+				CREDIT_NO = #{creditNo},
+				UPLOAD_TIME = #{uploadTime},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = #{modifyTime},
+				MODIFIER = #{modifier}
+		WHERE
+			1=1
+			AND REC_STATUS='1'
+			AND FILE_FALG IN   
+			    <foreach collection="flags" item="flag"  open="(" separator="," close=")">  
+		        	#{flag}  
+			    </foreach>  
+	</update>
+	
+	<!-- 根据标识查找所有的history -->
+	<select id="findByFlag" resultMap="materialHistoryItemResultMap">
+		<include refid="select"/>
+		FROM DM_MATERIAL_HISTORY
+		WHERE
+			1=1
+			AND REC_STATUS='1'
+			AND  FILE_FALG IN   
+			     <foreach collection="flags" item="flag"  open="(" separator="," close=")">  
+		        	#{flag}  
+			     </foreach> 
+	</select>
+	
+</mapper>

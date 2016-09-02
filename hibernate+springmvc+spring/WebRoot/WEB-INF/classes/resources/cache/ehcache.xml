@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache>
+	<diskStore path="/home/tomcat/hibernate/freestudio" />
+	<!-- eternal=false忽略timeToIdleSeconds,timeToLiveSeconds永远不会失效， 当缓存闲置30分钟后销毁，当缓存存活15分钟后销毁 -->
+	<defaultCache name="org.hibernate.cache.StandardQueryCache"
+		maxElementsInMemory="10000" eternal="false" overflowToDisk="true"
+		timeToIdleSeconds="1800" timeToLiveSeconds="900" diskPersistent="false"
+		diskExpiryThreadIntervalSeconds="120" />
+</ehcache>

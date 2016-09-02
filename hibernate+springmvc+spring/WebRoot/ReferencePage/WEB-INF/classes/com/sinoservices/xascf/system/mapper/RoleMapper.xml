@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.RoleMapper">
+
+    <resultMap type="com.sinoservices.xascf.system.model.RoleModel" id="roleResultMap">
+        <id property="id" column="ID"/>
+        <result property="rolePid" column="ROLE_PID"/>
+        <result property="roleName" column="ROLE_NAME"/>
+        <result property="roleCode" column="ROLE_CODE"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="systemPid" column="SYSTEM_PID"/>
+        <result property="creator" column="CREATOR"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="modifier" column="MODIFIER"/>
+        <result property="modifyTime" column="MODIFY_TIME"/>
+    </resultMap>
+    
+    <sql id="selectAll">
+        SELECT ID, ROLE_NAME, ROLE_PID,ROLE_CODE,DESCRIPTION,SYSTEM_PID, CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME,REC_VER,REC_STATUS
+          FROM `SS_ROLE`
+    </sql>
+
+    <sql id="findByExampleWhere">
+        WHERE 1=1 AND ID!=1
+        <if test="roleName!=null and roleName!=''"> AND ROLE_NAME LIKE CONCAT('%','${roleName}','%' )</if>
+        <if test="roleCode!=null and roleCode!=''"> AND ROLE_CODE LIKE CONCAT('%','${roleCode}','%' )</if>
+        <if test="systemPid!=null and systemPid!=''"> AND SYSTEM_PID LIKE CONCAT('%','${systemPid}','%' )</if>
+        <if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%')</if> 
+        
+    </sql>
+
+    <select id="getPage" parameterType="com.sinoservices.xascf.system.model.RoleModel" resultMap="roleResultMap">
+        <include refid="selectAll" />
+        <include refid="findByExampleWhere" />
+    </select>
+    
+    <select id="getNoPageList" parameterType="com.sinoservices.xascf.system.model.RoleModel" resultMap="roleResultMap">
+        <include refid="selectAll" />
+        <include refid="findByExampleWhere" />
+    </select>
+    
+    <select id="countByCondtion" parameterType="com.sinoservices.xascf.system.model.RoleModel" resultType="int">
+        SELECT COUNT(1) FROM `SS_ROLE`
+        <include refid="findByExampleWhere" />
+    </select>
+    <!-- 根据用户ID获取该用户权限系统的所有角色 -->
+    <select id="getRoleListByUserPid" resultMap="roleResultMap" parameterType="String">
+    	SELECT R.ID, ROLE_NAME, R.SYSTEM_PID
+          FROM `SS_ROLE` R
+			JOIN SS_USER_ROLE UR ON R.ROLE_PID=UR.ROLE_PID
+			WHERE 1=1
+			AND UR.USER_PID=#{userPid}
+    
+    </select>
+    <!-- 子系统根据用户ID和系统编码获取用户角色信息 -->
+    <select id="getRoleListByUserIdAndsystemCode" resultMap="roleResultMap" parameterType="java.util.Map">
+    	SELECT 
+			R.ROLE_NAME,R.ROLE_PID
+			FROM SS_ROLE R
+			JOIN SS_USER_ROLE UR ON UR.ROLE_PID=R.ROLE_PID
+			JOIN SS_SYSTEM S ON R.SYSTEM_PID=S.SYSTEM_PID
+			WHERE UR.USER_PID=#{userPid} AND S.SYSTEM_CODE=#{sysCode}
+    
+    </select>
+    <insert id="insert" parameterType="com.sinoservices.xascf.system.model.RoleModel">
+        INSERT INTO `SS_ROLE` (ID, ROLE_NAME, ROLE_PID,ROLE_CODE,DESCRIPTION, SYSTEM_PID,
+            CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME,REC_VER,REC_STATUS)    
+        VALUES (#{id}, #{roleName}, #{rolePid},#{roleCode},#{description},#{systemPid},
+            #{creator}, #{createTime, jdbcType=TIMESTAMP}, #{modifier}, #{modifyTime, jdbcType=TIMESTAMP}, #{recVer}, #{recStatus})
+    </insert>
+    
+    <update id="update" parameterType="com.sinoservices.xascf.system.model.RoleModel">
+        UPDATE `SS_ROLE` SET 
+        <if test="roleName!=null and roleName!=''">ROLE_NAME = #{roleName}, </if>
+        <if test="roleCode!=null and roleCode!=''">ROLE_CODE = #{roleCode},</if>
+        <if test="description!=null and description!=''">DESCRIPTION = #{description},</if>
+            MODIFIER = #{modifier}, MODIFY_TIME = #{modifyTime}
+         WHERE ROLE_PID = #{rolePid}
+    </update>
+    
+    <delete id="delete" parameterType="java.util.List">
+        DELETE FROM `SS_ROLE` WHERE
+        <choose>
+             <when test="null!=list and list.size!=0">
+                ROLE_PID IN
+                <foreach collection="list" item="rolePid" index="index" open="(" separator="," close=")">
+                    #{rolePid}
+                </foreach>
+            </when>
+            <otherwise>
+               1 != 1
+            </otherwise>
+        </choose>
+    </delete>
+    <!-- 子系统facade调用 -->
+    <!-- 根据systemCode获取角色列表 -->
+    <select id="getRoleListBySystemCode" resultMap="roleResultMap" parameterType="java.lang.String">
+	    SELECT R.ID, ROLE_NAME,R.ROLE_CODE
+	         FROM `ROLE` R
+			JOIN `SYSTEM` S ON R.SYSTEM_ID=S.ID
+			WHERE S.SYSTEM_CODE=#{_parameter}
+    </select>
+    
+    
+</mapper>

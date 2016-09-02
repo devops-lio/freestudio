@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.customer.mapper.CompanyClieMapper">
+	<resultMap type="com.sinoservices.xascf.customer.model.CompanyClieModel" id="companyClieModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="cliePid" column="CLIE_PID"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="memberName" column="MEMBER_NAME"/>
+		<result property="visitCount" column="VISIT_COUNT"/>
+		<result property="visitDate" column="VISIT_DATE"/>
+		<result property="visitCaption" column="VISIT_CAPTION"/>
+		<result property="visitType" column="VISIT_TYPE"/>
+		<result property="status" column="STATUS"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileUrl" column="FILE_URL"/>
+		<result property="remark" column="REMARK"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap> 
+	
+	<sql id="select"> 
+		 SELECT 
+			CLIE_PID,
+			SCS.CUSTOMER_NAME AS MEMBER_NAME,
+			MEMBER_PID,
+			VISIT_COUNT,
+			VISIT_DATE,
+			VISIT_CAPTION,
+			VISIT_TYPE,
+			FILE_NAME,
+			FILE_URL,
+			SSC.STATUS,
+			SSC.REMARK,
+			SSC.CREATOR
+	</sql>
+	
+	<sql id="count"> 
+	    	SELECT COUNT(1)  
+	</sql>
+	
+	<sql id="findByExample">
+	WHERE 1=1
+		<if test="memberPid !=null and  memberPid != ''">AND MEMBER_PID = #{memberPid}</if>
+		<if test="visitCount !=null and  visitCount != ''">AND VISIT_COUNT LIKE ('%${visitCount}%')</if>
+		<if test="memberName !=null and  memberName != ''">AND SCS.CUSTOMER_NAME LIKE ('%${memberName}%')</if>
+		<if test="visitCaption !=null and  visitCaption!= ''">AND VISIT_CAPTION = #{visitCaption}</if>
+		<if test="visitType !=null and  visitType != ''">AND VISIT_TYPE = #{visitType}</if>
+		<if test="visitDate !=null and visitDate !='' "> AND DATE_FORMAT(VISIT_DATE, '%Y-%m')= #{visitDate}</if>
+	</sql>
+	
+	<select id="getcountByCondtion" resultType="int" parameterType="com.sinoservices.xascf.customer.model.CompanyClieModel">
+		<include refid="count"/>
+		FROM  SS_COMPANY_CLIE SSC 
+		JOIN SS_CUSTOMER_SUB SCS ON SCS.CUSTOMERSUB_PID=SSC.MEMBER_PID
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="companyClieModelResultMap" parameterType="com.sinoservices.xascf.customer.model.CompanyClieModel">
+		<include refid="select"/>
+		FROM  SS_COMPANY_CLIE SSC 
+		JOIN SS_CUSTOMER_SUB SCS ON SCS.CUSTOMERSUB_PID=SSC.MEMBER_PID
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert"  parameterType="com.sinoservices.xascf.customer.model.CompanyClieModel">
+		INSERT INTO SS_COMPANY_CLIE(  	
+	        CLIE_PID, 
+	        MEMBER_PID,        
+	        VISIT_COUNT,	       
+	        VISIT_DATE,    
+	        VISIT_CAPTION,  
+	        VISIT_TYPE,	        
+	        STATUS,  
+	        FILE_NAME,
+	        FILE_URL,
+	        REMARK,   
+	        CREATOR,	
+	        REC_VER,	         
+	        CREATE_TIME
+		)VALUES(  
+			#{cliePid}, 
+			#{memberPid},
+			#{visitCount},
+			#{visitDate},
+			#{visitCaption},
+			#{visitType},
+			#{status},
+			#{fileName},
+			#{fileUrl},
+			#{remark},
+			#{creator},
+			1,
+			SYSDATE()
+		); 
+	</insert>  
+	<update id="updateByPid" parameterType="com.sinoservices.xascf.customer.model.CompanyClieModel">
+		UPDATE SS_COMPANY_CLIE SET
+		<if test="memberPid !=null and memberPid !=''">		MEMBER_PID = #{memberPid},</if>
+		<if test="visitCount !=null and visitCount !=''">		VISIT_COUNT = #{visitCount},</if>
+		<if test="visitDate !=null and visitDate !=''">		VISIT_DATE = #{visitDate},</if>
+		<if test="visitCaption !=null and visitCaption !=''">		VISIT_CAPTION = #{visitCaption},</if>
+		<if test="visitType !=null and visitType !=''">		VISIT_TYPE = #{visitType},</if>
+		<if test="status !=null and status !=''">		STATUS = #{status},</if>
+		<if test="fileName !=null and fileName !=''">		FILE_NAME = #{fileName},</if>
+		<if test="fileUrl !=null and fileUrl !=''">		FILE_URL = #{fileUrl},</if>
+		<if test="remark !=null and remark !=''">		REMARK = #{remark},</if>
+		<if test="modifier !=null and modifier !=''">		MODIFIER = #{modifier},</if>
+				MODIFY_TIME = SYSDATE(),
+				REC_VER = REC_VER+1
+		WHERE CLIE_PID=#{cliePid}
+	</update>
+	<delete id="deleteByPid" parameterType="String">
+		DELETE FROM SS_COMPANY_CLIE WHERE CLIE_PID=#{_parameter}
+	</delete>
+	
+	
+</mapper>

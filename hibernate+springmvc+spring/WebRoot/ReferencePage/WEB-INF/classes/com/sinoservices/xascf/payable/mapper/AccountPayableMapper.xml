@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.payable.mapper.AccountPayableMapper">
+	
+	<resultMap type="com.sinoservices.xascf.payable.model.AccountPayableModel" id="AccountPayableModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="accountPayablePid" column="ACCOUNT_PAYABLE_PID"/>
+		<result property="sscoPid" column="SSCO_PID"/> 
+		<result property="payType" column="PAY_TYPE"/> 
+		<result property="businessNo" column="BUSINESS_NO"/>
+		<result property="exceptAmount" column="EXCEPT_AMOUNT"/>
+		<result property="actualAmount" column="ACTUAL_AMOUNT"/>
+		<result property="exceptData" column="EXCEPT_DATA"/>
+		<result property="actualDate" column="ACTUAL_DATE"/>
+		<result property="currencyKind" column="CURRENCY_KIND"/>
+		<result property="customerName" column="CUSTOMER_NAME"/>
+		<result property="customer" column="CUSTOMER"/>
+		<result property="status" column="STATUS"/>
+		<result property="remark" column="REMARK"/> 
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="createTimeStr" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="select"> 
+		  SELECT 
+			ID,
+			ACCOUNT_PAYABLE_PID,
+			SSCO_PID, 
+			PAY_TYPE, 
+			BUSINESS_NO,
+			EXCEPT_AMOUNT,
+			ACTUAL_AMOUNT,
+			EXCEPT_DATA,
+			DATE_FORMAT(ACTUAL_DATE, '%Y-%m-%d') AS ACTUAL_DATE ,
+			CURRENCY_KIND,
+			CUSTOMER_NAME,
+			CUSTOMER,
+			STATUS,
+			REMARK, 
+			CREATOR,
+			CREATE_TIME,
+			MODIFIER,
+			MODIFY_TIME,
+			REC_VER,
+			REC_STATUS
+	</sql>
+	
+	<sql id="selectList">
+		<![CDATA[
+		  SELECT 
+			ID,
+			ACCOUNT_PAYABLE_PID,
+			SSCO_PID,
+			CLIENT_NAME,
+			PAY_TYPE, 
+			BUSINESS_NO,
+			EXCEPT_AMOUNT,
+			ACTUAL_AMOUNT,
+			EXCEPT_DATA,
+			DATE_FORMAT(ACTUAL_DATE, '%Y-%m-%d') AS ACTUAL_DATE
+		]]>
+	</sql>
+	
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	
+	
+	<insert id="insert">
+		INSERT INTO PM_ACCOUNT_PAYABLE(
+			ID,
+			ACCOUNT_PAYABLE_PID,
+			SSCO_PID, 
+			PAY_TYPE, 
+			BUSINESS_NO,
+			EXCEPT_AMOUNT,
+			ACTUAL_AMOUNT,
+			EXCEPT_DATA,
+			ACTUAL_DATE,
+			CURRENCY_KIND,
+			CUSTOMER_NAME,
+			CUSTOMER, 
+			REMARK, 
+			CREATOR,
+			CREATE_TIME
+		)VALUES( 
+			#{id},
+			#{accountPayablePid},
+			#{sscoPid}, 
+			#{payType}, 
+			#{businessNo},
+			#{exceptAmount},
+			#{actualAmount},
+			#{exceptData},
+			#{actualDate},
+			#{currencyKind},
+			#{customerName},
+			#{customer},
+			#{remark},
+			#{creator},
+			SYSDATE() 
+		); 
+	</insert> 
+	
+	<!-- 应收批量信息执行插入 -->
+	<insert id="addByList" parameterType="java.util.List">  
+	    	INSERT INTO PM_ACCOUNT_PAYABLE ( 
+				ACCOUNT_PAYABLE_PID,
+				SSCO_PID, 
+				PAY_TYPE, 
+				BUSINESS_NO,
+				EXCEPT_AMOUNT,
+				ACTUAL_AMOUNT,
+				EXCEPT_DATA,
+				ACTUAL_DATE,
+				CURRENCY_KIND,
+				CUSTOMER_NAME,
+				CUSTOMER, 
+				REMARK, 
+				CREATOR,
+				CREATE_TIME, 
+				REC_VER,
+				REC_STATUS 
+		) VALUES  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (   
+	           #{item.accountPayablePid},
+			   #{item.sscoPid}, 
+			   #{item.payType}, 
+			   #{item.businessNo},
+			   #{item.exceptAmount},
+			   #{item.actualAmount},
+			   #{item.exceptData},
+			   #{item.actualDate},
+			   #{item.currencyKind},
+			   #{item.customerName},
+			   #{item.customer},
+			   #{item.remark},
+			   'SYSTEM',
+			   SYSDATE(),
+			   #{item.recVer},
+			   #{item.recStatus}
+			   )  
+	    </foreach>  
+  </insert>  
+	
+	<!-- 应收信息更新 -->
+	<update id="updateByReceivable" parameterType="com.sinoservices.xascf.payable.model.AccountPayableModel">
+		UPDATE PM_ACCOUNT_PAYABLE
+		<set>
+			<if test="sscoPid !=null and sscoPid!='' ">SSCO_PID=${sscoPid},</if> 
+			<if test="payType !=null and payType'' ">PAY_TYPE=${payType},</if> 
+			<if test="businessNo != null and businessNo != ''">BUSINESS_NO=${businessNo},</if>
+			<if test="exceptAmount != null and exceptAmount != ''">EXCEPT_AMOUNT=${exceptAmount},</if>
+			<if test="actualAmount != null and actualAmount !=''">ACTUAL_AMOUNT=${actualAmount},</if>
+			<if test="exceptData != null and exceptData != ''">EXCEPT_DATA=${exceptData},</if>
+			<if test="actualDate != null and actualDate != ''">ACTUAL_DATE=${actualDate},</if>
+			<if test="currencyKind != null and currencyKind != ''">CURRENCY_KIND=${currencyKind},</if>
+			<if test="customerName != null and customerName != ''">CUSTOMER_NAME=${customerName},</if>
+			<if test="modifier != null and modifier != ''">MODIFIER=${modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''">MODIFY_TIME=${modifyTime}</if>
+		</set>
+		WHERE 1=1     
+		BUSINESS_NO=${businessNo} 
+	</update>
+	
+	
+	<!-- 应付管理查询 -->  
+	<sql id="findByPayable">
+	WHERE 1=1  
+	<if test="businessNo != null and businessNo !=''"> AND BUSINESS_NO LIKE ('%${businessNo}%')</if>  
+	<if test="payType != null and payType != ''"> AND PAY_TYPE =#{payType}</if>
+	<if test="createTimeFrom !=null and createTimeFrom !='' "> AND DATE_FORMAT(CREATE_TIME, '%Y-%m')= #{createTimeFrom}</if>
+	</sql> 
+	
+	<!-- count-->
+	<select id="getCountByPayable" resultType="int" parameterType="com.sinoservices.xascf.payable.view.AccountPayableQueryConditionView">
+		<include refid="count"/>
+		FROM  PM_ACCOUNT_PAYABLE
+		<include refid="findByPayable"/>
+		ORDER BY CREATE_TIME DESC
+	</select>
+	
+	<!-- page -->
+	<select id="getPayablePage" resultMap="AccountPayableModelResultMap" 
+		parameterType="com.sinoservices.xascf.payable.view.AccountPayableQueryConditionView">
+		<include refid="select"/>
+		FROM PM_ACCOUNT_PAYABLE 
+		<include refid="findByPayable"/>
+		ORDER BY CREATE_TIME DESC
+	</select> 
+	<!-- 根据业务编号查询最近生成的model -->
+	<select id="getPayableByBusnessNo" resultMap="AccountPayableModelResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM PM_ACCOUNT_PAYABLE 
+		WHERE 1=1 
+		AND BUSINESS_NO=#{_parameter}
+		ORDER BY CREATE_TIME DESC
+		LIMIT 1
+	</select> 
+	
+	
+	<!-- 应付图表 -->
+	<select id="getListByStat" resultMap="AccountPayableModelResultMap" parameterType="com.sinoservices.xascf.payable.view.AccountPayableQueryConditionView">
+		SELECT
+			DATE_FORMAT(CREATE_TIME, '%m') AS BUSINESS_NO, 
+			SUM(EXCEPT_AMOUNT) AS ACTUAL_AMOUNT 
+		FROM PM_ACCOUNT_PAYABLE
+		GROUP BY  DATE_FORMAT(CREATE_TIME, '%m')
+		<!-- 
+		SELECT
+			PAY_TYPE, 
+			DATE_FORMAT(ACTUAL_DATE, '%m') AS ACTUAL_DATE, 
+			SUM(ACTUAL_AMOUNT) AS ACTUAL_AMOUNT 
+		FROM PM_ACCOUNT_PAYABLE
+		WHERE PAY_TYPE='0'
+		GROUP BY PAY_TYPE, DATE_FORMAT(ACTUAL_DATE, '%m')
+		UNION ALL 
+		SELECT
+			PAY_TYPE, 
+			DATE_FORMAT(ACTUAL_DATE, '%m') AS ACTUAL_DATE, 
+			SUM(ACTUAL_AMOUNT) AS ACTUAL_AMOUNT  
+		FROM PM_ACCOUNT_PAYABLE
+		WHERE PAY_TYPE='1'
+		GROUP BY PAY_TYPE, DATE_FORMAT(ACTUAL_DATE, '%m')
+		 -->
+ 
+	</select>
+	 
+	
+</mapper>

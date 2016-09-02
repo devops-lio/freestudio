@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.customer.mapper.CustomerSubMapper">
+
+	<resultMap type="com.sinoservices.xascf.customer.view.CustomerSubItemView" id="CustomerItemViewMap"> 
+		<result property="id" column="ID"/> 
+		<result property="customersubPid" column="CUSTOMERSUB_PID"/> 
+		<result property="customerName" column="CUSTOMER_NAME"/>  
+		<result property="companyType" column="COMPANY_TYPE"/>
+		<result property="companyLevel" column="COMPANY_LEVEL"/> 
+		<result property="addressCn" column="ADDRESS_CN"/>
+		<result property="postalCode" column="POSTAL_CODE"/>
+		<result property="corporate" column="CORPORATE"/>
+		<result property="registeredTime" column="REGISTERED_TIME"/>
+		<result property="fax" column="FAX"/>
+		<result property="url" column="URL"/>
+		<result property="mobile" column="MOBILE"/>
+		<result property="tel" column="TEL"/>
+		<result property="businessNo" column="BUSINESS_NO"/>
+		<result property="email" column="EMAIL"/> 
+		<result property="taxNo" column="TAX_NO"/>
+		<result property="status" column="STATUS"/>
+		<result property="ispurchase" column="ISPURCHASE"/>
+		<result property="registeredFund" column="REGISTERED_FUND"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="industry" column="INDUSTRY"/>
+		<result property="mainbusiness" column="MAINBUSINESS"/>
+		<result property="organizationCode" column="ORGANIZATION_CODE"/>
+		<result property="loansNo" column="LOANS_NO"/>
+		<result property="loansPwd" column="LOANS_PWD"/> 
+		<result property="businessScope" column="BUSINESS_SCOPE"/>
+		<result property="area" column="AREA"/>
+		<result property="property" column="PROPERTY"/>
+		<result property="businessPeople" column="BUSINESS_PEOPLE"/>
+		<result property="remark" column="REMARK"/>   
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<result property="currencyType" column="CURRENCY_TYPE"/> 
+		<result property="scribedMoney" column="SCRIBED_MONEY"/>
+		<result property="roadmanagementNo" column="ROADMANAGEMENT_NO"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		<result property="memberNo" column="MEMBER_NO"/>
+		
+		
+		<result property="businesslicenseno" column="BUSINESSLICENSENO"/>
+		<result property="accountlicenseno" column="ACCOUNTLICENSENO"/>
+		<result property="registeredAddress" column="REGISTERED_ADDRESS"/>
+		<result property="officeAddress" column="OFFICE_ADDRESS"/>
+		<result property="loansBank" column="LOANS_BANK"/>
+		
+	</resultMap>
+	
+	
+	<resultMap type="com.sinoservices.xascf.customer.model.CustomerSubModel" id="CustomerModelResultMap"> 
+		<result property="id" column="ID"/> 
+		<result property="customersubPid" column="CUSTOMERSUB_PID"/> 
+		<result property="customerName" column="CUSTOMER_NAME"/>  
+		<result property="companyType" column="COMPANY_TYPE"/>
+		<result property="companyLevel" column="COMPANY_LEVEL"/> 
+		<result property="addressCn" column="ADDRESS_CN"/>
+		<result property="postalCode" column="POSTAL_CODE"/>
+		<result property="corporate" column="CORPORATE"/>
+		<result property="registeredTime" column="REGISTERED_TIME"/>
+		<result property="fax" column="FAX"/>
+		<result property="url" column="URL"/>
+		<result property="mobile" column="MOBILE"/>
+		<result property="tel" column="TEL"/>
+		<result property="businessNo" column="BUSINESS_NO"/>
+		<result property="email" column="EMAIL"/> 
+		<result property="taxNo" column="TAX_NO"/>
+		<result property="status" column="STATUS"/>
+		<result property="ispurchase" column="ISPURCHASE"/>
+		<result property="registeredFund" column="REGISTERED_FUND"/>
+		<result property="currency" column="CURRENCY"/>
+		<result property="industry" column="INDUSTRY"/>
+		<result property="mainbusiness" column="MAINBUSINESS"/>
+		<result property="organizationCode" column="ORGANIZATION_CODE"/>
+		<result property="loansNo" column="LOANS_NO"/>
+		<result property="loansPwd" column="LOANS_PWD"/> 
+		<result property="businessScope" column="BUSINESS_SCOPE"/>
+		<result property="area" column="AREA"/>
+		<result property="property" column="PROPERTY"/>
+		<result property="businessPeople" column="BUSINESS_PEOPLE"/>
+		<result property="remark" column="REMARK"/>   
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		
+		
+		<result property="currencyType" column="CURRENCY_TYPE"/> 
+		<result property="scribedMoney" column="SCRIBED_MONEY"/>
+		<result property="roadmanagementNo" column="ROADMANAGEMENT_NO"/>
+		<result property="memberPid" column="MEMBER_PID"/>
+		
+		<result property="businesslicenseno" column="BUSINESSLICENSENO"/>
+		<result property="accountlicenseno" column="ACCOUNTLICENSENO"/>
+		<result property="registeredAddress" column="REGISTERED_ADDRESS"/>
+		<result property="officeAddress" column="OFFICE_ADDRESS"/>
+		<result property="loansBank" column="LOANS_BANK"/>
+		
+	</resultMap>
+	
+	
+	<sql id="selectCustomer"> 
+		  SELECT 
+			 ID,
+			 CUSTOMERSUB_PID,                      
+			 CUSTOMER_NAME,   		               
+			 COMPANY_TYPE,     	                
+			 COMPANY_LEVEL,   			              
+			 ADDRESS_CN,  		              
+			 POSTAL_CODE,   		        
+			 CORPORATE,        	 
+			 CORPORATE_CARDNO,
+			 CONTROL_CARDNO,                 
+			 DATE_FORMAT(REGISTERED_TIME, '%Y-%m-%d') AS REGISTERED_TIME,                 
+			 FAX,    				   
+			 URL,  				        
+			 MOBILE,  				
+			 TEL,      			
+			 BUSINESS_NO,  
+			 EMAIL,   	  				
+			 TAX_NO,             
+			 STATUS,  
+			 ISPURCHASE,      		
+			 REGISTERED_FUND,    
+			 CURRENCY,       		
+			 INDUSTRY,    
+			 MAINBUSINESS,
+			 ORGANIZATION_CODE,
+			 LOANS_NO,
+			 LOANS_PWD, 		
+			 BUSINESS_SCOPE,    
+			 AREA,          		
+			 PROPERTY,     	
+			 REMARK,   			
+			 CREATOR,            
+			 DATE_FORMAT(CREATE_TIME, '%Y-%m-%d') AS CREATE_TIME,
+			 MODIFIER,           
+			 MODIFY_TIME,        
+			 REC_VER,            
+			 REC_STATUS,
+			 CURRENCY_TYPE,
+			 SCRIBED_MONEY,
+			 ROADMANAGEMENT_NO,
+			 BUSINESSLICENSENO,
+			 ACCOUNTLICENSENO,
+			 REGISTERED_ADDRESS,
+			 OFFICE_ADDRESS,
+			 LOANS_BANK
+	</sql>
+	
+	<sql id="count"> 
+	    	SELECT COUNT(1)  
+	</sql>
+	
+	<sql id="findCompExample">
+		WHERE 1=1 AND  SCS.REC_STATUS =2
+		<if test="customerName !=null and customerName !=''">AND CUSTOMER_NAME LIKE ('%${customerName}%')</if>  
+		<if test="businessScope !=null and businessScope !=''">AND BUSINESS_SCOPE LIKE ('%${businessScope}%')</if> 
+		<if test="userPid !=null and  userPid != ''">AND C.USER_PID = #{userPid}</if>
+	</sql>
+	
+	<sql id="findByExample">
+	WHERE 1=1 AND REC_STATUS =2 
+		<if test="customerName !=null and customerName !=''">AND CUSTOMER_NAME LIKE ('%${customerName}%')</if> 
+		<if test="organizationCode !=null and organizationCode !=''">AND ORGANIZATION_CODE =#{organizationCode}</if> 
+		<if test="roadmanagementNo !=null and roadmanagementNo !=''">AND ROADMANAGEMENT_NO =#{roadmanagementNo}</if> 
+		<if test="businesslicenseno !=null and businesslicenseno !=''">AND BUSINESSLICENSENO =#{businesslicenseno}</if> 
+		<if test="accountlicenseno !=null and accountlicenseno !=''">AND ACCOUNTLICENSENO =#{accountlicenseno}</if> 
+		<if test="taxNo !=null and taxNo !=''">AND TAX_NO =#{taxNo}</if> 
+	</sql>
+	
+	<!-- 企业登记查询 计数 -->	
+	<select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.customer.view.CustomerSubConditionView">
+		<include refid="count"/>
+		FROM  SS_CUSTOMER_SUB
+		<include refid="findByExample"/>
+		AND CUSTOMER_TYPE = 1 AND ISPURCHASE = '0'
+		ORDER BY CREATE_TIME DESC
+	</select>  
+	
+	<select id="findModelByExample" resultMap="CustomerItemViewMap" parameterType="com.sinoservices.xascf.customer.view.CustomerSubConditionView">
+		<include refid="selectCustomer"></include>
+		FROM SS_CUSTOMER_SUB 
+		<include refid="findByExample"></include>
+		ORDER BY CREATE_TIME DESC
+	</select>
+	
+	<!-- 企业证件查询 -->
+	<select id="getListForCheck" resultMap="CustomerItemViewMap" parameterType="com.sinoservices.xascf.customer.view.CustomerSubConditionView">
+		<include refid="selectCustomer"></include>
+		FROM SS_CUSTOMER_SUB   SS
+			WHERE 1=1 AND REC_STATUS ='2'  
+			AND ( 1=2
+			<if test="customerName !=null and customerName !=''">OR CUSTOMER_NAME =#{customerName}</if> 
+			<if test="organizationCode !=null and organizationCode !=''">OR ORGANIZATION_CODE =#{organizationCode}</if> 
+			<if test="roadmanagementNo !=null and roadmanagementNo !=''">OR ROADMANAGEMENT_NO =#{roadmanagementNo}</if> 
+			<if test="businesslicenseno !=null and businesslicenseno !=''">OR BUSINESSLICENSENO =#{businesslicenseno}</if> 
+			<if test="accountlicenseno !=null and accountlicenseno !=''">OR ACCOUNTLICENSENO =#{accountlicenseno}</if> 
+			<if test="taxNo !=null and taxNo !=''">OR TAX_NO =#{taxNo}</if>
+			) 
+	</select>
+	
+	<!-- 企业、个人会员分页查询 -->
+	<select id="getPageByCustomer"  resultMap="CustomerItemViewMap" parameterType="com.sinoservices.xascf.customer.view.CustomerSubConditionView">
+		<include refid="selectCustomer"/>
+		FROM SS_CUSTOMER_SUB 
+		<include refid="findCompExample"/>
+		AND ISPURCHASE = '0'
+		ORDER BY CREATE_TIME DESC
+	</select>
+	
+	
+	<!-- 企业、个人会员计数查询 -->
+	<select id="getCountByCustomer"  resultType="int" parameterType="com.sinoservices.xascf.customer.view.CustomerSubConditionView">
+		<include refid="count"/>
+		FROM SS_CUSTOMER_SUB 
+		<include refid="findCompExample"/>
+		AND ISPURCHASE = '0'
+		ORDER BY CREATE_TIME DESC
+	</select>
+	
+	<!-- 个人会员登记查询 计数 -->	
+	<select id="getCountByUserCondition" resultType="int" parameterType="com.sinoservices.xascf.customer.view.CustomerSubConditionView">
+		<include refid="count"/>
+		FROM  SS_CUSTOMER_SUB
+		<include refid="findByExample"/>
+		AND CUSTOMER_TYPE = 2 AND ISPURCHASE = '0'
+		ORDER BY CREATE_TIME DESC
+	</select> 
+	
+	<!-- 委托方登记列表分页查询  3.12 toney 修改 添加会员KPI查询-->
+	<select id="getPageByPurchase"  resultMap="CustomerItemViewMap" parameterType="com.sinoservices.xascf.customer.view.CustomerSubConditionView">
+		SELECT
+			SCS.ID,
+			SCS.CUSTOMERSUB_PID,
+			CUSTOMER_NAME,
+			COMPANY_TYPE,
+			COMPANY_LEVEL,
+			ADDRESS_CN,
+			POSTAL_CODE,
+			CORPORATE,
+			CORPORATE_CARDNO,
+			CONTROL_CARDNO,
+			DATE_FORMAT(REGISTERED_TIME, '%Y-%m-%d') AS REGISTERED_TIME,
+			FAX,
+			URL,
+			MOBILE,
+			TEL,
+			BUSINESS_NO,
+			EMAIL,
+			TAX_NO,
+			STATUS,
+			ISPURCHASE,
+			REGISTERED_FUND,
+			CURRENCY,
+			INDUSTRY,
+			MAINBUSINESS,
+			ORGANIZATION_CODE,
+			LOANS_NO,
+			LOANS_PWD,
+			BUSINESS_SCOPE,
+			AREA,
+			SCS.REMARK,
+			PROPERTY,
+			DATE_FORMAT(SCS.CREATE_TIME, '%Y-%m-%d') AS CREATE_TIME,
+			SCS.REC_STATUS,
+			CURRENCY_TYPE,
+			SCRIBED_MONEY,
+			ROADMANAGEMENT_NO,
+			BUSINESSLICENSENO,
+			ACCOUNTLICENSENO,
+			REGISTERED_ADDRESS,
+			OFFICE_ADDRESS,
+			LOANS_BANK
+		FROM SS_CUSTOMER_SUB  SCS
+		INNER JOIN SS_KPICUSTOMER C ON SCS.CUSTOMERSUB_PID = C.CUSTOMERSUB_PID
+		<include refid="findCompExample"/>
+		AND ISPURCHASE = '1'
+		<if test="list!=null"> AND SCS.CUSTOMERSUB_PID NOT IN (
+			   <foreach collection="list" separator="," item="i" index="index" > 
+         			#{i}
+      			</foreach>
+      			)</if>
+      	ORDER BY SCS.CREATE_TIME DESC
+	</select>
+	
+	<!-- 委托方登记列表分页 计数 -->	
+	<select id="getCountByPurchase" resultType="int" parameterType="com.sinoservices.xascf.customer.view.CustomerSubConditionView">
+		<include refid="count"/>
+		FROM  SS_CUSTOMER_SUB SCS
+		INNER JOIN SS_KPICUSTOMER C ON SCS.CUSTOMERSUB_PID = C.CUSTOMERSUB_PID
+		WHERE 1=1 AND SCS.REC_STATUS = 2 AND ISPURCHASE = 1
+		<if test="customerName !=null and customerName !=''">AND CUSTOMER_NAME LIKE ('%${customerName}%')</if> 
+		<if test="businessScope !=null and businessScope !=''">AND BUSINESS_SCOPE LIKE ('%${businessScope}%')</if> 
+		<if test="userPid !=null and  userPid != ''">AND C.USER_PID = #{userPid}</if>
+		ORDER BY SCS.CREATE_TIME DESC
+	</select>  
+	
+
+		<!-- 个人会员登记查询 
+	<select id="getPageByUser" resultMap="CustomerItemViewMap" parameterType="com.sinoservices.xascf.customer.view.CustomerSubConditionView">
+		<include refid="selectCustomer"/>
+		FROM SS_CUSTOMER_SUB
+		<include refid="findCompExample"/>
+		AND CUSTOMER_TYPE = 2 AND ISPURCHASE = 0
+	</select>
+	-->	
+	
+	
+	
+	<!-- 根据pid查找  编辑 -->
+	<select id="findByPid" resultMap="CustomerModelResultMap" parameterType="String">
+		<include refid="selectCustomer"/>
+		FROM  SS_CUSTOMER_SUB
+		WHERE
+			1=1
+			AND CUSTOMERSUB_PID = #{_parameter}  AND (REC_STATUS = 2 OR  REC_STATUS = 1)
+	</select>
+
+	<insert id="insert"  parameterType="com.sinoservices.xascf.customer.model.CustomerSubModel">
+		INSERT INTO SS_CUSTOMER_SUB(  
+			 CUSTOMERSUB_PID,   		                  
+			 CUSTOMER_NAME,   		               
+			 COMPANY_TYPE,     	                
+			 COMPANY_LEVEL,     			              
+			 ADDRESS_CN,  		              
+			 POSTAL_CODE,   		        
+			 CORPORATE,   
+			 CORPORATE_CARDNO,
+			 CONTROL_CARDNO,     	                  
+			 REGISTERED_TIME,                 
+			 FAX,    				   
+			 URL,  				        
+			 MOBILE,  				
+			 TEL,      			
+			 BUSINESS_NO,  
+			 EMAIL,      				
+			 TAX_NO,             
+			 STATUS, 
+			 ISPURCHASE,       		
+			 REGISTERED_FUND,    
+			 CURRENCY,       		
+			 INDUSTRY,  
+			 MAINBUSINESS,
+			 ORGANIZATION_CODE,
+			 LOANS_NO,
+			 LOANS_PWD,  
+			 BUSINESS_SCOPE,    
+			 AREA,          		
+			 PROPERTY,    	
+			 REMARK,   			
+			 CREATOR,            
+			 CREATE_TIME,
+			 CURRENCY_TYPE,
+			 SCRIBED_MONEY,
+			 ROADMANAGEMENT_NO,
+			 BUSINESSLICENSENO,
+			 ACCOUNTLICENSENO,
+			 REGISTERED_ADDRESS,
+			 OFFICE_ADDRESS,
+			 LOANS_BANK,
+			 REC_VER,
+			 REC_STATUS
+		)VALUES( 
+			 #{customersubPid},  
+			 #{customerName},      
+			 #{companyType},   
+			 #{companyLevel},        
+			 #{addressCn},       
+			 #{postalCode},      
+			 #{corporate},      
+			 #{corporateCardno},       
+			 #{controlCardno}, 
+			 #{registeredTime},  
+			 #{fax},             
+			 #{url},              
+			 #{mobile},           
+			 #{tel},           
+			 #{businessNo},    
+			 #{email},        
+			 #{taxNo},
+			 #{status},   
+			 #{ispurchase},   
+			 #{registeredFund},
+			 #{currency},     
+			 #{industry}, 
+			 #{mainbusiness},   
+			 #{organizationCode},      
+			 #{loansNo},      
+			 #{loansPwd},   
+			 #{businessScope},  
+			 #{area},      
+			 #{property},   
+			 #{remark},
+			 #{creator},
+			 SYSDATE(),
+			 #{currencyType},
+			 #{scribedMoney},
+			 #{roadmanagementNo}, 
+			 #{businesslicenseno},
+			 #{accountlicenseno},
+			 #{registeredAddress},
+			 #{officeAddress},
+			 #{loansBank},
+			 1,
+			 2
+		)
+	</insert>  
+	
+	<update id="deleteById" parameterType="com.sinoservices.xascf.customer.model.CustomerSubModel">
+		UPDATE SS_CUSTOMER_SUB 
+		SET 
+			REC_STATUS=#{recStatus} 
+			WHERE 1=1 
+			AND CUSTOMERSUB_PID=#{customersubPid}
+	</update>
+	
+	<update id="logicDeleteById" parameterType="com.sinoservices.xascf.customer.model.CustomerSubModel">
+		UPDATE SS_CUSTOMER_SUB 
+		SET 
+			REC_STATUS=#{recStatus} 
+			WHERE 1=1 
+			AND CUSTOMERSUB_PID=#{customersubPid}
+	</update>
+	
+	<!-- 企业详细信息更新 -->
+	<update id="updateByCompany" parameterType="com.sinoservices.xascf.customer.model.CustomerSubModel">
+		UPDATE SS_CUSTOMER_SUB
+		<set>   
+			<if test="customersubPid != null and customersubPid != ''" >CUSTOMERSUB_PID = #{customersubPid},</if> 
+			<if test="customerName != null and customerName != ''" >CUSTOMER_NAME = #{customerName},</if> 
+			<if test="companyType != null and companyType != ''" >COMPANY_TYPE = #{companyType},</if>
+			<if test="companyLevel != null and companyLevel != ''" >COMPANY_LEVEL = #{companyLevel},</if> 
+			<if test="addressCn != null and addressCn != ''" >ADDRESS_CN = #{addressCn},</if>
+			<if test="postalCode != null and postalCode != ''" >POSTAL_CODE = #{postalCode},</if>
+			<if test="corporate != null and corporate != ''" >CORPORATE = #{corporate},</if> 
+			<if test="corporateCardno != null and corporateCardno != ''" >CORPORATE_CARDNO = #{corporateCardno},</if>
+			<if test="controlCardno != null and controlCardno != ''" >CONTROL_CARDNO = #{controlCardno},</if>
+			
+			<if test="registeredTime != null and registeredTime != ''" >REGISTERED_TIME = #{registeredTime},</if>
+			FAX = #{fax}, 
+			EMAIL = #{email},
+			<if test="url != null and url != ''" >URL = #{url},</if>
+			<if test="mobile != null and mobile != ''" >MOBILE = #{mobile},</if>
+			<if test="tel != null and tel != ''" >TEL = #{tel},</if>
+			<if test="businessNo != null and businessNo != ''" >BUSINESS_NO = #{businessNo},</if>
+			<if test="taxNo != null and taxNo != ''" >TAX_NO = #{taxNo},</if>
+			<if test="status != null and status != ''" >STATUS = #{status},</if>
+			<if test="ispurchase != null and ispurchase != ''">ISPURCHASE = #{ispurchase},</if>
+			<if test="registeredFund != null and registeredFund !=''" >REGISTERED_FUND = #{registeredFund},</if>
+			<if test="currency != null and currency != ''" >CURRENCY = #{currency},</if>
+			<if test="industry != null and industry != ''" >INDUSTRY = #{industry},</if>   
+			<if test="mainbusiness != null and mainbusiness != '' ">MAINBUSINESS = #{mainbusiness},</if>
+			<if test="organizationCode != null and organizationCode != ''" >ORGANIZATION_CODE = #{organizationCode},</if>
+			<if test="loansNo != null and loansNo != ''" >LOANS_NO = #{loansNo},</if>
+			<if test="loansPwd != null and loansPwd != ''" >LOANS_PWD = #{loansPwd},</if> 
+			<if test="businessScope != null and businessScope != ''" >BUSINESS_SCOPE = #{businessScope},</if>
+			<if test="area != null and area != ''" >AREA = #{area},</if>
+			<if test="property != null and property !=''" >PROPERTY = #{property},</if> 
+			<if test="remark != null and remark != ''" >REMARK = #{remark},</if>   
+			<if test="creator != null and creator != ''" >CREATOR = #{creator},</if>
+			<if test="createTime != null and createTime != ''" >CREATE_TIME = #{createTime},</if>
+			<if test="modifier != null and modifier != ''" >MODIFIER = #{modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''" >MODIFY_TIME = #{modifyTime},</if>
+			<if test="recVer != null and recVer != ''" >REC_VER = #{recVer},</if>
+			<if test="recStatus != null and recStatus != ''" >REC_STATUS = #{recStatus},</if> 
+			<if test="currencyType != null and currencyType != ''" >CURRENCY_TYPE = #{currencyType},</if>
+			<if test="scribedMoney != null and scribedMoney != ''" >SCRIBED_MONEY = #{scribedMoney},</if>
+			<if test="roadmanagementNo != null and roadmanagementNo != ''" >ROADMANAGEMENT_NO = #{roadmanagementNo},</if> 	
+			
+			<if test="businesslicenseno != null and businesslicenseno != ''" >BUSINESSLICENSENO = #{businesslicenseno},</if> 	
+			<if test="accountlicenseno != null and accountlicenseno != ''" >ACCOUNTLICENSENO = #{accountlicenseno},</if> 	
+			<if test="registeredAddress != null and registeredAddress != ''" >REGISTERED_ADDRESS = #{registeredAddress},</if> 	
+			<if test="officeAddress != null and officeAddress != ''" >OFFICE_ADDRESS = #{officeAddress},</if> 	
+			<if test="loansBank != null and loansBank != ''" >LOANS_BANK = #{loansBank}</if> 	
+		</set>
+		WHERE 
+		CUSTOMERSUB_PID = #{customersubPid} 
+	</update> 
+	
+	<update id="update" parameterType="com.sinoservices.xascf.customer.model.CustomerSubModel">
+		UPDATE SS_CUSTOMER_SUB  
+		<set>  
+			<if test="customersubPid != null and customersubPid != ''" >CUSTOMERSUB_PID = #{customersubPid},</if> 
+			<if test="customerName != null and customerName != ''" >CUSTOMER_NAME = #{customerName},</if> 
+			<if test="companyType != null and companyType != ''" >COMPANY_TYPE = #{companyType},</if>
+			<if test="companyLevel != null and companyLevel != ''" >COMPANY_LEVEL = #{companyLevel},</if> 
+			<if test="addressCn != null and addressCn != ''" >ADDRESS_CN = #{addressCn},</if>
+			<if test="postalCode != null and postalCode != ''" >POSTAL_CODE = #{postalCode},</if>
+			<if test="corporate != null and corporate != ''" >CORPORATE = #{corporate},</if>
+			<if test="corporateCardno != null and corporateCardno != ''" >CORPORATE_CARDNO = #{corporateCardno},</if>
+			<if test="controlCardno != null and controlCardno != ''" >CONTROL_CARDNO = #{controlCardno},</if> 
+			
+			<if test="registeredTime != null and registeredTime != ''" >REGISTERED_TIME = #{registeredTime},</if>
+			<if test="fax != null and fax != ''" >FAX = #{fax},</if>
+			<if test="email != null and email != ''" >EMAIL = #{email},</if>
+			<if test="url != null and url != ''" >URL = #{url},</if>
+			<if test="mobile != null and mobile != ''" >MOBILE = #{mobile},</if>
+			<if test="tel != null and tel != ''" >TEL = #{tel},</if>
+			<if test="businessNo != null and businessNo != ''" >BUSINESS_NO = #{businessNo},</if>
+			<if test="taxNo != null and taxNo != ''" >TAX_NO = #{taxNo},</if>
+			<if test="status != null and status != ''" >STATUS = #{status},</if>
+			<if test="ispurchase != null and ispurchase != ''">ISPURCHASE = #{ispurchase},</if>
+			<if test="registeredFund != null and registeredFund !=''" >REGISTERED_FUND = #{registeredFund},</if>
+			<if test="currency != null and currency != ''" >CURRENCY = #{currency},</if>
+			<if test="industry != null and industry != ''" >INDUSTRY = #{industry},</if>   
+			<if test="mainbusiness != null and mainbusiness != '' ">MAINBUSINESS = #{mainbusiness},</if>
+			<if test="organizationCode != null and organizationCode != ''" >ORGANIZATION_CODE = #{organizationCode},</if>
+			<if test="loansNo != null and loansNo != ''" >LOANS_NO = #{loansNo},</if>
+			<if test="loansPwd != null and loansPwd != ''" >LOANS_PWD = #{loansPwd},</if> 
+			<if test="businessScope != null and businessScope != ''" >BUSINESS_SCOPE = #{businessScope},</if>
+			<if test="area != null and area != ''" >AREA = #{area},</if>
+			<if test="property != null and property !=''" >PROPERTY = #{property},</if> 
+			<if test="remark != null and remark != ''" >REMARK = #{remark},</if>   
+			<if test="creator != null and creator != ''" >CREATOR = #{creator},</if>
+			<if test="createTime != null and createTime != ''" >CREATE_TIME = #{createTime},</if>
+			<if test="modifier != null and modifier != ''" >MODIFIER = #{modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''" >MODIFY_TIME = #{modifyTime},</if>
+			<if test="recVer != null and recVer != ''" >REC_VER = #{recVer},</if>
+			<if test="recStatus != null and recStatus != ''" >REC_STATUS = #{recStatus},</if> 
+			<if test="currencyType != null and currencyType != ''" >CURRENCY_TYPE = #{currencyType},</if>
+			<if test="scribedMoney != null and scribedMoney != ''" >SCRIBED_MONEY = #{scribedMoney},</if>
+			<if test="roadmanagementNo != null and roadmanagementNo != ''" >ROADMANAGEMENT_NO = #{roadmanagementNo},</if> 	
+			<if test="businesslicenseno != null and businesslicenseno != ''" >BUSINESSLICENSENO = #{businesslicenseno},</if> 	
+			<if test="accountlicenseno != null and accountlicenseno != ''" >ACCOUNTLICENSENO = #{accountlicenseno},</if> 	
+			<if test="registeredAddress != null and registeredAddress != ''" >REGISTERED_ADDRESS = #{registeredAddress},</if> 	
+			<if test="officeAddress != null and officeAddress != ''" >OFFICE_ADDRESS = #{officeAddress},</if> 	
+			<if test="loansBank != null and loansBank != ''" >LOANS_BANK = #{loansBank}</if> 
+		</set>
+			WHERE 
+			CUSTOMERSUB_PID = #{customersubPid} 
+	</update>
+	
+	<!-- 会员一级删除恢复 -->
+	<update id="recoverySub" parameterType="String">
+		UPDATE SS_CUSTOMER_SUB 
+		SET 
+			REC_STATUS='2'
+		WHERE 1=1 
+			AND CUSTOMERSUB_PID=#{_parameter}
+	</update>
+	
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.NodeDefinitionMapper">
+    
+    <resultMap type="com.sinoservices.xascf.system.model.NodeDefinitionModel" id="nodeDefinitionResultMap">
+        <result property="id" column="ID"/>
+        <result property="nodePid" column="NODE_PID"/>
+        <result property="flowName" column="FLOW_NAME"/>
+        <result property="flowMapObject" column="FLOW_MAP_OBJECT"/>
+        <result property="nodeName" column="NODE_NAME"/>
+        <result property="nodeMapField" column="NODE_MAP_FIELD"/>
+        <result property="fieldValue" column="FIELD_VALUE"/>
+        <result property="creator" column="CREATOR"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="modifier" column="MODIFIER"/>
+        <result property="modifyTime" column="MODIFY_TIME"/>
+    </resultMap>
+    
+    
+    <sql id="selectAll">
+        SELECT ID,NODE_PID,
+               FLOW_NAME,FLOW_MAP_OBJECT,NODE_NAME,NODE_MAP_FIELD,FIELD_VALUE,
+               CREATOR,
+               CREATE_TIME,
+               MODIFIER,
+               MODIFY_TIME
+          FROM `SS_NODE_DEFINITION`
+    </sql>
+    
+    <sql id="count">
+        SELECT COUNT(1) FROM `SS_NODE_DEFINITION`
+    </sql>
+    
+    <sql id="findByExampleWhere">
+        WHERE 1=1
+            <if test="flowName !=null and flowName !=''"> AND FLOW_NAME LIKE CONCAT('%','${flowName}','%' )</if>
+            <if test="nodeName !=null and nodeName !=''"> AND NODE_NAME LIKE CONCAT('%','${nodeName}','%' )</if>
+    </sql>
+    
+    <select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.system.model.NodeDefinitionModel">
+        <include refid="count"/>
+        <include refid="findByExampleWhere"/>
+    </select>
+    
+    <select id="getPage" resultMap="nodeDefinitionResultMap" parameterType="com.sinoservices.xascf.system.model.NodeDefinitionModel">
+        <include refid="selectAll"/>
+        <include refid="findByExampleWhere"/>
+        ORDER BY CREATE_TIME DESC
+    </select>
+    
+    <select id="getByPid" resultMap="nodeDefinitionResultMap" parameterType="java.lang.String">
+        <include refid="selectAll"/>
+        WHERE NODE_PID = #{_parameter}
+          LIMIT 1
+    </select>
+    
+    <select id="getListByUserPid" resultMap="nodeDefinitionResultMap" parameterType="java.lang.String">
+    	SELECT 
+               FLOW_NAME,FLOW_MAP_OBJECT,NODE_NAME,NODE_MAP_FIELD,FIELD_VALUE           
+			          FROM `SS_NODE_DEFINITION` ND
+			JOIN SS_ROLE_NODE RN ON RN.NODE_PID=ND.NODE_PID
+			 WHERE  RN.ROLE_PID IN ( SELECT SUR.ROLE_PID FROM SS_USER_ROLE SUR
+			WHERE SUR.USER_PID=#{_parameter}
+			) 
+    </select>
+</mapper>

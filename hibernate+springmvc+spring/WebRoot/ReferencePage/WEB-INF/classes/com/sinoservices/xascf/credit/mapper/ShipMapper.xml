@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.credit.mapper.ShipMapper">
+	<resultMap type="com.sinoservices.xascf.credit.model.ShipModel" id="shipModelResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="shipNo" column="SHIP_NO"/>
+		<result property="financingOrderNo" column="FINANCING_ORDER_NO"/>
+		<result property="planCarrierName" column="PLAN_CARRIER_NAME"/>
+		<result property="carrierCode" column="CARRIER_CODE"/>
+		<result property="carrierName" column="CARRIER_NAME"/>
+		<result property="planCarNo" column="PLAN_CAR_NO"/>
+		<result property="isEffective" column="ISEFFECTIVE"/>
+		<result property="carNo" column="CAR_NO"/>
+		<result property="planHandCarNo" column="PLAN_HAND_CAR_NO"/>
+		<result property="handCarNo" column="HAND_CAR_NO"/>
+		<result property="mainDriverName" column="MAIN_DRIVER_NAME"/>
+		<result property="planScendDriverName" column="PLAN_SCEND_DRIVER_NAME"/>
+		<result property="scendDriverName" column="SCEND_DRIVER_NAME"/>
+		<result property="startAddress" column="START_ADDRESS"/>
+		<result property="aimCode" column="AIM_CODE"/>
+		<result property="aimName" column="AIM_NAME"/>
+		<result property="payType" column="PAY_TYPE"/>
+		<result property="payPrice" column="PAY_PRICE"/>
+		<result property="sendCode" column="SEND_CODE"/>
+		<result property="sendName" column="SEND_NAME"/>
+		<result property="sendAddress" column="SEND_ADDRESS"/>
+		<result property="sendPhone" column="SEND_PHONE"/>
+		<result property="receiverCode" column="RECEIVER_CODE"/>
+		<result property="receiverName" column="RECEIVER_NAME"/>
+		<result property="receiverAddress" column="RECEIVER_ADDRESS"/>
+		<result property="receiverPhone" column="RECEIVER_PHONE"/>
+		<result property="goodsCode" column="GOODS_CODE"/>
+		<result property="goodsName" column="GOODS_NAME"/>
+		<result property="packageType" column="PACKAGE_TYPE"/>
+		<result property="quantity" column="QUANTITY"/>
+		<result property="weight" column="WEIGHT"/>
+		<result property="goodsValue" column="GOODS_VALUE"/>
+		<result property="safeFee" column="SAFE_FEE"/>
+		<result property="transferFee" column="TRANSFER_FEE"/>
+		<result property="allFee" column="ALL_FEE"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileRename" column="FILE_RENAME"/>
+		<result property="fileUrl" column="FILE_URL"/>
+		<result property="status" column="STATUS"/>
+		<result property="toDate" column="TO_DATE"/>
+		<result property="remark" column="REMARK"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					SHIP_NO,
+					FINANCING_ORDER_NO,
+					PLAN_CARRIER_NAME,
+					CARRIER_CODE,
+					CARRIER_NAME,
+					PLAN_CAR_NO,
+					CAR_NO,
+					PLAN_HAND_CAR_NO,
+					HAND_CAR_NO,
+					MAIN_DRIVER_NAME,
+					PLAN_SCEND_DRIVER_NAME,
+					SCEND_DRIVER_NAME,
+					START_ADDRESS,ISEFFECTIVE,
+					AIM_CODE,
+					AIM_NAME,
+					PAY_TYPE,
+					PAY_PRICE,
+					SEND_CODE,
+					SEND_NAME,
+					SEND_ADDRESS,
+					SEND_PHONE,
+					RECEIVER_CODE,
+					RECEIVER_NAME,
+					RECEIVER_ADDRESS,
+					RECEIVER_PHONE,
+					GOODS_CODE,
+					GOODS_NAME,
+					PACKAGE_TYPE,
+					QUANTITY,
+					WEIGHT,
+					GOODS_VALUE,
+					SAFE_FEE,
+					TRANSFER_FEE,
+					ALL_FEE,
+					FILE_NAME,
+					FILE_RENAME,
+					FILE_URL,
+					STATUS,TO_DATE,
+					REMARK,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER,
+					REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="id!=null and id!=''"> AND ID LIKE ('%'||'id'||'%' )</if>
+		<if test="pid!=null and pid!=''"> AND PID LIKE ('%'||'pid'||'%' )</if>
+		<if test="financingOrderNo!=null and financingOrderNo!=''"> AND FINANCING_ORDER_NO LIKE ('%'||'financingOrderNo'||'%' )</if>
+		<if test="planCarrierName!=null and planCarrierName!=''"> AND PLAN_CARRIER_NAME LIKE ('%'||'planCarrierName'||'%' )</if>
+		<if test="carrierCode!=null and carrierCode!=''"> AND CARRIER_CODE LIKE ('%'||'carrierCode'||'%' )</if>
+		<if test="carrierName!=null and carrierName!=''"> AND CARRIER_NAME LIKE ('%'||'carrierName'||'%' )</if>
+		<if test="planCarNo!=null and planCarNo!=''"> AND PLAN_CAR_NO LIKE ('%'||'planCarNo'||'%' )</if>
+		<if test="carNo!=null and carNo!=''"> AND CAR_NO LIKE ('%'||'carNo'||'%' )</if>
+		<if test="planHandCarNo!=null and planHandCarNo!=''"> AND PLAN_HAND_CAR_NO LIKE ('%'||'planHandCarNo'||'%' )</if>
+		<if test="handCarNo!=null and handCarNo!=''"> AND HAND_CAR_NO LIKE ('%'||'handCarNo'||'%' )</if>
+		<if test="mainDriverName!=null and mainDriverName!=''"> AND MAIN_DRIVER_NAME LIKE ('%'||'mainDriverName'||'%' )</if>
+		<if test="planScendDriverName!=null and planScendDriverName!=''"> AND PLAN_SCEND_DRIVER_NAME LIKE ('%'||'planScendDriverName'||'%' )</if>
+		<if test="scendDriverName!=null and scendDriverName!=''"> AND SCEND_DRIVER_NAME LIKE ('%'||'scendDriverName'||'%' )</if>
+		<if test="startAddress!=null and startAddress!=''"> AND START_ADDRESS LIKE ('%'||'startAddress'||'%' )</if>
+		<if test="aimCode!=null and aimCode!=''"> AND AIM_CODE LIKE ('%'||'aimCode'||'%' )</if>
+		<if test="aimName!=null and aimName!=''"> AND AIM_NAME LIKE ('%'||'aimName'||'%' )</if>
+		<if test="payType!=null and payType!=''"> AND PAY_TYPE LIKE ('%'||'payType'||'%' )</if>
+		<if test="payPrice!=null and payPrice!=''"> AND PAY_PRICE LIKE ('%'||'payPrice'||'%' )</if>
+		<if test="sendCode!=null and sendCode!=''"> AND SEND_CODE LIKE ('%'||'sendCode'||'%' )</if>
+		<if test="sendName!=null and sendName!=''"> AND SEND_NAME LIKE ('%'||'sendName'||'%' )</if>
+		<if test="sendAddress!=null and sendAddress!=''"> AND SEND_ADDRESS LIKE ('%'||'sendAddress'||'%' )</if>
+		<if test="sendPhone!=null and sendPhone!=''"> AND SEND_PHONE LIKE ('%'||'sendPhone'||'%' )</if>
+		<if test="receiverCode!=null and receiverCode!=''"> AND RECEIVER_CODE LIKE ('%'||'receiverCode'||'%' )</if>
+		<if test="receiverName!=null and receiverName!=''"> AND RECEIVER_NAME LIKE ('%'||'receiverName'||'%' )</if>
+		<if test="receiverAddress!=null and receiverAddress!=''"> AND RECEIVER_ADDRESS LIKE ('%'||'receiverAddress'||'%' )</if>
+		<if test="receiverPhone!=null and receiverPhone!=''"> AND RECEIVER_PHONE LIKE ('%'||'receiverPhone'||'%' )</if>
+		<if test="goodsCode!=null and goodsCode!=''"> AND GOODS_CODE LIKE ('%'||'goodsCode'||'%' )</if>
+		<if test="goodsName!=null and goodsName!=''"> AND GOODS_NAME LIKE ('%'||'goodsName'||'%' )</if>
+		<if test="packageType!=null and packageType!=''"> AND PACKAGE_TYPE LIKE ('%'||'packageType'||'%' )</if>
+		<if test="quantity!=null and quantity!=''"> AND QUANTITY LIKE ('%'||'quantity'||'%' )</if>
+		<if test="weight!=null and weight!=''"> AND WEIGHT LIKE ('%'||'weight'||'%' )</if>
+		<if test="goodsValue!=null and goodsValue!=''"> AND GOODS_VALUE LIKE ('%'||'goodsValue'||'%' )</if>
+		<if test="safeFee!=null and safeFee!=''"> AND SAFE_FEE LIKE ('%'||'safeFee'||'%' )</if>
+		<if test="transferFee!=null and transferFee!=''"> AND TRANSFER_FEE LIKE ('%'||'transferFee'||'%' )</if>
+		<if test="allFee!=null and allFee!=''"> AND ALL_FEE LIKE ('%'||'allFee'||'%' )</if>
+		<if test="status!=null and status!=''"> AND STATUS LIKE ('%'||'status'||'%' )</if>
+		<if test="remark!=null and remark!=''"> AND REMARK LIKE ('%'||'remark'||'%' )</if>
+		<if test="recVer!=null and recVer!=''"> AND REC_VER LIKE ('%'||'recVer'||'%' )</if>
+		<if test="createTime!=null and createTime!=''"> AND CREATE_TIME LIKE ('%'||'createTime'||'%' )</if>
+		<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%'||'creator'||'%' )</if>
+		<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME LIKE ('%'||'modifyTime'||'%' )</if>
+		<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%'||'modifier'||'%' )</if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%'||'recStatus'||'%' )</if>
+	</sql>
+	
+	<!-- 查看运单号是否已经存在 -->
+	<select id="getShipNoList" resultType="String" parameterType="java.util.List">
+		SELECT SHIP_NO FROM DM_SHIP
+		WHERE 1=1 AND SHIP_NO IN
+		<foreach item="shipNos" collection="list" open="(" separator="," close=")">
+			#{shipNos}
+		</foreach>
+	</select>
+	
+	<!-- 根据授信单号查找 -->
+	<select id="getPageByOrderNo" resultMap="shipModelResultMap" parameterType="com.sinoservices.xascf.credit.view.ShipCondtion" >
+		<include refid="select"/>
+		FROM DM_SHIP
+		WHERE
+			1=1
+			<if test="isEffective !=null and isEffective !=''"> AND ISEFFECTIVE =#{isEffective}</if>
+			AND FINANCING_ORDER_NO=#{financingOrderNo}
+			
+	</select>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.credit.model.ShipModel">
+		<include refid="count"/>
+		FROM  DM_SHIP
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="shipModelResultMap" parameterType="com.sinoservices.xascf.credit.model.ShipModel">
+		<include refid="select"/>
+		FROM  DM_SHIP
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO DM_SHIP (
+				ID,
+				PID,
+				FINANCING_ORDER_NO,
+				PLAN_CARRIER_NAME,
+				CARRIER_CODE,
+				CARRIER_NAME,
+				PLAN_CAR_NO,
+				CAR_NO,
+				PLAN_HAND_CAR_NO,
+				HAND_CAR_NO,
+				MAIN_DRIVER_NAME,
+				PLAN_SCEND_DRIVER_NAME,
+				SCEND_DRIVER_NAME,
+				START_ADDRESS,
+				AIM_CODE,
+				AIM_NAME,
+				PAY_TYPE,
+				PAY_PRICE,
+				SEND_CODE,
+				SEND_NAME,
+				SEND_ADDRESS,
+				SEND_PHONE,
+				RECEIVER_CODE,
+				RECEIVER_NAME,
+				RECEIVER_ADDRESS,
+				RECEIVER_PHONE,
+				GOODS_CODE,
+				GOODS_NAME,
+				PACKAGE_TYPE,
+				QUANTITY,
+				WEIGHT,
+				GOODS_VALUE,
+				SAFE_FEE,
+				TRANSFER_FEE,
+				ALL_FEE,
+				FILE_NAME,
+				FILE_RENAME,
+				FILE_URL,
+				STATUS,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS,
+		) VALUES (
+			   #{id},
+			   #{pid},
+			   #{financingOrderNo},
+			   #{planCarrierName},
+			   #{carrierCode},
+			   #{carrierName},
+			   #{planCarNo},
+			   #{carNo},
+			   #{planHandCarNo},
+			   #{handCarNo},
+			   #{mainDriverName},
+			   #{planScendDriverName},
+			   #{scendDriverName},
+			   #{startAddress},
+			   #{aimCode},
+			   #{aimName},
+			   #{payType},
+			   #{payPrice},
+			   #{sendCode},
+			   #{sendName},
+			   #{sendAddress},
+			   #{sendPhone},
+			   #{receiverCode},
+			   #{receiverName},
+			   #{receiverAddress},
+			   #{receiverPhone},
+			   #{goodsCode},
+			   #{goodsName},
+			   #{packageType},
+			   #{quantity},
+			   #{weight},
+			   #{goodsValue},
+			   #{safeFee},
+			   #{transferFee},
+			   #{allFee},
+			   #{fileName},
+			   #{fileRename},
+			   #{fileUrl},
+			   #{status},
+			   #{remark},
+			   #{recVer},
+			   SYSDATE(),
+			   #{creator},
+			   #{modifyTime},
+			   #{modifier},
+			   #{recStatus},
+		);
+	</insert>
+	
+	<update id="update">
+		UPDATE DM_SHIP SET
+				ID = #{id},
+				PID = #{pid},
+				FINANCING_ORDER_NO = #{financingOrderNo},
+				PLAN_CARRIER_NAME = #{planCarrierName},
+				CARRIER_CODE = #{carrierCode},
+				CARRIER_NAME = #{carrierName},
+				PLAN_CAR_NO = #{planCarNo},
+				CAR_NO = #{carNo},
+				PLAN_HAND_CAR_NO = #{planHandCarNo},
+				HAND_CAR_NO = #{handCarNo},
+				MAIN_DRIVER_NAME = #{mainDriverName},
+				PLAN_SCEND_DRIVER_NAME = #{planScendDriverName},
+				SCEND_DRIVER_NAME = #{scendDriverName},
+				START_ADDRESS = #{startAddress},
+				AIM_CODE = #{aimCode},
+				AIM_NAME = #{aimName},
+				PAY_TYPE = #{payType},
+				PAY_PRICE = #{payPrice},
+				SEND_CODE = #{sendCode},
+				SEND_NAME = #{sendName},
+				SEND_ADDRESS = #{sendAddress},
+				SEND_PHONE = #{sendPhone},
+				RECEIVER_CODE = #{receiverCode},
+				RECEIVER_NAME = #{receiverName},
+				RECEIVER_ADDRESS = #{receiverAddress},
+				RECEIVER_PHONE = #{receiverPhone},
+				GOODS_CODE = #{goodsCode},
+				GOODS_NAME = #{goodsName},
+				PACKAGE_TYPE = #{packageType},
+				QUANTITY = #{quantity},
+				WEIGHT = #{weight},
+				GOODS_VALUE = #{goodsValue},
+				SAFE_FEE = #{safeFee},
+				TRANSFER_FEE = #{transferFee},
+				ALL_FEE = #{allFee},
+				FILE_NAME = #{fileName},
+				FILE_RENAME = #{fileRename},
+				FILE_URL = #{fileUrl},
+				STATUS = #{status},
+				REMARK = #{remark},
+				REC_VER = #{recVer},
+				CREATE_TIME = #{createTime},
+				CREATOR = #{creator},
+				MODIFY_TIME = SYSDATE(),
+				MODIFIER = #{modifier},
+				REC_STATUS = #{recStatus},
+	</update>
+	
+	<!-- 根据creditNo删除 -->
+	<delete id="deleteByCreditNo" parameterType="String">
+		DELETE FROM  DM_SHIP
+		WHERE
+			1=1
+			AND FINANCING_ORDER_NO=#{_parameter}
+	</delete>
+	<delete id="deleteByBusenessNo" parameterType="String">
+		DELETE FROM  DM_SHIP
+		WHERE
+			1=1
+			AND FINANCING_ORDER_NO=#{_parameter}
+			AND ISEFFECTIVE='1'
+	</delete>
+	<delete id="deleteByPid" parameterType="String">
+		DELETE FROM  DM_SHIP
+		WHERE PID=#{_parameter}
+	</delete>
+	<update id="updateToNoEffectiveByOrderNo" parameterType="String">
+		UPDATE DM_SHIP SET
+				ISEFFECTIVE=0,
+				REC_VER=REC_VER+1,
+				MODIFY_TIME=SYSDATE()
+			WHERE FINANCING_ORDER_NO=#{_parameter}
+	</update>
+	<!-- 插入list -->
+	<insert id="insertList" parameterType="java.util.List">
+		<selectKey keyProperty="createTime" order="BEFORE"  resultType="java.lang.String">  
+	        SELECT CURRENT_TIMESTAMP()  
+	    </selectKey> 
+		INSERT INTO DM_SHIP (
+				PID,
+				SHIP_NO,
+				FINANCING_ORDER_NO,
+				PLAN_CARRIER_NAME,
+				CARRIER_CODE,
+				CARRIER_NAME,
+				PLAN_CAR_NO,
+				CAR_NO,
+				PLAN_HAND_CAR_NO,
+				HAND_CAR_NO,
+				MAIN_DRIVER_NAME,
+				PLAN_SCEND_DRIVER_NAME,
+				SCEND_DRIVER_NAME,
+				START_ADDRESS,
+				AIM_CODE,
+				AIM_NAME,
+				PAY_TYPE,
+				PAY_PRICE,
+				SEND_CODE,
+				SEND_NAME,
+				SEND_ADDRESS,
+				SEND_PHONE,
+				RECEIVER_CODE,
+				RECEIVER_NAME,
+				RECEIVER_ADDRESS,
+				RECEIVER_PHONE,
+				GOODS_CODE,
+				GOODS_NAME,
+				PACKAGE_TYPE,
+				QUANTITY,
+				WEIGHT,
+				GOODS_VALUE,
+				SAFE_FEE,
+				TRANSFER_FEE,
+				ALL_FEE,
+				FILE_NAME,
+				FILE_RENAME,
+				FILE_URL,
+				ISEFFECTIVE,
+				STATUS,
+				TO_DATE,
+				REMARK,
+				REC_VER,
+				CREATE_TIME,
+				CREATOR,
+				MODIFY_TIME,
+				MODIFIER,
+				REC_STATUS
+		) VALUES 
+			<foreach collection="list" item="item" index="index" separator=",">
+			  (#{item.pid},
+			   #{item.shipNo},
+			   #{item.financingOrderNo},
+			   #{item.planCarrierName},
+			   #{item.carrierCode},
+			   #{item.carrierName},
+			   #{item.planCarNo},
+			   #{item.carNo},
+			   #{item.planHandCarNo},
+			   #{item.handCarNo},
+			   #{item.mainDriverName},
+			   #{item.planScendDriverName},
+			   #{item.scendDriverName},
+			   #{item.startAddress},
+			   #{item.aimCode},
+			   #{item.aimName},
+			   #{item.payType},
+			   #{item.payPrice},
+			   #{item.sendCode},
+			   #{item.sendName},
+			   #{item.sendAddress},
+			   #{item.sendPhone},
+			   #{item.receiverCode},
+			   #{item.receiverName},
+			   #{item.receiverAddress},
+			   #{item.receiverPhone},
+			   #{item.goodsCode},
+			   #{item.goodsName},
+			   #{item.packageType},
+			   #{item.quantity},
+			   #{item.weight},
+			   #{item.goodsValue},
+			   #{item.safeFee},
+			   #{item.transferFee},
+			   #{item.allFee},
+			   #{item.fileName},
+			   #{item.fileRename},
+			   #{item.fileUrl},
+			   1,
+			   #{item.status},
+			   #{item.toDate},
+			   #{item.remark},
+			   1,
+			   SYSDATE(),
+			   #{item.creator},
+			   #{item.modifyTime},
+			   #{item.modifier},
+			   1)
+			</foreach>
+	</insert>
+</mapper>

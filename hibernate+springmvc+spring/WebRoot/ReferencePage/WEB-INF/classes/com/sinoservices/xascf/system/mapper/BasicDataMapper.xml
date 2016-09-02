@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.BasicDataMapper">
+	<resultMap type="com.sinoservices.xascf.system.model.BasicDataModel" id="basicDataModelResultMap">
+					<result property="id" column="ID"/>
+					<result property="dataPid" column="DATA_PID"/>
+					<result property="parentCode" column="PARENT_CODE"/>
+					<result property="code" column="CODE"/>
+					<result property="nameCn" column="NAMA_CN"/>
+					<result property="nameEn" column="NAMA_EN"/>
+					<result property="sequenceNo" column="SEQUENCE_NO"/>
+					<result property="reMark" column="REMARK"/>
+					<result property="recStatus" column="REC_STATUS"/>
+					<result property="creator" column="CREATOR"/>
+					<result property="createTime" column="CREATE_TIME"/>
+					<result property="modifier" column="MODIFIER"/>
+					<result property="modifyTime" column="MODIFY_TIME"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+			  ID,
+			  DATA_PID,
+			  PARENT_CODE,
+			  CODE,
+			  NAMA_CN,
+			  NAMA_EN,
+			  SEQUENCE_NO,
+			  REMARK,
+			  CREATE_TIME,
+			  CREATOR,
+			  MODIFY_TIME,
+			  MODIFIER,
+			  REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+				<if test="dataPid!=null and dataPid!=''"> AND DATA_PID LIKE ('%${dataPid}%' )</if>
+				<if test="code!=null and code!=''"> AND CODE = #{code}</if>
+				<if test="parentCode!=null and parentCode!=''"> AND PARENT_CODE =#{parentCode}</if>
+				<if test="nameCn!=null and nameCn!=''"> AND NAMA_CN LIKE ('%${nameCn}%' )</if>
+				<if test="nameEn!=null and nameEn!=''"> AND NAMA_EN LIKE ('%${nameEn}%' )</if>
+				<if test="sequenceNo!=null and sequenceNo!=''"> AND SEQUENCE_NO LIKE ('%${sequenceNo}%' )</if>
+				<if test="reMark!=null and reMark!=''"> AND REMARK LIKE ('%${reMark}%' )</if>
+				<if test="creator!=null and creator!=''"> AND CREATOR LIKE ('%${creator}%' )</if>
+				<if test="createTime!=null and createTime!=''"> AND CREATE_TIME &gt;= #{createTime}</if>
+				<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS LIKE ('%${recStatus}%' )</if>
+				<if test="modifyTime!=null and modifyTime!=''"> AND MODIFY_TIME &gt;= #{modifyTime}</if>
+				<if test="modifier!=null and modifier!=''"> AND MODIFIER LIKE ('%${modifier}%' )</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.system.view.BasicDataCondition">
+		<include refid="count"/>
+		FROM  SS_BASIC_DATA
+		<include refid="findByExample"/>
+		<if test="parentCode==null and parentCode!=''"> AND PARENT_CODE is NULL</if>
+		AND REC_STATUS=1
+	</select>
+	
+	<select id="getPage" resultMap="basicDataModelResultMap" parameterType="com.sinoservices.xascf.system.view.BasicDataCondition">
+		<include refid="select"/>
+		FROM  SS_BASIC_DATA
+		<include refid="findByExample"/>
+		<if test="parentCode==null and parentCode!=''"> AND PARENT_CODE is NULL</if>
+		AND REC_STATUS=1
+	</select>
+	
+	<!-- 保存基础数据 -->
+	<insert id="save" parameterType="com.sinoservices.xascf.system.model.BasicDataModel" >  
+		insert into SS_BASIC_DATA(
+		  DATA_PID,
+		  PARENT_CODE,
+		  CODE,
+		  NAMA_CN,
+		  NAMA_EN,
+		  SEQUENCE_NO,
+		  REMARK,
+		  CREATE_TIME,
+		  CREATOR,
+		  MODIFY_TIME,
+		  MODIFIER
+		)
+		values (#{dataPid},#{parentCode},#{code},#{nameCn}
+				,#{nameEn},#{sequenceNo},#{reMark},#{createTime}
+				,#{creator},#{modifyTime}
+				,#{modifier}
+				)
+    
+    </insert>
+    
+    <!-- 根据id删除基础数据 -->
+    <update id="deleteById" parameterType="String">
+    	UPDATE SS_BASIC_DATA
+    	 SET 
+    	 	REC_STATUS='0'
+    	 WHERE 1=1
+    	  AND ID=#{id}
+    </update>
+	
+	
+	<!-- 根据父标识删除基础数据 -->
+    <update id="deleteByParentCode" parameterType="String">
+    	UPDATE SS_BASIC_DATA
+    	 SET 
+    	 	REC_STATUS='0'
+    	 WHERE 1=1
+    	  AND PARENT_CODE=#{parentCode}
+    </update>
+    
+    <!-- 更新基础数据 -->
+    <update id="update" parameterType="com.sinoservices.xascf.system.model.BasicDataModel">
+    	UPDATE SS_BASIC_DATA
+    	<set> 
+			<if test="code != null and code != '' "> CODE=#{code}, </if> 
+      		<if test="nameCn != null and nameCn != '' "> NAMA_CN=#{nameCn}, </if> 
+      		<if test="nameEn != null and nameEn != '' "> NAMA_EN=#{nameEn}, </if> 
+      		<if test="sequenceNo != null and sequenceNo != '' "> SEQUENCE_NO=#{sequenceNo}, </if> 
+      		<if test="reMark != null and reMark != '' "> REMARK=#{reMark}, </if> 
+      		<if test="modifyTime != null and modifyTime != '' "> MODIFY_TIME=#{modifyTime}, </if> 
+      		<if test="modifier != null and modifier != '' "> MODIFIER=#{modifier} </if> 
+		</set> 
+    	WHERE 1=1
+    	  AND ID=#{id}
+    </update>
+    
+    <!-- 根据code查找 -->
+    <select id="findByCode" resultType="int" parameterType="com.sinoservices.xascf.system.model.BasicDataModel">
+		SELECT COUNT(1)
+		FROM  SS_BASIC_DATA
+		WHERE 1=1
+			  <if test="parentCode==null or parentCode==''"> AND PARENT_CODE is NULL</if>
+			  <if test="parentCode!=null and parentCode!=''"> AND PARENT_CODE=#{parentCode}</if>
+			  AND `CODE`=#{code}
+			  AND REC_STATUS=1
+			  
+	</select>
+	<!-- 根据parentCode查找 -->
+    <select id="getDataByParentCode" resultMap="basicDataModelResultMap"  parameterType="String">
+		<include refid="select"/>
+		FROM  SS_BASIC_DATA
+		WHERE 1=1
+			  AND PARENT_CODE=#{parentCode}
+			  AND REC_STATUS=1
+		ORDER BY SEQUENCE_NO 
+	</select>
+	
+	<!-- 根据parentCode和code查找 -->
+    <select id="getDataByParentAndCode" resultMap="basicDataModelResultMap"  parameterType="com.sinoservices.xascf.system.model.BasicDataModel">
+		<include refid="select"/>
+		FROM  SS_BASIC_DATA
+		<include refid="findByExample"/>
+		AND REC_STATUS=1
+	</select>
+	<!-- 根据parentCode和ids查找 -->
+    <select id="getDataByParentCodeAndIds" resultMap="basicDataModelResultMap"  parameterType="com.sinoservices.xascf.system.model.BasicDataModel">
+		<include refid="select"/>
+		FROM  SS_BASIC_DATA
+		WHERE 1=1
+			  AND PARENT_CODE=#{parentCode}
+			  AND REC_STATUS=1
+			   <if test="list!=null"> AND NAMA_CN NOT IN (
+			   <foreach collection="list" separator="," item="i" index="index" > 
+         			#{i}
+      			</foreach>
+      			)</if>
+			   
+	</select>
+	
+    
+</mapper>

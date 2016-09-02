@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.agfancing.mapper.AgFancingSolutionMapper">
+	<resultMap type="com.sinoservices.xascf.agfancing.model.AgFancingSolutionModel" id="agFancingSolutionResultMap">
+		<result property="id" column="ID"/>
+		<result property="pid" column="PID"/>
+		<result property="solutionNo" column="SOLUTION_NO"/>
+		<result property="solutionName" column="SOLUTION_NAME"/>
+		<result property="solutionDesc" column="SOLUTION_DESC"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+					ID,
+					PID,
+					SOLUTION_NO,
+					SOLUTION_NAME,
+					SOLUTION_DESC,
+					REC_STATUS,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER
+		]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="pid!=null and pid!=''"> AND PID = #{pid} </if>
+		<if test="solutionNo !=null and solutionNo !=''"> AND SOLUTION_NO like ('%${solutionNo}%') </if>
+		<if test="solutionName !=null and solutionName !=''">  AND SOLUTION_NAME like ('%${solutionName}%') </if>
+		<if test="solutionDesc !=null and solutionDesc !=''">  AND SOLUTION_DESC like ('%${solutionDesc}%') </if>
+		<if test="recStatus!=null and recStatus!=''"> AND REC_STATUS =#{recStatus}</if>
+	</sql>
+	
+	<!-- 不分页 -->
+	<select id="getSolutionList" resultMap="agFancingSolutionResultMap" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingSolutionModel">
+		<include refid="select"/>
+		FROM DM_AGFANCING_SOLUTION
+		<include refid="findByExample"/>
+	</select>
+	
+	<!-- 分页 -->
+	<select id="getSolutionPage" resultMap="agFancingSolutionResultMap" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingSolutionModel">
+		<include refid="select"/>
+		FROM DM_AGFANCING_SOLUTION
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getSolutionCount" resultType="int" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingSolutionModel">
+		Select count(1) 
+		FROM DM_AGFANCING_SOLUTION
+		<include refid="findByExample"/>
+	</select>
+	
+	<insert id="insert" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingSolutionModel">
+		INSERT INTO DM_AGFANCING_SOLUTION (
+					PID,
+					SOLUTION_NO,
+					SOLUTION_NAME,
+					SOLUTION_DESC,
+					REC_STATUS,
+					REC_VER,
+					CREATE_TIME,
+					CREATOR,
+					MODIFY_TIME,
+					MODIFIER
+		) VALUES (
+			   #{pid},
+			   #{solutionNo},
+			   #{solutionName},
+			   #{solutionDesc},
+			   1,
+			   1,
+			   SYSDATE(),
+			   #{creator},
+			   SYSDATE(),
+			   #{modifier}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.sinoservices.xascf.agfancing.model.AgFancingSolutionModel">
+	UPDATE  DM_AGFANCING_SOLUTION set 
+	<if test="solutionNo !=null and solutionNo !=''">SOLUTION_NO=#{solutionNo}, </if>
+	<if test="solutionName !=null and solutionName !=''">SOLUTION_NAME=#{solutionName}, </if>
+	<if test="solutionDesc !=null and solutionDesc !=''">SOLUTION_DESC=#{solutionDesc}, </if>
+	<if test="modifier !=null and modifier !=''">MODIFIER=#{modifier}, </if>
+	REC_VER=REC_VER+1,
+	MODIFY_TIME=SYSDATE()
+	WHERE PID=#{pid} 
+	</update>
+
+  <delete id="delete" parameterType="String">
+  		DELETE FROM DM_AGFANCING_SOLUTION WHERE PID IN
+		<foreach item="pid" collection="list" open="(" separator="," close=")">
+			#{pid}
+		</foreach>
+ 	 </delete>
+</mapper>

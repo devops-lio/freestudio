@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.UserSystemMapper">
+    
+    <resultMap type="com.sinoservices.xascf.system.model.UserSystemModel" id="UserSystemModelResultMap">
+        <result property="id" column="ID"/>
+        <result property="userSystemPid" column="USER_SYSTEM_PID"/>
+        <result property="userPid" column="USER_PID"/>
+        <result property="systemPid" column="SYSTEM_PID"/>
+        <result property="creator" column="CREATOR"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="modifier" column="MODIFIER"/>
+        <result property="modifyTime" column="MODIFY_TIME"/>
+    </resultMap>
+    
+    
+    <sql id="selectAll">
+        SELECT ID,USER_SYSTEM_PID,
+               USER_PID,SYSTEM_PID,
+               CREATOR,
+               CREATE_TIME,
+               MODIFIER,
+               MODIFY_TIME
+          FROM `SS_USER_SYSTEM`
+    </sql>
+    
+    <sql id="count">
+        SELECT COUNT(1) FROM `SS_USER_SYSTEM`
+    </sql>
+    
+    <sql id="findByExampleWhere">
+        WHERE 1=1
+            <if test="userPid!=null and userPid!=''"> AND USER_PID=#{userPid}</if>
+            <if test="systemPid!=null and systemPid!=''"> AND SYSTEM_PID=#{systemPid}</if>
+    </sql>
+    
+    <select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.system.model.UserSystemModel">
+        <include refid="count"/>
+        <include refid="findByExampleWhere"/>
+    </select>
+    <select id="getPage" resultMap="UserSystemModelResultMap" parameterType="com.sinoservices.xascf.system.model.UserSystemModel">
+        <include refid="selectAll"/>
+        <include refid="findByExampleWhere"/>
+        ORDER BY CREATE_TIME DESC
+    </select>
+    <select id="getByPid" resultMap="UserSystemModelResultMap" parameterType="java.lang.String">
+        <include refid="selectAll"/>
+        WHERE ID = #{_parameter}
+          LIMIT 1
+    </select>
+    <!-- 子系统获取用户系统信息 -->
+    <select id="getByUserAccountAndSystemCode" resultMap="UserSystemModelResultMap" parameterType="java.util.Map">
+	    SELECT US.USER_ID,US.SYSTEM_ID 
+		    FROM USER_SYSTEM US 
+			JOIN `USER` U ON US.USER_ID=U.ID
+			JOIN SYSTEM S ON US.SYSTEM_ID=S.ID
+			WHERE U.ACCOUNT=#{account} AND S.SYSTEM_CODE=#{systemCode}
+    </select>
+    <insert id="insert" parameterType="com.sinoservices.xascf.system.model.UserSystemModel">
+        INSERT INTO `SS_USER_SYSTEM`
+            (ID, USER_SYSTEM_PID,USER_PID,SYSTEM_PID, CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+            )
+         VALUES
+            (#{id},#{userSystemPid}, #{userPid}, #{systemPid}, 'SYSTEM', SYSDATE(), 'SYSTEM', SYSDATE()
+            )
+    </insert>   
+     <!-- 批量执行插入 -->
+	<insert id="addByList"  parameterType="java.util.List">  
+	    	 INSERT INTO SS_USER_SYSTEM ( USER_PID,USER_SYSTEM_PID, SYSTEM_PID,
+            CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+			) values  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        ( #{item.userPid},#{item.userSystemPid}, #{item.systemPid},
+	         #{item.creator},SYSDATE(), #{item.modifier},SYSDATE())  
+	    </foreach>  
+  </insert>
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE FROM `SS_USER_SYSTEM` WHERE USER_SYSTEM_PID = #{userSystemPid}
+    </delete>
+    
+    <delete id="deleteByUserPid" parameterType="java.lang.String">
+        DELETE FROM SS_USER_SYSTEM WHERE USER_PID = #{_parameter}
+    </delete>
+    
+    <update id="update" parameterType="com.sinoservices.xascf.system.model.UserSystemModel">
+        UPDATE `SS_USER_SYSTEM`
+        SET
+           <if test="userPid!=null and userPid!=''">USER_PID=#{userPid},</if>
+            <if test="systemPid!=null and systemPid!=''"> SYSTEM_PID=#{systemPid},</if>
+            MODIFIER='SYSTEM',
+            MODIFY_TIME=SYSDATE()
+        WHERE
+            ID=#{id}
+    </update>
+</mapper>

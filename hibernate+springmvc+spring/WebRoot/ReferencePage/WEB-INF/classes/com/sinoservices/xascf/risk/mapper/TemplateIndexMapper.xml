@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.risk.mapper.TemplateIndexMapper">
+	<resultMap type="com.sinoservices.xascf.risk.model.TemplateIndexModel" id="templateIndexResultMap">
+		<result property="id" column="ID"/>
+		<result property="indexPid" column="INDEX_PID"/>
+		<result property="templatePid" column="TEMPLATE_PID"/>
+		<result property="indexNo" column="INDEX_NO"/>
+		<result property="indexName" column="INDEX_NAME"/>
+		<result property="indexType" column="INDEX_TYPE"/>
+		<result property="mappingMaterial" column="MAPPING_MATERIAL"/>
+		<result property="materialName" column="MATERIAL_NAME"/>
+		<result property="parentPid" column="PARENT_PID"/>
+		<result property="percentage" column="PERCENTAGE"/>
+		<result property="fullMarks" column="FULL_MARKS"/>
+		<result property="remark" column="REMARK"/>
+		<result property="ruleNo" column="RULE_NO"/>
+		<result property="ruleName" column="RULE_NAME"/>
+		<result property="ruleDesc" column="RULE_DESC"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.risk.view.TemplateIndexQueryItemView" id="templateIndexItemResultMap">
+		<result property="id" column="ID"/>
+		<result property="indexPid" column="INDEX_PID"/>
+		<result property="templatePid" column="TEMPLATE_PID"/>
+		<result property="indexNo" column="INDEX_NO"/>
+		<result property="indexName" column="INDEX_NAME"/>
+		<result property="indexType" column="INDEX_TYPE"/>
+		<result property="mappingMaterial" column="MAPPING_MATERIAL"/>
+		<result property="materialName" column="MATERIAL_NAME"/>
+		<result property="parentPid" column="PARENT_PID"/>
+		<result property="percentage" column="PERCENTAGE"/>
+		<result property="fullMarks" column="FULL_MARKS"/>
+		<result property="remark" column="REMARK"/>
+		<result property="ruleNo" column="RULE_NO"/>
+		<result property="ruleName" column="RULE_NAME"/>
+		<result property="ruleDesc" column="RULE_DESC"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="creator" column="CREATOR"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="recStatus" column="REC_STATUS"/>
+		<collection property="children" column="INDEX_PID" ofType="com.sinoservices.xascf.risk.view.TemplateIndexQueryItemView" select="select-children"/>
+	</resultMap>
+	<select id="select-children" parameterType="String" resultMap="templateIndexItemResultMap">
+       SELECT 
+			ID,INDEX_PID,INDEX_NO,INDEX_NAME,INDEX_TYPE,MAPPING_MATERIAL,MATERIAL_NAME,PARENT_PID,PERCENTAGE,FULL_MARKS,REMARK,RULE_NO,
+			RULE_NAME,RULE_DESC,TEMPLATE_PID,
+			REC_VER,CREATE_TIME,CREATOR,MODIFY_TIME,MODIFIER,REC_STATUS
+        FROM  RM_TEMPLATE_INDEX
+         WHERE PARENT_PID =#{indexPid}
+    </select> 
+	<sql id="select">
+		<![CDATA[
+			SELECT 
+				ID,INDEX_PID,INDEX_NO,INDEX_NAME,INDEX_TYPE,MAPPING_MATERIAL,MATERIAL_NAME,PARENT_PID,PERCENTAGE,FULL_MARKS,REMARK,RULE_NO,
+				RULE_NAME,RULE_DESC,TEMPLATE_PID,
+				REC_VER,CREATE_TIME,CREATOR,MODIFY_TIME,MODIFIER,REC_STATUS
+		]]>
+	</sql>
+	
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	
+	<sql id="findByExample">
+		WHERE 1=1
+		<if test="indexPid !=null and indexPid !=''"> AND INDEX_PID =#{indexPid}</if>
+		<if test="indexNo !=null and indexNo !=''"> AND INDEX_NO =#{indexNo}</if>
+		<if test="indexName !=null and indexName !=''"> AND INDEX_NAME =#{indexName}</if>
+		<if test="parentPid!=null and parentPid!=''"> AND PARENT_PID =#{parentPid}</if>
+		<if test="percentage!=null and percentage!=''"> AND PERCENTAGE =#{percentage}</if>
+		<if test="ruleNo!=null and ruleNo!=''"> AND	RULE_NO = #{ruleNo} </if>
+		<if test="ruleName!=null and ruleName!=''"> AND	RULE_NAME = #{ruleName}</if>
+		<if test="indexType !=null and indexType !=''"> AND INDEX_TYPE = #{indexType}</if>
+	</sql>
+	
+	<select id="countByCondtion" resultType="int" parameterType="com.sinoservices.xascf.risk.view.TemplateIndexQueryConditionView">
+		<include refid="count"/>
+		FROM  RM_TEMPLATE_INDEX
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getPage" resultMap="templateIndexItemResultMap" parameterType="com.sinoservices.xascf.risk.view.TemplateIndexQueryConditionView">
+		<include refid="select"/>
+		FROM  RM_TEMPLATE_INDEX
+		<include refid="findByExample"/>
+	</select>
+	
+	<select id="getTreeModel" resultMap="templateIndexItemResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  RM_TEMPLATE_INDEX
+		WHERE 1=1
+		AND TEMPLATE_PID=#{_parameter} AND INDEX_TYPE=1 
+	</select>
+	
+	<!-- 新增 -->
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.sinoservices.xascf.risk.model.TemplateIndexModel">
+		INSERT INTO RM_TEMPLATE_INDEX(
+		INDEX_PID,
+		TEMPLATE_PID,
+		INDEX_NO,
+		INDEX_NAME,
+		INDEX_TYPE,
+		MAPPING_MATERIAL,
+		MATERIAL_NAME,
+		PARENT_PID,
+		PERCENTAGE,
+		FULL_MARKS,
+		REMARK,
+		RULE_NO,
+		RULE_NAME,
+		RULE_DESC,
+		CREATE_TIME,
+		CREATOR,
+		REC_VER,
+		REC_STATUS
+		) VALUES(
+		#{indexPid},
+		#{templatePid},
+		#{indexNo},
+		#{indexName},
+		#{indexType},
+		#{mappingMaterial},
+		#{materialName},
+		#{parentPid},
+		#{percentage},
+		#{fullMarks},
+		#{remark},
+		#{ruleNo},
+		#{ruleName},
+		#{ruleDesc},
+		SYSDATE(),
+		#{creator},1,0
+		)
+	</insert>
+	
+	
+	<!-- 修改 -->
+	<update id="updateByModel" parameterType="com.sinoservices.xascf.risk.model.TemplateIndexModel">
+		UPDATE RM_TEMPLATE_INDEX SET
+		<if test="templatePid!=null and templatePid!=''">	TEMPLATE_PID = #{templatePid},</if>
+		<if test="indexNo!=null and indexNo!=''">	INDEX_NO = #{indexNo},</if>
+		<if test="indexName!=null and indexName!=''">	INDEX_NAME = #{indexName},</if>
+		<if test="indexType!=null and indexType!=''"> INDEX_TYPE = #{indexType},</if>
+		<if test="mappingMaterial !=null and mappingMaterial !=''"> MAPPING_MATERIAL = #{mappingMaterial},</if>
+		<if test="materialName !=null and materialName !=''"> MATERIAL_NAME = #{materialName}, </if>
+		<if test="parentPid!=null and parentPid!=''">	PARENT_PID =#{parentPid} ,</if>
+		<if test="percentage!=null and percentage!=''">	PERCENTAGE = #{percentage},</if>
+		<if test="fullMarks!=null and fullMarks!=''">	FULL_MARKS = #{fullMarks},</if>
+		<if test="remark!=null and remark!=''">	REMARK = #{remark},</if>
+		<if test="ruleDesc !=null and ruleDesc !=''">	RULE_DESC = #{ruleDesc},</if>
+		<if test="recStatus!=null and recStatus!=''">	REC_STATUS = #{recStatus},</if>
+		<if test="ruleNo!=null and ruleNo!=''">	RULE_NO = #{ruleNo},</if>
+		<if test="ruleName!=null and ruleName!=''">	RULE_NAME = #{ruleName},</if>
+				Modify_Time = SYSDATE(),
+				Modifier =#{modifier},
+				Rec_Ver=Rec_Ver+1 
+		WHERE INDEX_PID=#{indexPid}	
+	</update>
+	<!-- 修改 -->
+	<update id="updateByTemplatePid" parameterType="com.sinoservices.xascf.risk.model.TemplateIndexModel">
+		UPDATE RM_TEMPLATE_INDEX SET
+		<if test="indexNo!=null and indexNo!=''">	INDEX_NO = #{indexNo},</if>
+		<if test="indexName!=null and indexName!=''">	INDEX_NAME = #{indexName},</if>
+		<if test="recStatus!=null and recStatus!=''">	REC_STATUS = #{recStatus},</if>
+				Modify_Time = SYSDATE(),
+				Modifier =#{modifier},
+				Rec_Ver=Rec_Ver+1 
+		WHERE TEMPLATE_PID = #{templatePid}	AND INDEX_TYPE=#{indexType}
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="deleteByPids" parameterType="java.util.List"> 
+		DELETE FROM RM_TEMPLATE_INDEX WHERE INDEX_PID in
+		<foreach item="ids" collection="list" open="(" separator="," close=")">
+				#{ids}
+			</foreach>
+	</delete>
+	
+	<select id="getByParentPid" resultMap="templateIndexResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  RM_TEMPLATE_INDEX
+		WHERE PARENT_PID=#{_parameter}	
+	</select>
+	
+	<select id="getByPid" resultMap="templateIndexResultMap" parameterType="String">
+		<include refid="select"/>
+		FROM  RM_TEMPLATE_INDEX
+		WHERE INDEX_PID=#{indexPid}	
+	</select>
+	
+	<select id="findIndexsByParams" resultMap="templateIndexResultMap" parameterType="com.sinoservices.xascf.risk.view.TemplateIndexQueryConditionView">
+		<include refid="select"/>
+		FROM  RM_TEMPLATE_INDEX
+		<include refid="findByExample"/>
+	</select>
+	
+	<update id="updateTemplate" parameterType="com.sinoservices.xascf.risk.model.TemplateIndexModel">
+		UPDATE 
+			RM_TEMPLATE_INDEX 
+		SET
+			RULE_DESC=#{ruleDesc}
+		WHERE
+			1=1
+			AND RULE_NO=#{ruleNo}
+	</update>
+	
+</mapper>

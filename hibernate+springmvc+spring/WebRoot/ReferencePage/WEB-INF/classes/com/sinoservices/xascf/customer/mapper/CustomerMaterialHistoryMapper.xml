@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.customer.mapper.CustomerMaterialHistoryMapper"> 
+	<resultMap type="com.sinoservices.xascf.customer.model.CustomerMaterialHistoryModel" id="CustomerMaterialHistoryModelResultMap">
+		<result property="id" column="ID"/> 
+		<result property="materialhistoryPid" column="MATERIALHISTORY_PID"/>
+		<result property="materialDetailPid" column="MATERIAL_DETAIL_PID"/>
+		<result property="uploadTime" column="UPLOAD_TIME"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileRename" column="FILE_RENAME"/> 
+		<result property="fileUrl" column="FILE_URL"/>  
+		<result property="fileFalg" column="FILE_FALG"/>  
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/> 
+	</resultMap>  
+	
+	<resultMap type="com.sinoservices.xascf.customer.model.AssociateMaterialDetailModel" id="AssociateMaterialDetailItemViewMap"> 
+		<result property="id" column="ID"/>  
+		<result property="materialDetailPid" column="MATERIAL_DETAIL_PID"/> 
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileRename" column="FILE_RENAME"/>  
+		<result property="fileUrl" column="FILE_URL"/>  
+		<result property="fileFalg" column="FILE_FALG"/>  
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>  
+	</resultMap> 
+
+	<resultMap type="com.sinoservices.xascf.customer.view.CustomerMaterialHistoryItem" id="CustomerMaterialHistoryItemViewMap"> 
+		<result property="id" column="ID"/> 
+		<result property="materialhistoryPid" column="MATERIALHISTORY_PID"/>
+		<result property="materialDetailPid" column="MATERIAL_DETAIL_PID"/>
+		<result property="uploadtTime" column="UPLOAD_TIME"/>
+		<result property="fileName" column="FILE_NAME"/>
+		<result property="fileRename" column="FILE_RENAME"/> 
+		<result property="fileUrl" column="URL"/> 
+		<result property="fileFalg" column="FILE_URL"/>  
+		<result property="creator" column="CREATOR"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="modifier" column="MODIFIER"/>
+		<result property="modifyTime" column="MODIFY_TIME"/>
+		<result property="recVer" column="REC_VER"/>
+		<result property="recStatus" column="REC_STATUS"/>  
+	</resultMap>    
+	
+	
+	
+	<sql id="select"> 
+		  SELECT 
+			 ID,
+			 MATERIALHISTORY_PID,
+			 MATERIAL_DETAIL_PID,
+			 UPLOAD_TIME,
+			 FILE_NAME,
+			 FILE_RENAME, 
+			 FILE_URL,
+			 FILE_FALG,
+			 CREATOR,
+			 CREATE_TIME,
+			 MODIFIER,
+			 MODIFY_TIME,
+			 REC_VER,
+			 REC_STATUS
+	</sql>
+	 
+	
+	<sql id="count"> 
+	    	SELECT COUNT(1)  
+	</sql> 
+	 
+	 
+	 <select id="findByHistory" resultMap="AssociateMaterialDetailItemViewMap" parameterType="java.lang.String">
+		SELECT  
+			FILE_NAME,
+			FILE_RENAME,  
+			FILE_URL,
+			FILE_FALG
+		FROM  SS_CUSTOMER_MATERIAL_HISTORY
+		WHERE
+			1=1
+			AND FILE_FALG IN (
+		 			<foreach collection="list" item="fileFalg" index="index"  separator=",">  
+	        		 #{fileFalg}
+	    			</foreach>  
+	    			) 
+	</select>
+	 
+ 
+	<!-- 会员 -->
+	<insert id="insert"  parameterType="com.sinoservices.xascf.customer.model.CustomerMaterialHistoryModel">
+		INSERT INTO SS_CUSTOMER_MATERIAL_HISTORY(  
+			 MATERIALHISTORY_PID,   		                  
+			 MATERIAL_DETAIL_PID,   		               
+			 UPLOAD_TIME,     	                
+			 FILE_NAME,     			              
+			 FILE_RENAME,   	
+			 FILE_URL,	        
+			 FILE_FALG,     			
+			 CREATOR,            
+			 CREATE_TIME,
+			 REC_VER
+		)VALUES( 
+			 #{materialhistoryPid},  
+			 #{materialDetailPid},      
+			 #{uploadTime},
+			 #{fileName},        
+			 #{fileRename},          
+			 #{fileUrl},   
+			 #{fileFalg},  
+			 #{creator},
+			 #{createTime},
+			 1
+		)
+	</insert>   
+	
+	
+	<!-- 企业详细信息更新 -->
+	<update id="update " parameterType="com.sinoservices.xascf.customer.model.CustomerMaterialHistoryModel">
+		UPDATE SS_CUSTOMER_MATERIAL_HISTORY
+		<set>   
+			<if test="materialhistoryPid != null and materialhistoryPid != ''" >MATERIALHISTORY_PID = #{materialhistoryPid},</if> 
+			<if test="materialDetailPid != null and materialDetailPid != ''" >MATERIAL_DETAIL_PID = #{materialDetailPid},</if> 
+			<if test="uploadtTime != null and uploadtTime != ''" >UPLOAD_TIME = #{uploadtTime},</if>
+			<if test="fileName != null and fileName != ''" >FILE_NAME = #{fileName},</if> 
+			<if test="fileRename != null and fileRename != ''" >FILE_RENAME = #{fileRename},</if> 
+			<if test="fileUrl != null and fileUrl != ''" >FILE_URL = #{fileUrl},</if>  
+			<if test="fileFalg != null and fileFalg != ''" >FILE_FALG = #{fileFalg},</if>  
+			<if test="creator != null and creator != ''" >CREATOR = #{creator},</if>
+			<if test="createTime != null and createTime != ''" >CREATE_TIME = #{createTime},</if>
+			<if test="modifier != null and modifier != ''" >MODIFIER = #{modifier},</if>
+			<if test="modifyTime != null and modifyTime != ''" >MODIFY_TIME = #{modifyTime},</if>
+			<if test="recVer != null and recVer != ''" >REC_VER = #{recVer},</if>
+			<if test="recStatus != null and recStatus != ''" >REC_STATUS = #{recStatus}</if> 
+		</set>
+		WHERE 
+		MATERIALHISTORY_PID = #{materialhistoryPid} 
+	</update> 
+	 
+	
+</mapper>

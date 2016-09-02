@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:op="http://www.sinoservices.com/schema/options"
+	xsi:schemaLocation="
+	 http://www.sinoservices.com/schema/options http://www.sinoservices.com/schema/sns-options-1.0.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	">
+
+	<bean class="com.sinoservices.components.options.impl.OptionsRegistry">
+		<property name="optionsSources">
+			<set>
+				
+				<!-- 再融资状态 -->
+				<op:ConstantOptions type="AG_FANCING_STATE">
+					<op:option key="" value=""></op:option>
+					<op:option key="0" value="新建"></op:option>
+					<op:option key="2" value="已融入"></op:option>
+				</op:ConstantOptions> 
+				
+				<!-- 利息收取方式 -->
+				<op:ConstantOptions type="RATE_TYPE">
+					<op:option key="0" value="天"></op:option>
+					<op:option key="1" value="月"></op:option>
+					<op:option key="2" value="季"></op:option>
+				</op:ConstantOptions>  
+				
+				<!-- 复利收取方式 -->
+				<op:ConstantOptions type="COMPOUND_TYPE">
+					<op:option key="1" value="月"></op:option>
+					<op:option key="2" value="季末月"></op:option>
+				</op:ConstantOptions>  
+			
+				<!-- 是否 Y/N -->
+				<op:ConstantOptions type="IS_YES_NO">
+					<op:option key="" value=""></op:option>
+					<op:option key="Y" value="是"></op:option>
+					<op:option key="N" value="否"></op:option>
+				</op:ConstantOptions>  
+				
+				<!-- 是否 收取保证金Y/N -->
+				<op:ConstantOptions type="IS_BOND">
+					<op:option key="Y" value="是"></op:option>
+					<op:option key="N" value="否"></op:option>
+				</op:ConstantOptions>  
+				
+				<!-- 服务费收取方式 -->
+				<op:ConstantOptions type="SERVE_METHOD">
+					<op:option key="YEAR" value="按年"></op:option>
+					<op:option key="TIMES" value="按次"></op:option>
+				</op:ConstantOptions> 
+				<!-- 手动计息类型 -->
+				<op:ConstantOptions type="HANDS_LXTYPE">
+					<op:option key="IN" value="账期"></op:option>
+					<op:option key="OUT" value="逾期"></op:option>
+				</op:ConstantOptions> 
+				
+				<!-- 是否 Y/N -->
+				<op:I18nOptions type="YES_OR_NO">
+					<op:option key="Y" value="ui.xascf.yes"></op:option>
+					<op:option key="N" value="ui.xascf.no"></op:option>
+				</op:I18nOptions>
+				
+				<!-- 物流单状态 -->
+				<op:ConstantOptions type="SHIP_STATUS">
+					<op:option key="1" value="已签收"></op:option>
+					<op:option key="2" value="运输中"></op:option>
+				</op:ConstantOptions>
+				<!-- 基本材料类型 -->
+				<op:ConstantOptions type="ROOT_MATERIAL_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="合同"></op:option>
+					<op:option key="2" value="发票"></op:option>
+				</op:ConstantOptions> 
+				<!-- 抵押材料类型 -->
+				<op:ConstantOptions type="DY_MATERIAL_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="5" value="房产抵押"></op:option>
+					<op:option key="6" value="车辆抵押"></op:option>
+					<op:option key="7" value="土地抵押"></op:option>
+				</op:ConstantOptions> 
+				
+				<!-- 产品类型 -->
+				<op:ConstantOptions type="FANCING_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="运费保理"></op:option>
+					<op:option key="2" value="供采保理"></op:option>
+				</op:ConstantOptions> 
+				<!-- 是否可预付 -->
+				<op:ConstantOptions type="FANCING_ISEPREPAY">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="否"></op:option>
+					<op:option key="2" value="是"></op:option>
+				</op:ConstantOptions> 
+				<op:ConstantOptions type="EPREPAY_NOTETYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="订单"></op:option>
+					<op:option key="2" value="运单"></op:option>
+				</op:ConstantOptions> 
+				<!-- 票据类型 -->
+				<op:ConstantOptions type="NOTE_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="发票"></op:option>
+					<op:option key="2" value="对账单"></op:option>
+					<op:option key="3" value="回单"></op:option>
+				</op:ConstantOptions> 
+				<!-- 发票类型 -->
+				<op:ConstantOptions type="RECEIPT_TYPE">
+					<op:option key="1" value="增值税普通发票"></op:option>
+					<op:option key="2" value="增值税专用发票"></op:option>
+					<op:option key="3" value="公路内河运输统一发票"></op:option>
+					<op:option key="4" value="其他发票"></op:option>
+				</op:ConstantOptions> 
+				<!-- 发票种类 -->
+				<op:ConstantOptions type="RECEIPT_KINDS">
+					<op:option key="1" value="正式发票"></op:option>
+					<op:option key="2" value="虚拟发票"></op:option>
+					<op:option key="3" value="红冲发票"></op:option>
+				</op:ConstantOptions> 
+				<!-- 提单类型 -->
+				<op:ConstantOptions type="FANCING_LADINGBILL_TYPE">
+					<op:option key="1" value="海运提单"></op:option>
+					<op:option key="2" value="空运提单"></op:option>
+				</op:ConstantOptions> 
+				<!-- 申请人类型 -->
+				<op:ConstantOptions type="FANCING_REQUEST_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="企业"></op:option>
+					<op:option key="2" value="个人"></op:option>
+				</op:ConstantOptions> 
+				<!-- 保理方式 -->
+				<op:ConstantOptions type="FANCING_KINDS">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="一次性融资"></op:option>
+					<op:option key="2" value="持续性融资"></op:option>
+				</op:ConstantOptions> 
+				<!-- 保理类别 -->
+				<op:ConstantOptions type="FANCING_FUNCTION">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="非买断式融资"></op:option>
+					<op:option key="2" value="买断式融资"></op:option>
+				</op:ConstantOptions> 
+				<!-- 放款类型 是否预付 -->
+				<op:ConstantOptions type="LOAN_ISEPREPAY">
+					<op:option key="1" value="否"></op:option>
+					<op:option key="2" value="是"></op:option>
+				</op:ConstantOptions>
+				<!-- 放款类型 -->
+				<op:ConstantOptions type="LOAN_TYPE">
+					<op:option key="1" value="全款"></op:option>
+					<op:option key="2" value="预付款"></op:option>
+					<op:option key="3" value="尾款"></op:option>
+				</op:ConstantOptions>
+				<!-- 授信、放款申请发起类型 10后端20信安利得30信安利得安卓APP  -->
+				<op:ConstantOptions type="REQUEST_FROM">
+					<op:option key="" value=""></op:option>
+					<op:option key="10" value="后端"></op:option>
+					<op:option key="20" value="信安利得"></op:option>
+					<op:option key="30" value="信安利得安卓APP"></op:option>
+					<op:option key="40" value="三方平台"></op:option>
+				</op:ConstantOptions>
+				<!-- 融资单状态
+				  	 * 00-新建，01退回
+					 * 10已提交/待市场总监确认
+					 * 20市场总监已确认/待放款设定
+					 * 30 放款已设定/待复核确认 
+					 * 40待风险委员会审核
+					 * 50放款申请通过/待放款
+					 * 60 已放款
+				 -->
+				<op:ConstantOptions type="FANCING_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="00" value="新建"></op:option>
+					<op:option key="01" value="退回"></op:option>
+					<op:option key="10" value="待确认"></op:option>
+					<op:option key="20" value="待审批"></op:option>
+					<op:option key="30" value="待复核"></op:option>
+					<op:option key="40" value="待特批"></op:option>
+					<op:option key="50" value="待放款"></op:option>
+					<op:option key="60" value="已放款"></op:option>
+					<op:option key="70" value="已还款"></op:option>
+					<op:option key="80" value="票据置换中"></op:option>
+					<op:option key="81" value="票据置换退回"></op:option>
+					<op:option key="90" value="票据已置换"></op:option>
+					<op:option key="100" value="逾期"></op:option>
+				</op:ConstantOptions> 
+				<!-- 账单状态
+				  	 10 未还
+					  20已还款
+				 -->
+				<op:ConstantOptions type="BILL_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="10" value="未还"></op:option>
+					<op:option key="20" value="已还"></op:option>
+					<op:option key="30" value="票据置换中"></op:option>
+					<op:option key="31" value="票据置换退回"></op:option>
+					<op:option key="40" value="票据已置换"></op:option>
+					<op:option key="50" value="逾期"></op:option>
+				</op:ConstantOptions> 
+				<!-- 审批是否通过 -->
+				<op:ConstantOptions type="APPROLVAL_PASS">
+					<op:option key="Y" value="通过"></op:option>
+					<op:option key="N" value="否决"></op:option>
+				</op:ConstantOptions> 
+				<!-- 融资单还款方式 -->
+				<op:ConstantOptions type="BILLREBACK_TYPE">
+					<op:option key="1" value="一次性还本付息"></op:option>
+					<op:option key="2" value="按期付息到期还本"></op:option>
+				</op:ConstantOptions> 
+				<!-- 账单单还款方式 -->
+				<op:ConstantOptions type="BILLREBACK_FUNCTION">
+					<op:option key="1" value="转账"></op:option>
+					<op:option key="2" value="现金"></op:option>
+					<op:option key="3" value="承兑汇票"></op:option>
+					<op:option key="4" value="电子承兑汇票"></op:option>
+				</op:ConstantOptions> 
+				<!-- 融资单利息计算周期 -->
+				<op:ConstantOptions type="RATE_CYCLE">
+					<op:option key="1" value="月"></op:option>
+					<op:option key="2" value="季"></op:option>
+					<op:option key="3" value="半年"></op:option>
+					<op:option key="4" value="年度"></op:option>
+				</op:ConstantOptions> 
+				
+				<!-- 融资单账期计算类型 -->
+				<op:ConstantOptions type="DATE_TYPE">
+					<op:option key="1" value="天"></op:option>
+					<op:option key="2" value="月"></op:option>
+					<op:option key="3" value="年"></op:option>
+				</op:ConstantOptions> 
+				<!-- 融资单账期计算类型 -->
+				<op:ConstantOptions type="BILL_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="本金"></op:option>
+					<op:option key="2" value="利息"></op:option>
+					<op:option key="3" value="罚息"></op:option>
+				</op:ConstantOptions> 
+				<!-- 账单日 -->
+				<op:ConstantOptions type="BILLON_TYPE">
+					<op:option key="2" value="2日"></op:option>
+					<op:option key="4" value="4日"></op:option>
+					<op:option key="7" value="7日"></op:option>
+					<op:option key="9" value="9日"></op:option>
+				</op:ConstantOptions> 
+				<op:ConstantOptions type="BILLON_TYPE_EN">
+					<op:option key="1" value="2"></op:option>
+					<op:option key="2" value="4"></op:option>
+					<op:option key="3" value="7"></op:option>
+					<op:option key="4" value="9"></op:option>
+				</op:ConstantOptions> 
+				
+				<!-- 理财产品状态 -->
+				<op:ConstantOptions type="PRODUCT_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="新建"></op:option>
+					<op:option key="2" value="发布"></op:option>
+					<op:option key="3" value="募集"></op:option>
+					<op:option key="4" value="续存"></op:option>
+					<op:option key="5" value="结束"></op:option>
+				</op:ConstantOptions> 
+				<!-- 理财产品赎回方式 -->
+				<op:ConstantOptions type="PRODUCT_REDEEMTYPE">
+					<op:option key="1" value="申请"></op:option>
+					<op:option key="2" value="自动"></op:option>
+				</op:ConstantOptions> 
+
+				<!-- 业务类型 -->
+				<op:ConstantOptions type="PM_BUSINESS_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="利息收入"></op:option>
+					<op:option key="2" value="手续费收入"></op:option> 
+				</op:ConstantOptions> 
+				
+				<!-- 理财产品放款状态 -->
+				<op:ConstantOptions type="PROFIT_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="未放款"></op:option>
+					<op:option key="2" value="客户申请"></op:option>
+					<op:option key="3" value="已放款"></op:option>
+				</op:ConstantOptions> 
+				
+				<!-- 币种 -->			
+				<op:ConstantOptions type="CURRENCY">
+					<op:option key="" value=""></op:option>		
+					<op:option key="CNY" value="人民币"></op:option>
+					<op:option key="USD" value="美元"></op:option>
+				</op:ConstantOptions>
+				<!-- 资金融入种类 -->			
+				<op:ConstantOptions type="FUND_INCOME_TYPE">
+					<op:option key="" value=""></op:option>		
+					<op:option key="01" value="自有资金"></op:option>
+					<op:option key="02" value="借入资金"></op:option>
+					<op:option key="03" value="再融资资金"></op:option>
+				</op:ConstantOptions>
+				<!-- 资金业务类型 -->			
+				<op:ConstantOptions type="FUND_BUSINESS_TYPE">
+					<op:option key="" value=""></op:option>		
+					<op:option key="01" value="保理融资"></op:option>
+					<op:option key="02" value="理财产品"></op:option>
+				</op:ConstantOptions>
+				<!-- 资金交易类型 -->			
+				<op:ConstantOptions type="FUND_TRANSACTION_TYPE">
+					<op:option key="" value=""></op:option>					
+					<op:option key="I" value="资金流入"></op:option>
+					<op:option key="O" value="资金流出"></op:option>
+				</op:ConstantOptions>
+				<!-- 资金类型 -->			
+				<op:ConstantOptions type="FUND_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="01" value="本金"></op:option>
+					<op:option key="02" value="利息"></op:option>
+					<op:option key="03" value="手续费"></op:option>
+					<op:option key="04" value="保证金"></op:option>
+					<op:option key="10" value="其他"></op:option>
+				</op:ConstantOptions>
+				<!-- 流水号类型 -->			
+				<op:ConstantOptions type="SERIAL_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="01" value="银行流水"></op:option>
+					<op:option key="02" value="三方支付流水"></op:option>
+				</op:ConstantOptions>
+				
+				<!-- 提现状态 -->			
+				<op:ConstantOptions type="WITHDRAW_STATUS">
+					<op:option key="" value=""></op:option>		
+					<op:option key="00" value="提取审批中"></op:option>
+					<op:option key="01" value="审批通过"></op:option>
+					<op:option key="02" value="审批拒绝"></op:option>
+				</op:ConstantOptions>
+				<!-- 银行账号用途 -->			
+				<op:ConstantOptions type="ACCOUNT_USAGE">
+					<op:option key="" value=""></op:option>		
+					<op:option key="01" value="融资款"></op:option>
+					<op:option key="02" value="手续费"></op:option>
+					<op:option key="03" value="保证金"></op:option>
+					<op:option key="04" value="保理款"></op:option>
+					<op:option key="05" value="利息"></op:option>
+					<op:option key="06" value="其他"></op:option>
+				</op:ConstantOptions>
+				
+				<!-- 银行账户类型 -->
+				<op:ConstantOptions type="CUS_BANKNO_TYPE">
+					<op:option key="1" value="监管账户"></op:option>
+					<op:option key="2" value="结算账户"></op:option> 
+				</op:ConstantOptions>
+				
+				<!-- 企业、个人监管机构类型属性 -->
+				<op:ConstantOptions type="CUS_BANK_PROPERTY">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="银行"></op:option>
+					<op:option key="2" value="第三方支付"></op:option>  
+				</op:ConstantOptions>
+				<!-- 企业级别 -->
+				<op:ConstantOptions type="CUS_COM_LEVEL">
+					<op:option key="1" value="集团大客户"></op:option>
+					<op:option key="2" value="普通客户"></op:option> 
+					<op:option key="3" value="外接客户"></op:option> 
+				</op:ConstantOptions>
+				
+				<!-- 会员来源 -->
+				<op:ConstantOptions type="CUS_COM_SOURCE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="后端登记"></op:option>
+					<op:option key="2" value="信安利得注册"></op:option> 
+					<op:option key="3" value="手机APP"></op:option> 
+					<op:option key="4" value="外部平台"></op:option>  
+				</op:ConstantOptions>
+				
+				<!-- 企业会员审核状态会员审核状态
+				 * 刚注册/待完善10
+				 * 已完善 /待审核20
+				 * 通过 30 -->
+				<op:ConstantOptions type="CUS_COM_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="10" value="待完善资料"></op:option>
+					<op:option key="20" value="待审核"></op:option> 
+					<op:option key="30" value="审核确认"></op:option> 
+				</op:ConstantOptions>  
+				<op:ConstantOptions type="CUS_REC_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="停用"></op:option>
+					<op:option key="2" value="正常"></op:option> 
+				</op:ConstantOptions>  
+				<!-- 所属行业类型 -->
+				<op:ConstantOptions type="CUS_COM_INDUSTRY">
+					<op:option key="1" value="物流"></op:option>
+					<op:option key="2" value="医疗"></op:option> 
+					<op:option key="3" value="IT"></op:option> 
+					<op:option key="4" value="工业"></op:option> 
+					<op:option key="5" value="金融"></op:option> 
+					<op:option key="6" value="教育"></op:option> 
+					<op:option key="7" value="汽车服务"></op:option> 
+					<op:option key="8" value="市场"></op:option> 
+					<op:option key="9" value="制造业"></op:option> 
+					<op:option key="10" value="农业"></op:option> 
+				</op:ConstantOptions>
+				
+				<!-- 委托方类别 -->
+				<op:ConstantOptions type="PURCHASE_CATEGORY">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="三方"></op:option>
+					<op:option key="2" value="直客"></op:option> 
+				</op:ConstantOptions>  
+				  
+				
+				<!-- 公共信息类型 -->
+				<op:ConstantOptions type="NOTICE_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="00" value="公司简介"></op:option>
+					<op:option key="01" value="产品介绍"></op:option>
+					<op:option key="02" value="运费保理融资"></op:option>
+					<op:option key="03" value="仓单质押保理"></op:option>
+					<op:option key="04" value="公告信息"></op:option>
+					<op:option key="05" value="常见问题"></op:option>
+					<op:option key="06" value="招贤纳士"></op:option>
+					<op:option key="07" value="联系我们"></op:option>
+					<op:option key="08" value="轮播图片"></op:option>  
+					<op:option key="09" value="投资帮助"></op:option>  
+				</op:ConstantOptions> 
+				
+				<!-- 公共信息状态-->
+				<op:ConstantOptions type="NOTICE_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="01" value="新建"></op:option>
+					<op:option key="02" value="已发布"></op:option> 
+				</op:ConstantOptions> 
+				
+				<!-- 公共信息是否置顶 -->
+				<op:ConstantOptions type="NOTICE_IS_TOP">
+					<op:option key="" value=""></op:option>
+					<op:option key="0" value="否"></op:option>
+					<op:option key="1" value="是"></op:option> 
+				</op:ConstantOptions> 
+				
+				<!-- 评估模板类型 -->
+				<op:ConstantOptions type="RM_TEMPLATE_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="企业"></op:option>
+					<op:option key="2" value="个人"></op:option>
+					<op:option key="3" value="融资单"></op:option>
+				</op:ConstantOptions>  
+				<!-- 是否评估因子父项 否及模板 -->
+				<op:ConstantOptions type="RM_ITEM_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="否"></op:option>
+					<op:option key="2" value="是"></op:option>
+				</op:ConstantOptions>  
+				<!-- 是否默认 -->
+				<op:ConstantOptions type="RM_IS_DEFAULT">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="是"></op:option>
+					<op:option key="0" value="否"></op:option>
+				</op:ConstantOptions>  
+				<!-- 材料类型 -->
+				<op:ConstantOptions type="RM_MATERIAL_TYPE">
+					<op:option key="1" value="企业授信"></op:option>
+					<op:option key="2" value="个人授信"></op:option>
+				</op:ConstantOptions> 
+				
+				<!-- 账户类型 -->
+				<op:ConstantOptions type="BANK_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="监管账户"></op:option>
+					<op:option key="2" value="结算账户"></op:option>  
+				</op:ConstantOptions>
+				
+				<!-- 企业向银行贷款担保方式 -->
+				<op:ConstantOptions type="GUARANTEE_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="抵押"></op:option>
+					<op:option key="2" value="信用"></op:option>  
+				</op:ConstantOptions>
+				
+				<!-- 企业向银行贷款状态 -->
+				<op:ConstantOptions type="LOAN_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="正常"></op:option>
+					<op:option key="2" value="逾期"></op:option>  
+				</op:ConstantOptions>  
+				  
+				<!-- 运输类型 -->
+				<op:ConstantOptions type="TRANSPORT_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="特殊"></op:option>
+					<op:option key="2" value="普货"></op:option>  
+				</op:ConstantOptions>    
+				<!-- 结算方式 -->
+				<op:ConstantOptions type="SETTLEMENT_WAY">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="支票"></op:option>
+					<op:option key="2" value="转账"></op:option>  
+					<op:option key="3" value="汇票"></op:option>  
+					<op:option key="4" value="现金"></op:option>  
+				</op:ConstantOptions>    
+				
+				<!-- KPI考核状态 -->
+				<op:ConstantOptions type="KPI_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="0" value="完成考核"></op:option>
+					<op:option key="1" value="未考核"></op:option>  
+				</op:ConstantOptions> 
+				
+				<!-- 融资费用状态 -->
+				<op:ConstantOptions type="FANCING_CHARGE_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="02" value="待收款"></op:option>
+					<op:option key="03" value="已收款"></op:option>  
+					<op:option key="04" value="已退还"></op:option>  
+				</op:ConstantOptions> 
+				
+
+				<!-- 授信状态 -->
+				<op:ConstantOptions type="CREDIT_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="001" value="前台草稿"></op:option>
+					<op:option key="00" value="新建"></op:option>
+					<op:option key="01" value="退回"></op:option>
+					<op:option key="10" value="待确认"></op:option>
+					<op:option key="20" value="待评分"></op:option>
+					<op:option key="30" value="待设定"></op:option>
+					<op:option key="40" value="待复核"></op:option>
+					<op:option key="50" value="待特批"></op:option>
+					<op:option key="60" value="通过"></op:option>
+					<op:option key="000" value="作废"></op:option>
+				</op:ConstantOptions> 
+
+				<!-- 利息类型 -->
+				<op:ConstantOptions type="PM_COSTS_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="融资资金利息"></op:option>
+					<op:option key="2" value="理财派息"></op:option>  
+					<op:option key="3" value="再融资利息"></op:option>   
+				</op:ConstantOptions> 
+				
+				
+				<!-- 委托方是否有效 -->
+				<op:ConstantOptions type="IS_EFFECTIVE">
+					<op:option key="0" value="无效"></op:option>
+					<op:option key="1" value="有效"></op:option>  
+				</op:ConstantOptions> 
+				
+				<!-- 系统参数、参数类型 -->
+				<op:ConstantOptions type="PARAMET_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="融资"></op:option>
+					<op:option key="2" value="资金管理"></op:option>  
+					<op:option key="3" value="风控"></op:option> 
+					<op:option key="4" value="理财"></op:option> 
+				</op:ConstantOptions> 
+				
+				<!-- 拜访类型 -->
+				<op:ConstantOptions type="VISIT_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="电话拜访"></op:option>
+					<op:option key="2" value="上门拜访"></op:option> 
+				</op:ConstantOptions> 
+				<!-- 合同状态 -->
+				<op:ConstantOptions type="CONTRACT_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="10" value="新建"></op:option>
+					<op:option key="20" value="生效"></op:option> 
+					<op:option key="30" value="作废"></op:option> 
+				</op:ConstantOptions> 
+				
+				<!-- 放款申请单 放款至 1结算账号2司机账号 -->
+				<op:ConstantOptions type="LOAN_TO_TYPE">
+					<op:option key="1" value="结算账号"></op:option>
+					<op:option key="2" value="司机账号"></op:option> 
+				</op:ConstantOptions> 
+				<!-- 票据状态 -->
+				<op:ConstantOptions type="NOTE_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="0" value="失效"></op:option>
+					<op:option key="1" value="有效"></op:option> 
+				</op:ConstantOptions> 
+				<!-- 委员会表决状态 -->
+				<op:ConstantOptions type="SUG_STATUS">
+					<op:option key="Y" value="同意"></op:option>
+					<op:option key="N" value="否决"></op:option> 
+					<op:option key="A" value="再议"></op:option> 
+				</op:ConstantOptions> 
+				 
+				<!-- 会员类型 -->
+				<op:ConstantOptions type="CUSTOMER_TYPE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="企业会员"></op:option>
+					<op:option key="3" value="委托方"></op:option> 
+				</op:ConstantOptions> 
+				
+				<!-- 资金方状态
+				 * 已停用 10
+				 * 拟合作 20
+				 * 合作中 30 -->
+				<op:ConstantOptions type="AG_CUSTOMER_STATUS">
+					<op:option key="" value=""></op:option>
+					<op:option key="20" value="拟合作"></op:option>
+					<op:option key="30" value="合作中"></op:option> 
+					<op:option key="10" value="已停用"></op:option> 
+				</op:ConstantOptions>  
+				
+				<!-- 再融资单利息计算周期 -->
+				<op:ConstantOptions type="AG_RATE_CYCLE">
+					<op:option key="" value=""></op:option>
+					<op:option key="1" value="天"></op:option>
+					<op:option key="2" value="月"></op:option>
+					<op:option key="3" value="季"></op:option>
+					<op:option key="4" value="半年"></op:option>
+					<op:option key="5" value="年"></op:option>
+				</op:ConstantOptions> 
+			</set>
+		</property>
+	</bean>
+</beans>

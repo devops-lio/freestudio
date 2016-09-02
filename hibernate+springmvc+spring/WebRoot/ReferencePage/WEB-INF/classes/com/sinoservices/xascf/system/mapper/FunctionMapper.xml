@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinoservices.xascf.system.mapper.FunctionMapper">
+
+	 <resultMap type="com.sinoservices.xascf.system.model.FunctionModel" id="functionResultMap">
+        <id property="id" column="ID"/>
+        <result property="functionPid" column="FUNCTION_PID"/>
+        <result property="operationId" column="OPERATION_ID"/>
+        <result property="resourcePid" column="RESOURCE_PID"/>
+        <result property="systemPid" column="SYSTEM_PID"/>
+        <result property="creator" column="CREATOR"/>
+        <result property="createTime" column="CREATE_TIME"/>
+        <result property="modifier" column="MODIFIER"/>
+        <result property="modifyTime" column="MODIFY_TIME"/>
+    </resultMap>
+    
+    <sql id="selectAll">
+        SELECT ID, FUNCTION_PID,OPERATION_ID, RESOURCE_PID,SYSTEM_PID, CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+         FROM `SS_FUNCTION`
+    </sql>
+	<!-- 获取角色功能配置 -->
+	<select id="getByRolePid" parameterType="java.util.List" resultMap="functionResultMap">
+		SELECT F.ID,F.FUNCTION_PID, OPERATION_ID, RESOURCE_PID  FROM `SS_FUNCTION`  F
+	 	JOIN  SS_ROLE_FUNCTION RF ON F.FUNCTION_PID=RF.FUNCTION_PID
+		WHERE RF.ROLE_PID IN (
+		 <foreach collection="list" item="rolePid" index="index"  separator=",">  
+	         #{rolePid}
+	    </foreach> 
+	    )
+	</select>
+	<!-- 权限系统获取用户配置信息 -->
+	<select id="getByUserPid" resultMap="functionResultMap" parameterType="com.sinoservices.xascf.system.view.UserResourceCondition">
+		SELECT F.ID,F.FUNCTION_PID, F.RESOURCE_PID AS RESOURCE_PID FROM 
+			 `SS_FUNCTION` F 
+			JOIN SS_ROLE_FUNCTION RF ON F.FUNCTION_PID=RF.FUNCTION_PID
+			JOIN SS_USER_ROLE UR ON UR.ROLE_PID=RF.ROLE_PID
+			WHERE 1=1  AND UR.USER_PID=#{userPid} AND F.SYSTEM_PID=#{systemPid}
+	</select>
+    <insert id="insert" parameterType="com.sinoservices.xascf.system.model.FunctionModel">
+        INSERT INTO `SS_FUNCTION` (ID,FUNCTION_PID,OPERATION_ID,RESOURCE_PID,SYSTEM_PID,
+            CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME)    
+        VALUES (#{id},#{functionPid},#{operationId},#{resourcePid},#{systemPid},
+            #{creator}, #{createTime, jdbcType=TIMESTAMP}, #{modifier}, #{modifyTime, jdbcType=TIMESTAMP})
+    </insert>
+    <!-- 批量执行插入 -->
+	<insert id="addByList"  parameterType="java.util.List">  
+	
+	    	INSERT INTO `SS_FUNCTION` (FUNCTION_PID,OPERATION_ID,RESOURCE_PID,SYSTEM_PID,
+            CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+			) values  
+	    <foreach collection="list" item="item" index="index"  separator=",">  
+	        (#{item.functionPid}, #{item.operationId}, #{item.resourcePid},#{item.systemPid},
+	         #{item.creator},SYSDATE(), #{item.modifier},SYSDATE())  
+	    </foreach>  
+  </insert>  
+	
+    <delete id="deleteByResourcePid">
+        DELETE FROM `SS_FUNCTION` WHERE
+        <choose>
+            <when test="null!=list and list.size!=0">
+                RESOURCE_PID IN
+	            <foreach collection="list" item="resourcePid" index="index" open="(" separator="," close=")">
+	                #{resourcePid}
+	            </foreach>
+	        </when>
+	        <otherwise>
+	           1 != 1
+	        </otherwise>
+        </choose>
+    </delete>
+    
+</mapper>

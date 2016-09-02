@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinoservices.xascf.fancing.mapper.NotePoolMapper">
+	<resultMap type="com.sinoservices.xascf.fancing.view.NotePoolItem"	id="notepoolItemResultMap">
+		<result property="memberPid" column="MENBER_PID" />
+		<result property="memberName" column="CUSTOMER_NAME" />
+		<result property="allLoanPrice" column="ALL_LOAN_PRICE" />
+		<result property="allNotePrice" column="ALL_NOTE_PRICE" />
+		<result property="allNoteDisPrice" column="ALL_NOTE_DISPRICE" />
+		<result property="allNoteNum" column="ALL_NUM" />
+		<result property="effNoteNum" column="EFF_NUM" />
+		<result property="noEffNoteNum" column="NO_EFF" />
+	</resultMap>
+	<resultMap type="com.sinoservices.xascf.fancing.view.FancingNoteItem"	id="fancingNoteItemResultMap">
+		<result property="fancingOrderNo" column="FANCING_ORDER_NO"/>
+		<result property="contractNo" column="CONTRACT_NO"/>
+		<result property="memberPid" column="MENBER_PID"/>
+		<result property="memberName" column="MENBER_NAME"/>
+		<result property="noteType" column="NOTE_TYPE"/>
+		<result property="notePrice" column="NOTE_PRICE"/>
+		<result property="noteDisprice" column="NOTE_DISPRICE"/>
+		<result property="buyerPid" column="BUYER_PID"/>
+		<result property="buyerName" column="BUYER_NAME"/>
+		<result property="requestPrice" column="REQUEST_PRICE"/>
+		<result property="replyPrice" column="REPLY_PRICE"/>
+		<result property="payTime" column="PAY_TIME"/>
+		<result property="fancingStatus" column="FANCING_STATUS"/>
+		<result property="allNum" column="ALL_NUM"/>
+		<result property="noteStatus" column="ISEFFECTIVE"/>
+		<result property="noteToDate" column="TO_DATE"/>
+		<result property="fancingStatus" column="FANCING_STATUS"/>
+		<result property="fancingStatusCn" column="FANCING_STATUS"/>
+		
+		<result property="billPrice" column="BILL_PRICE"/>
+		<result property="latestTime" column="LATEST_TIME"/>
+		<result property="rebackDate" column="REBACK_DATE"/>
+		<result property="remainingPrice" column="REMAINING_PRICE"/>
+	</resultMap>
+	
+
+	<sql id="count">
+		<![CDATA[
+	    	SELECT COUNT(1) 
+	  	]]>
+	</sql>
+	<sql id="findAllByExample">
+		WHERE 1=1 AND FOO.LOAN_TYPE!=2
+		<if test="memberName !=null and memberName !=''"> AND CUSTOMER_NAME LIKE ('%${memberName}%')</if>
+		<if test="userPid!=null and userPid!=''">AND  USER_PID  =#{userPid}</if>
+		
+	</sql>
+	<!-- 联和放款申请表计算已放款、有效票据金额 、折扣金额
+	     联合 发票、对账单、回单表 计算票据总数量、有效票据数量、无效票据数量
+	 -->
+	 <select id="getCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.NotePoolItem">
+		 SELECT COUNT(1)
+			FROM (
+				SELECT
+						SCS.CUSTOMER_NAME,FOO.MENBER_PID,T_USER.USER_PID  AS USER_PID,
+						SUM(FOO.REPLY_PRICE) AS ALL_LOAN_PRICE,
+						SUM(T3.EFF_PRICE) AS ALL_NOTE_PRICE,
+						SUM(T3.EFF_PRICE) *FC.BILL_RATE/100 AS ALL_NOTE_DISPRICE,
+						SUM(T3.ALL_NUM) AS ALL_NUM,
+						SUM(T3.EFF_NUM) AS EFF_NUM,
+						SUM(T3.NO_EFF) AS NO_EFF
+					FROM DM_FANCING_ORDER FOO	JOIN SS_CUSTOMER_SUB SCS ON FOO.MENBER_PID = SCS.CUSTOMERSUB_PID
+			   		LEFT JOIN DM_FANCING_CONTRACT FC ON FC.CONTRACT_NO=FOO.CONTRACT_NO
+					LEFT JOIN (
+									SELECT	SU.USER_NO AS USER_NO,	SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,	SU.USER_PID AS USER_PID
+									FROM	SS_KPICUSTOMER SSK
+											JOIN SS_USER SU ON 	SSK.USER_PID = SU.USER_PID )
+									T_USER
+							ON T_USER.CUSTOMERSUB_PID=FOO.MENBER_PID
+					LEFT JOIN (
+									SELECT F.FANCING_ORDER_NO,
+									IFNULL(T0.ALL_NUM,0)+IFNULL(T1.ALL_NUM,0)+IFNULL(T2.ALL_NUM,0) AS
+									ALL_NUM,
+									IFNULL(T0.EFF_NUM,0)+IFNULL(T1.EFF_NUM,0) +IFNULL(T2.EFF_NUM,0) AS EFF_NUM,
+									IFNULL(T0.EFF_PRICE,0)+IFNULL(T1.EFF_PRICE,0) +IFNULL(T2.EFF_PRICE,0) AS EFF_PRICE,
+									IFNULL(T0.NO_EFF,0)+IFNULL(T1.NO_EFF,0)+IFNULL(T2.NO_EFF,0) AS NO_EFF
+									FROM DM_FANCING_ORDER F
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM,DRR.FANCING_ORDER_NO,
+									SUM(CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									ACTUAL_AMOUNT ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+									SUM(
+									CASE WHEN DRR.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_RECEIPT DRR GROUP BY DRR.FANCING_ORDER_NO) T0
+									ON T0.FANCING_ORDER_NO=F.FANCING_ORDER_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM, DSB.BUSINESS_NO,
+									SUM(
+									CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+								 SUM(CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									BILL_AMOUNT ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DSB.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_SHIP_BILL DSB
+									GROUP BY DSB.BUSINESS_NO
+									) T1 ON T1.BUSINESS_NO=F.FANCING_ORDER_NO
+									LEFT JOIN(
+									SELECT SUM(1) AS ALL_NUM, DST.BUSINESS_NO,
+									SUM(CASE WHEN DST.ISEFFECTIVE = '1' THEN
+									TOTAL_PRICE ELSE 0 END
+									) AS EFF_PRICE,
+									SUM(
+									CASE WHEN DST.ISEFFECTIVE = '1' THEN
+									1 ELSE 0 END
+									) AS EFF_NUM,
+									SUM(
+									CASE WHEN DST.ISEFFECTIVE = '0' THEN
+									1 ELSE 0 END
+									) AS NO_EFF
+									FROM DM_SHIP_TURN DST
+									GROUP BY DST.BUSINESS_NO
+									) T2 ON T2.BUSINESS_NO=F.FANCING_ORDER_NO
+									GROUP BY F.FANCING_ORDER_NO
+									) 
+							T3 ON T3.FANCING_ORDER_NO=FOO.FANCING_ORDER_NO
+							<include refid="findAllByExample" />
+						GROUP BY		FOO.MENBER_PID
+			) TT
+	 </select>
+	 
+	<select id="findByCondition" resultMap="notepoolItemResultMap"		parameterType="com.sinoservices.xascf.fancing.view.NotePoolItem">
+		SELECT
+			SCS.CUSTOMER_NAME,FOO.MENBER_PID,T_USER.USER_PID  AS USER_PID,
+			SUM(FOO.REPLY_PRICE) AS ALL_LOAN_PRICE,
+			SUM(T3.EFF_PRICE) AS ALL_NOTE_PRICE,
+			SUM(T3.EFF_PRICE) *FC.BILL_RATE/100 AS ALL_NOTE_DISPRICE,
+			SUM(T3.ALL_NUM) AS ALL_NUM,
+			SUM(T3.EFF_NUM) AS EFF_NUM,
+			SUM(T3.NO_EFF) AS NO_EFF
+		FROM DM_FANCING_ORDER FOO	JOIN SS_CUSTOMER_SUB SCS ON FOO.MENBER_PID = SCS.CUSTOMERSUB_PID
+   		LEFT JOIN DM_FANCING_CONTRACT FC ON FC.CONTRACT_NO=FOO.CONTRACT_NO
+		LEFT JOIN (
+						SELECT	SU.USER_NO AS USER_NO,	SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,	SU.USER_PID AS USER_PID
+						FROM	SS_KPICUSTOMER SSK
+								JOIN SS_USER SU ON 	SSK.USER_PID = SU.USER_PID )
+						T_USER
+				ON T_USER.CUSTOMERSUB_PID=FOO.MENBER_PID
+		LEFT JOIN (
+						SELECT F.FANCING_ORDER_NO,
+						IFNULL(T0.ALL_NUM,0)+IFNULL(T1.ALL_NUM,0)+IFNULL(T2.ALL_NUM,0) AS
+						ALL_NUM,
+						IFNULL(T0.EFF_NUM,0)+IFNULL(T1.EFF_NUM,0) +IFNULL(T2.EFF_NUM,0) AS EFF_NUM,
+						IFNULL(T0.EFF_PRICE,0)+IFNULL(T1.EFF_PRICE,0) +IFNULL(T2.EFF_PRICE,0) AS EFF_PRICE,
+						IFNULL(T0.NO_EFF,0)+IFNULL(T1.NO_EFF,0)+IFNULL(T2.NO_EFF,0) AS NO_EFF
+						FROM DM_FANCING_ORDER F
+						LEFT JOIN(
+						SELECT SUM(1) AS ALL_NUM,DRR.FANCING_ORDER_NO,
+						SUM(CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+						ACTUAL_AMOUNT ELSE 0 END
+						) AS EFF_PRICE,
+						SUM(
+						CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+						1 ELSE 0 END
+						) AS EFF_NUM,
+						SUM(
+						CASE WHEN DRR.ISEFFECTIVE = '0' THEN
+						1 ELSE 0 END
+						) AS NO_EFF
+						FROM DM_RECEIPT DRR GROUP BY DRR.FANCING_ORDER_NO) T0
+						ON T0.FANCING_ORDER_NO=F.FANCING_ORDER_NO
+						LEFT JOIN(
+						SELECT SUM(1) AS ALL_NUM, DSB.BUSINESS_NO,
+						SUM(
+						CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+						1 ELSE 0 END
+						) AS EFF_NUM,
+					 SUM(CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+						BILL_AMOUNT ELSE 0 END
+						) AS EFF_PRICE,
+						SUM(
+						CASE WHEN DSB.ISEFFECTIVE = '0' THEN
+						1 ELSE 0 END
+						) AS NO_EFF
+						FROM DM_SHIP_BILL DSB
+						GROUP BY DSB.BUSINESS_NO
+						) T1 ON T1.BUSINESS_NO=F.FANCING_ORDER_NO
+						LEFT JOIN(
+						SELECT SUM(1) AS ALL_NUM, DST.BUSINESS_NO,
+						SUM(CASE WHEN DST.ISEFFECTIVE = '1' THEN
+						TOTAL_PRICE ELSE 0 END
+						) AS EFF_PRICE,
+						SUM(
+						CASE WHEN DST.ISEFFECTIVE = '1' THEN
+						1 ELSE 0 END
+						) AS EFF_NUM,
+						SUM(
+						CASE WHEN DST.ISEFFECTIVE = '0' THEN
+						1 ELSE 0 END
+						) AS NO_EFF
+						FROM DM_SHIP_TURN DST
+						GROUP BY DST.BUSINESS_NO
+						) T2 ON T2.BUSINESS_NO=F.FANCING_ORDER_NO
+						GROUP BY F.FANCING_ORDER_NO
+						) 
+				T3 ON T3.FANCING_ORDER_NO=FOO.FANCING_ORDER_NO
+		<include refid="findAllByExample" />
+		GROUP BY		FOO.MENBER_PID
+	</select>
+	<!-- 票据作废查询 预付款票据无法作废 因为预付款无有效票据 -->
+	<select id="getFancingNoteCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.FancingNoteItem">
+	 	SELECT
+						COUNT(1)
+					FROM
+						DM_FANCING_ORDER F
+					LEFT JOIN (
+						SELECT
+						SUM(1) AS ALL_NUM,
+						ISEFFECTIVE AS ISEFFECTIVE,
+						SUM(EFF_PRICE) AS EFF_PRICE,
+						TO_DATE AS TO_DATE,
+						T2.FANCING_ORDER_NO
+					FROM
+						(
+							SELECT
+								DRR.FANCING_ORDER_NO,
+								DRR.ISEFFECTIVE AS ISEFFECTIVE,
+								CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+								ACTUAL_AMOUNT ELSE 0 END
+								 AS EFF_PRICE,
+								DRR.RECEIPT_TO_DATE AS TO_DATE
+							FROM
+								DM_RECEIPT DRR
+								
+							ORDER BY
+								DRR.CREATE_TIME DESC
+						) T2
+					GROUP BY	T2.FANCING_ORDER_NO
+					) T0 ON T0.FANCING_ORDER_NO = F.FANCING_ORDER_NO
+					LEFT JOIN (
+						SELECT
+						SUM(1) AS ALL_NUM,
+						ISEFFECTIVE AS ISEFFECTIVE,
+						SUM(EFF_PRICE) AS EFF_PRICE,
+						TO_DATE AS TO_DATE,
+						T2.BUSINESS_NO
+					FROM
+						(
+							SELECT
+								DSB.BUSINESS_NO,
+								DSB.ISEFFECTIVE AS ISEFFECTIVE,
+								CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+								BILL_AMOUNT ELSE 0 END
+								 AS EFF_PRICE,
+								DSB.TO_DATE AS TO_DATE
+							FROM
+								DM_SHIP_BILL DSB
+							ORDER BY
+								DSB.CREATE_TIME DESC
+						) T2
+						GROUP BY
+						BUSINESS_NO
+					) T1 ON T1.BUSINESS_NO = F.FANCING_ORDER_NO
+					LEFT JOIN (
+						SELECT
+						SUM(1) AS ALL_NUM,
+						SUM(EFF_PRICE) AS EFF_PRICE,
+						ISEFFECTIVE AS ISEFFECTIVE,
+						TO_DATE AS TO_DATE,
+						T2.BUSINESS_NO
+					FROM
+						(
+							SELECT
+								DST.BUSINESS_NO,
+								DST.ISEFFECTIVE AS ISEFFECTIVE,
+								DST.TO_DATE AS TO_DATE,
+								CASE WHEN DST.ISEFFECTIVE = '1' THEN
+								TOTAL_PRICE ELSE 0 END
+								 AS EFF_PRICE
+							FROM
+								DM_SHIP_TURN DST
+							ORDER BY
+								DST.CREATE_TIME DESC
+						) T2
+					GROUP BY
+						T2.BUSINESS_NO
+					) T2 ON T2.BUSINESS_NO = F.FANCING_ORDER_NO
+					LEFT JOIN (
+						SELECT
+							SU.USER_NO AS USER_NO,
+							SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,
+							SU.USER_PID AS USER_PID
+						FROM
+							SS_KPICUSTOMER SSK
+						JOIN SS_USER SU ON SSK.USER_PID = SU.USER_PID
+					) T_USER ON T_USER.CUSTOMERSUB_PID = F.MENBER_PID
+					LEFT JOIN DM_FANCING_CONTRACT FC ON FC.CONTRACT_NO=F.CONTRACT_NO
+					WHERE
+						1 = 1 AND F.LOAN_TYPE!=2
+						<if test="memberPid !=null and memberPid !=''"> AND F.MENBER_PID =#{memberPid}</if>
+						<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND F.FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%')</if>
+						<if test="buyerName !=null and buyerName !=''"> AND F.BUYER_NAME LIKE ('%${buyerName}%')</if>
+						<if test="userPid!=null and userPid!=''">AND  USER_PID  =#{userPid}</if>
+						<if test="noteType !=null and noteType !=''">AND  NOTE_TYPE  =#{noteType}</if>
+						<if test="noteStatus !=null and noteStatus !=''">AND   IFNULL(
+							T0.ISEFFECTIVE,
+							IFNULL(
+								T1.ISEFFECTIVE,
+								T2.ISEFFECTIVE
+							)
+						)  =#{noteStatus}</if>
+	 </select>
+	<select id="getFancingNoteByCondition" resultMap="fancingNoteItemResultMap" parameterType="com.sinoservices.xascf.fancing.view.FancingNoteItem">
+				SELECT
+						F.FANCING_ORDER_NO,
+						REPLY_PRICE,
+						MENBER_PID,
+						MENBER_NAME,
+						BUYER_PID,
+						BUYER_NAME,
+						IFNULL(T0.EFF_PRICE, 0) + IFNULL(T1.EFF_PRICE, 0) + IFNULL(T2.EFF_PRICE, 0) AS 	NOTE_PRICE,
+						NOTE_TYPE,
+						(IFNULL(T0.EFF_PRICE, 0) + IFNULL(T1.EFF_PRICE, 0) + IFNULL(T2.EFF_PRICE, 0))* FC.BILL_RATE/100 AS NOTE_DISPRICE,
+						T_USER.USER_PID AS USER_PID,
+						IFNULL(T0.ALL_NUM, 0) + IFNULL(T1.ALL_NUM, 0) + IFNULL(T2.ALL_NUM, 0) AS ALL_NUM,
+						IFNULL(
+							T0.ISEFFECTIVE,
+							IFNULL(
+								T1.ISEFFECTIVE,
+								T2.ISEFFECTIVE
+							)
+						) AS ISEFFECTIVE,
+						IFNULL(
+							T0.TO_DATE,
+							IFNULL(T1.TO_DATE, T2.TO_DATE)
+						) AS TO_DATE
+					FROM
+						DM_FANCING_ORDER F
+					LEFT JOIN (
+						SELECT
+						SUM(1) AS ALL_NUM,
+						ISEFFECTIVE AS ISEFFECTIVE,
+						SUM(EFF_PRICE) AS EFF_PRICE,
+						TO_DATE AS TO_DATE,
+						T2.FANCING_ORDER_NO
+					FROM
+						(
+							SELECT
+								DRR.FANCING_ORDER_NO,
+								DRR.ISEFFECTIVE AS ISEFFECTIVE,
+								CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+								ACTUAL_AMOUNT ELSE 0 END
+								 AS EFF_PRICE,
+								DRR.RECEIPT_TO_DATE AS TO_DATE
+							FROM
+								DM_RECEIPT DRR
+							ORDER BY
+								DRR.CREATE_TIME DESC
+						) T2
+					GROUP BY	T2.FANCING_ORDER_NO
+					) T0 ON T0.FANCING_ORDER_NO = F.FANCING_ORDER_NO
+					LEFT JOIN (
+						SELECT
+						SUM(1) AS ALL_NUM,
+						ISEFFECTIVE AS ISEFFECTIVE,
+						SUM(EFF_PRICE) AS EFF_PRICE,
+						TO_DATE AS TO_DATE,
+						T2.BUSINESS_NO
+					FROM
+						(
+							SELECT
+								DSB.BUSINESS_NO,
+								DSB.ISEFFECTIVE AS ISEFFECTIVE,
+								CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+								BILL_AMOUNT ELSE 0 END
+								 AS EFF_PRICE,
+								DSB.TO_DATE AS TO_DATE
+							FROM
+								DM_SHIP_BILL DSB
+							ORDER BY
+								DSB.CREATE_TIME DESC
+						) T2
+						GROUP BY
+						BUSINESS_NO
+					) T1 ON T1.BUSINESS_NO = F.FANCING_ORDER_NO
+					LEFT JOIN (
+						SELECT
+						SUM(1) AS ALL_NUM,
+						SUM(EFF_PRICE) AS EFF_PRICE,
+						ISEFFECTIVE AS ISEFFECTIVE,
+						TO_DATE AS TO_DATE,
+						T2.BUSINESS_NO
+					FROM
+						(
+							SELECT
+								DST.BUSINESS_NO,
+								DST.ISEFFECTIVE AS ISEFFECTIVE,
+								DST.TO_DATE AS TO_DATE,
+								CASE WHEN DST.ISEFFECTIVE = '1' THEN
+								TOTAL_PRICE ELSE 0 END
+								 AS EFF_PRICE
+							FROM
+								DM_SHIP_TURN DST
+							ORDER BY
+								DST.CREATE_TIME DESC
+						) T2
+					GROUP BY
+						T2.BUSINESS_NO
+					) T2 ON T2.BUSINESS_NO = F.FANCING_ORDER_NO
+					LEFT JOIN (
+						SELECT
+							SU.USER_NO AS USER_NO,
+							SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,
+							SU.USER_PID AS USER_PID
+						FROM
+							SS_KPICUSTOMER SSK
+						JOIN SS_USER SU ON SSK.USER_PID = SU.USER_PID
+					) T_USER ON T_USER.CUSTOMERSUB_PID = F.MENBER_PID
+					LEFT JOIN DM_FANCING_CONTRACT FC ON FC.CONTRACT_NO=F.CONTRACT_NO
+					WHERE
+						1 = 1 AND F.LOAN_TYPE!=2
+		<if test="memberPid !=null and memberPid !=''"> AND F.MENBER_PID =#{memberPid}</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND F.FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%')</if>
+		<if test="buyerName !=null and buyerName !=''"> AND F.BUYER_NAME LIKE ('%${buyerName}%')</if>
+		<if test="userPid!=null and userPid!=''">AND  USER_PID  =#{userPid}</if>
+		<if test="noteType !=null and noteType !=''">AND  NOTE_TYPE  =#{noteType}</if>
+		<if test="noteStatus !=null and noteStatus !=''">AND   IFNULL(
+							T0.ISEFFECTIVE,
+							IFNULL(
+								T1.ISEFFECTIVE,
+								T2.ISEFFECTIVE
+							)
+						)  =#{noteStatus}</if>
+	</select>
+	<!-- 只有全款放款才能进行票据置换查询 -->
+	<select id="getFancingAndBillNoteCountByCondition" resultType="int" parameterType="com.sinoservices.xascf.fancing.view.FancingNoteItem">
+		SELECT
+					COUNT(1)
+				FROM
+					DM_FANCING_ORDER F
+				LEFT JOIN (
+					SELECT
+						SUM(1) AS ALL_NUM,
+						ISEFFECTIVE AS ISEFFECTIVE,
+						SUM(EFF_PRICE) AS EFF_PRICE,
+						TO_DATE AS TO_DATE,
+						T2.FANCING_ORDER_NO
+					FROM
+						(
+							SELECT
+								DRR.FANCING_ORDER_NO,
+								DRR.ISEFFECTIVE AS ISEFFECTIVE,
+									CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									ACTUAL_AMOUNT ELSE 0 END
+									 AS EFF_PRICE,
+								DRR.RECEIPT_TO_DATE AS TO_DATE
+							FROM
+								DM_RECEIPT DRR
+							ORDER BY
+								DRR.CREATE_TIME DESC
+						) T2
+					GROUP BY
+						T2.FANCING_ORDER_NO
+				) T0 ON T0.FANCING_ORDER_NO = F.FANCING_ORDER_NO
+				LEFT JOIN (
+					SELECT
+						SUM(1) AS ALL_NUM,
+						ISEFFECTIVE AS ISEFFECTIVE,
+						SUM(EFF_PRICE) AS EFF_PRICE,
+						TO_DATE AS TO_DATE,
+						T2.BUSINESS_NO
+					FROM
+						(
+							SELECT
+								DSB.BUSINESS_NO,
+								DSB.ISEFFECTIVE AS ISEFFECTIVE,
+									CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									BILL_AMOUNT ELSE 0 END
+									 AS EFF_PRICE,
+								DSB.TO_DATE AS TO_DATE
+							FROM
+								DM_SHIP_BILL DSB
+							
+							ORDER BY
+								DSB.CREATE_TIME DESC
+						) T2
+						GROUP BY
+						BUSINESS_NO
+				) T1 ON T1.BUSINESS_NO = F.FANCING_ORDER_NO
+				LEFT JOIN (
+					SELECT
+						SUM(1) AS ALL_NUM,
+						SUM(EFF_PRICE) AS EFF_PRICE,
+						ISEFFECTIVE AS ISEFFECTIVE,
+						TO_DATE AS TO_DATE,
+						T2.BUSINESS_NO
+					FROM
+						(
+							SELECT
+								DST.BUSINESS_NO,
+								DST.ISEFFECTIVE AS ISEFFECTIVE,
+								DST.TO_DATE AS TO_DATE,
+								CASE WHEN DST.ISEFFECTIVE = '1' THEN
+								TOTAL_PRICE ELSE 0 END
+								 AS EFF_PRICE
+							FROM
+								DM_SHIP_TURN DST
+							ORDER BY
+								DST.CREATE_TIME DESC
+						) T2
+					GROUP BY
+						T2.BUSINESS_NO
+				) T2 ON T2.BUSINESS_NO = F.FANCING_ORDER_NO
+				LEFT JOIN (
+					SELECT
+						SU.USER_NO AS USER_NO,
+						SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,
+						SU.USER_PID AS USER_PID
+					FROM
+						SS_KPICUSTOMER SSK
+					JOIN SS_USER SU ON SSK.USER_PID = SU.USER_PID
+				) T_USER ON T_USER.CUSTOMERSUB_PID = F.MENBER_PID
+				LEFT JOIN (
+					SELECT
+						FB.BILL_PRICE,
+						FB.FANCING_ORDER_NO,
+						BILL_PRICE - (
+							IFNULL(BRR.REPAYMENT_PRICE, 0)
+						) AS REMAINING_PRICE,
+						FB.REBACK_DATE,
+						FB.LATEST_TIME
+					FROM
+						DM_FANCING_BILL FB
+					
+					LEFT JOIN (
+						SELECT
+							SUM(BR.REPAYMENT_PRICE) AS REPAYMENT_PRICE,
+							BR.BILL_NO
+						FROM
+							DM_BILLREBACK_RECORD BR
+						GROUP BY
+							BR.BILL_NO
+					) BRR ON BRR.BILL_NO = FB.BILL_NO WHERE FB.BILL_TYPE='1'
+				) FBB ON F.FANCING_ORDER_NO = FBB.FANCING_ORDER_NO
+				LEFT JOIN DM_FANCING_CONTRACT FC ON FC.CONTRACT_NO=F.CONTRACT_NO
+				WHERE
+					1 = 1 AND F.LOAN_TYPE=1
+				<if test="memberPid !=null and memberPid !=''"> AND F.MENBER_PID =#{memberPid}</if>
+				<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND F.FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%')</if>
+				<if test="buyerName !=null and buyerName !=''"> AND F.BUYER_NAME LIKE ('%${buyerName}%')</if>
+				<if test="memberName !=null and memberName !=''"> AND F.MENBER_NAME LIKE ('%${memberName}%')</if>
+				<if test="userPid!=null and userPid!=''">AND  USER_PID  =#{userPid}</if>
+				<if test="noteType !=null and noteType !=''">AND  NOTE_TYPE  =#{noteType}</if>
+				<if test="fancingStatus !=null and fancingStatus !=''">AND  FANCING_STATUS  =#{fancingStatus}</if>
+				<if test="noteStatus !=null and noteStatus !=''">AND  IFNULL(
+						T0.ISEFFECTIVE,
+						IFNULL(
+							T1.ISEFFECTIVE,
+							T2.ISEFFECTIVE
+						)
+					)  =#{noteStatus}</if>
+	
+	</select>
+	<select id="getFancingAndBillNoteByCondition" resultMap="fancingNoteItemResultMap" parameterType="com.sinoservices.xascf.fancing.view.FancingNoteItem">
+				 SELECT
+					F.FANCING_ORDER_NO,F.PAY_TIME,
+					FBB.BILL_PRICE,
+					FBB.LATEST_TIME,
+					FBB.REBACK_DATE,
+					FBB.REMAINING_PRICE,
+					REPLY_PRICE,
+					MENBER_PID,
+					MENBER_NAME,
+					F.FANCING_STATUS,
+					BUYER_PID,
+					BUYER_NAME,
+					IFNULL(T0.EFF_PRICE, 0) + IFNULL(T1.EFF_PRICE, 0) + IFNULL(T2.EFF_PRICE, 0) AS 	NOTE_PRICE,
+					NOTE_TYPE,
+					(IFNULL(T0.EFF_PRICE, 0) + IFNULL(T1.EFF_PRICE, 0) + IFNULL(T2.EFF_PRICE, 0))* FC.BILL_RATE/100 AS NOTE_DISPRICE,
+					T_USER.USER_PID AS USER_PID,
+					IFNULL(T0.ALL_NUM, 0) + IFNULL(T1.ALL_NUM, 0) + IFNULL(T2.ALL_NUM, 0) AS ALL_NUM,
+					IFNULL(
+						T0.ISEFFECTIVE,
+						IFNULL(
+							T1.ISEFFECTIVE,
+							T2.ISEFFECTIVE
+						)
+					) AS ISEFFECTIVE,
+					IFNULL(
+						T0.TO_DATE,
+						IFNULL(T1.TO_DATE, T2.TO_DATE)
+					) AS TO_DATE
+				FROM
+					DM_FANCING_ORDER F
+				LEFT JOIN (
+					SELECT
+						SUM(1) AS ALL_NUM,
+						ISEFFECTIVE AS ISEFFECTIVE,
+						SUM(EFF_PRICE) AS EFF_PRICE,
+						TO_DATE AS TO_DATE,
+						T2.FANCING_ORDER_NO
+					FROM
+						(
+							SELECT
+									DRR.FANCING_ORDER_NO,
+									DRR.ISEFFECTIVE AS ISEFFECTIVE,
+									CASE WHEN DRR.ISEFFECTIVE = '1' THEN
+									ACTUAL_AMOUNT ELSE 0 END
+									 AS EFF_PRICE,
+								DRR.RECEIPT_TO_DATE AS TO_DATE
+							FROM
+								DM_RECEIPT DRR
+							ORDER BY
+								DRR.CREATE_TIME DESC
+						) T2
+					GROUP BY
+						T2.FANCING_ORDER_NO
+				) T0 ON T0.FANCING_ORDER_NO = F.FANCING_ORDER_NO
+				LEFT JOIN (
+					SELECT
+						SUM(1) AS ALL_NUM,
+						ISEFFECTIVE AS ISEFFECTIVE,
+						SUM(EFF_PRICE) AS EFF_PRICE,
+						TO_DATE AS TO_DATE,
+						T2.BUSINESS_NO
+					FROM
+						(
+							SELECT
+									DSB.BUSINESS_NO,
+									DSB.ISEFFECTIVE AS ISEFFECTIVE,
+									CASE WHEN DSB.ISEFFECTIVE = '1' THEN
+									BILL_AMOUNT ELSE 0 END
+									 AS EFF_PRICE,
+								DSB.TO_DATE AS TO_DATE
+							FROM
+								DM_SHIP_BILL DSB
+							ORDER BY
+								DSB.CREATE_TIME DESC
+						) T2
+						GROUP BY
+						BUSINESS_NO
+				) T1 ON T1.BUSINESS_NO = F.FANCING_ORDER_NO
+				LEFT JOIN (
+					SELECT
+						SUM(1) AS ALL_NUM,
+						SUM(EFF_PRICE) AS EFF_PRICE,
+						ISEFFECTIVE AS ISEFFECTIVE,
+						TO_DATE AS TO_DATE,
+						T2.BUSINESS_NO
+					FROM
+						(
+							SELECT
+								DST.BUSINESS_NO,
+								DST.ISEFFECTIVE AS ISEFFECTIVE,
+								DST.TO_DATE AS TO_DATE,
+								CASE WHEN DST.ISEFFECTIVE = '1' THEN
+								TOTAL_PRICE ELSE 0 END
+								 AS EFF_PRICE
+							FROM
+								DM_SHIP_TURN DST
+							ORDER BY
+								DST.CREATE_TIME DESC
+						) T2
+					GROUP BY
+						T2.BUSINESS_NO
+				) T2 ON T2.BUSINESS_NO = F.FANCING_ORDER_NO
+				LEFT JOIN (
+					SELECT
+						SU.USER_NO AS USER_NO,
+						SSK.CUSTOMERSUB_PID AS CUSTOMERSUB_PID,
+						SU.USER_PID AS USER_PID
+					FROM
+						SS_KPICUSTOMER SSK
+					JOIN SS_USER SU ON SSK.USER_PID = SU.USER_PID
+				) T_USER ON T_USER.CUSTOMERSUB_PID = F.MENBER_PID
+				LEFT JOIN (
+					SELECT
+						FB.BILL_PRICE,
+						FB.FANCING_ORDER_NO,
+						BILL_PRICE - (
+							IFNULL(BRR.REPAYMENT_PRICE, 0)
+						) AS REMAINING_PRICE,
+						FB.REBACK_DATE,
+						FB.LATEST_TIME
+					FROM
+						DM_FANCING_BILL FB
+					
+					LEFT JOIN (
+						SELECT
+							SUM(BR.REPAYMENT_PRICE) AS REPAYMENT_PRICE,
+							BR.BILL_NO
+						FROM
+							DM_BILLREBACK_RECORD BR
+						GROUP BY
+							BR.BILL_NO
+					) BRR ON BRR.BILL_NO = FB.BILL_NO WHERE FB.BILL_TYPE='1'
+				) FBB ON F.FANCING_ORDER_NO = FBB.FANCING_ORDER_NO
+				LEFT JOIN DM_FANCING_CONTRACT FC ON FC.CONTRACT_NO=F.CONTRACT_NO
+				WHERE
+					1 = 1 AND F.LOAN_TYPE=1
+		<if test="memberPid !=null and memberPid !=''"> AND F.MENBER_PID =#{memberPid}</if>
+		<if test="fancingOrderNo!=null and fancingOrderNo!=''"> AND F.FANCING_ORDER_NO LIKE ('%${fancingOrderNo}%')</if>
+		<if test="buyerName !=null and buyerName !=''"> AND F.BUYER_NAME LIKE ('%${buyerName}%')</if>
+		<if test="memberName !=null and memberName !=''"> AND F.MENBER_NAME LIKE ('%${memberName}%')</if>
+		<if test="userPid!=null and userPid!=''">AND  USER_PID  =#{userPid}</if>
+		<if test="noteType !=null and noteType !=''">AND  NOTE_TYPE  =#{noteType}</if>
+		<if test="fancingStatus !=null and fancingStatus !=''">AND  FANCING_STATUS  =#{fancingStatus}</if>
+		<if test="noteStatus !=null and noteStatus !=''">AND  IFNULL(
+						T0.ISEFFECTIVE,
+						IFNULL(
+							T1.ISEFFECTIVE,
+							T2.ISEFFECTIVE
+						)
+					)  =#{noteStatus}</if>
+	</select>
+	
+</mapper>
